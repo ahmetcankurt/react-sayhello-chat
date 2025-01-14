@@ -1,0 +1,117 @@
+/* Modal.css */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-container {
+  background-color: #fff;
+  padding: 20px 10px;
+  border-radius: 8px;
+  width: 400px;
+  height: 450px;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  overflow-y: auto;
+}
+
+.modal-close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: transparent;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #888;
+}
+
+.modal-close-button:hover {
+  color: #555;
+}
+
+.modal-error {
+  color: red;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+.modal-user-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  animation: slideDown 0.3s ease-in-out;
+}
+
+.modal-user-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  text-align: left;
+  border: 1px solid #ccc;
+  background-color: #9a989827;
+  border-radius: 3px;
+  padding:  5px;
+  cursor: pointer;
+}
+
+.modal-user-item:hover {
+  background-color: rgb(181, 216, 255);
+}
+
+.modal-profile-image {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 10px;
+  object-fit: cover;
+}
+
+
+.modal-search-container{
+  display: flex; /* Flexbox ile input ve ikon yatayda hizalanır */
+  align-items: center; /* İkonu ve input'u dikeyde ortalar */
+  position: relative; /* İkonun input'un içinde doğru konumlandırılması için */
+}
+
+@keyframes slideDown {
+  from {
+      opacity: 0;
+      transform: translateY(-20px);
+  }
+  to {
+      opacity: 1;
+      transform: translateY(0);
+  }
+}
+
+.modal-friends-add-button{
+  text-align: center;
+  border-radius: 5px;
+  background-color: #8888887d;
+  height: 30px;
+  width: 30px;
+  font-size: 14px!important;
+  padding: 2px;
+}
+
+
+.modal-friends-add-button:hover{
+  background-color: #888888;
+}
+
+
+.modal-user-item-div{
+  display: flex;
+  align-items: center;
+}

@@ -1,0 +1,121 @@
+/* Chat kutusunun tüm boşluğu kaplamasını sağlama */
+.message-box {
+  flex-grow: 1; /* Geriye kalan alanı al */
+  height: 100vh;
+  
+}
+
+.chat-img-container {
+  position: relative;
+  display: inline-block;
+}
+
+.chat-img-me {
+  height: 50px;
+  width: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: top; /* Resmin üst kısmını göstermek için */
+}
+
+.status-light {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  height: 12px;
+  width: 12px;
+  border-radius: 50%;
+  border: 2px solid white; /* Dış çerçeve */
+}
+
+.status-light.active {
+  background-color: green;
+}
+
+.status-light.inactive {
+  background-color: red;
+}
+
+.chat-info {
+  display: flex;
+  flex-direction: column; /* Alt alta yerleştirme */
+}
+
+.chat-name {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.chat-status {
+  font-size: 14px;
+  color: green; /* Online için yeşil renk */
+}
+
+.chat-status.Online {
+  font-size: 14px;
+  color: green; /* Online için yeşil renk */
+}
+
+.chat-status.Offline {
+  font-size: 14px;
+  color: red;
+}
+
+/* Ana chat container */
+.chat-container {
+  display: flex;
+  flex-direction: column; /* Header, ChatBox ve Footer için dikey sıralama */
+  height: 100%; /* Tüm ekranı kaplasın */
+}
+
+/* Header'ın üstte sabitlenmesi */
+.chat-header {
+  background-color: #f1f1f1;
+  position: sticky;
+  top: 0;
+  display: flex;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Hafif gölge */
+  padding: 24px;
+}
+
+/* Footer'ın altta sabitlenmesi */
+.chat-footer {
+  background-color: #f1f1f1;
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1); /* Hafif gölge */
+  padding: 24px;
+}
+
+/* ChatBox'ın geri kalan alanı kaplamasını sağlama */
+.chat-box {
+  flex-grow: 1; /* Kalan alanı al */
+  overflow-y: auto; /* Uzun sohbetler için kaydırma */
+  padding: 10px;
+}
+
+.chat-icon {
+  font-size: 24px;
+  color: #727272;
+  cursor: pointer;
+}
+
+.chat-search-input {
+  width: 100%;
+  height: 40px;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  padding: 0 16px;
+  font-size: 16px;
+  outline: none;
+  background-color: white;
+  margin: 0 8px; /* İkonlar arasında boşluk */
+}
+
+.chat-search-input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 3px rgba(0, 123, 255, 0.5);
+}

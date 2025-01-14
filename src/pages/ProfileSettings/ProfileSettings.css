@@ -1,0 +1,144 @@
+.profile-settings-container {
+  position: relative;
+  margin-bottom: 50px;
+}
+
+.profile-settings-bg {
+  width: 100%;
+  height: 160px;
+  background-repeat: no-repeat;
+  object-fit: cover;
+}
+
+.profile-settings-me {
+  border: 5px rgb(234, 234, 241) solid;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  position: absolute;
+  bottom: -40px; /* Resmin yarısının alt kısımda olmasını sağlıyoruz */
+  left: 50%;
+  transform: translateX(-50%); /* Resmi tam ortalamak için */
+  object-fit: cover;
+}
+
+.camera-icon-bg .icon {
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 0 0 15px 0; /* Daire görünümü */
+  margin: 10px;
+  text-align: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  font-size: 24px; /* İkon boyutu */
+  color: rgb(0, 0, 0); /* İkon rengi */
+  cursor: pointer;
+  background-color: rgba(
+    255,
+    255,
+    255,
+    0.6
+  ); /* Arka plan rengi (yarı şeffaf) */
+  padding: 4px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.camera-icon-profil {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
+  width: 30px;
+  height: 30px;
+  background-color: rgba(255, 255, 255, 0.6);
+  border-radius: 50%;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+}
+
+.camera-icon-profil .icon {
+  font-size: 24px;
+  color: rgb(0, 0, 0);
+}
+/* 
+.camera-icon-profil:hover {
+  background-color: rgb(0, 0, 0);
+  color: rgba(255, 255, 255, 0.6);
+} */
+
+.profile-settings-me:hover {
+}
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border-radius: 8px;
+  padding: 10px;
+  max-height: 450px;
+  overflow-y: auto;
+}
+
+.form-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.form-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.form-container::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+.form-container::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.form-container-button {
+  padding: 10px 15px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 10px 0px 15px 0;
+}
+
+.form-container-button:hover {
+  background-color: #0056b3;
+}
+
+.form-container-textarea {
+  height: 150px; /* Yüksekliği artırın */
+}
+
+/* ProfileSettings.css */
+
+.form-control-settings {
+  font-size: 14px; /* Yazı boyutunu küçült */
+  padding: 6px 10px; /* İç boşluğu azalt */
+  height: 30px; /* Yüksekliği küçült */
+}
+
+.form-container-textarea {
+  font-size: 14px; /* Yazı boyutunu küçült */
+  padding: 6px 10px; /* İç boşluğu azalt */
+  height: 80px; /* Yüksekliği küçült */
+}
+
+.form-container-button {
+  font-size: 14px; /* Buton yazı boyutunu küçült */
+  padding: 10px 15px; /* Buton iç boşluğu */
+  height: auto; /* Buton yüksekliğini ayarla */
+}

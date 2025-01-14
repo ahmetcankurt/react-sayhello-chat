@@ -1,0 +1,83 @@
+.app-container {
+  display: flex; /* Flex container yapıyoruz */
+  height: 100vh; /* Tam ekran boyutu */
+}
+
+.not-chat{
+  width: 100%;
+  /* border: 1px red solid; */
+  height: 100vh; /* Tam ekran boyutu */
+  justify-content: center;
+  display: flex;
+  align-items: center;
+}
+.sidebar {
+  height: 100vh;
+  background-color: rgb(46, 46, 46);
+  width: 75px; /* Sabit genişlik */
+  display: flex; 
+  flex-direction: column; 
+  justify-content: space-between; 
+  padding: 20px 0 ;
+  text-align: center;
+}
+
+.sidebar-icon {
+  text-align: center;
+  font-size: 28px;
+  display: block;
+  cursor: pointer;
+  color: rgb(135, 138, 146);
+}
+
+.sayy-hello-icon {
+  text-align: center;
+  font-size: 28px;
+  cursor: pointer;
+  color: rgb(135, 138, 146);
+}
+
+.sidebar-icon:hover {
+  color: aliceblue;
+
+}
+
+.sidebar-icon-group {
+  display: flex; /* Flex container yapıyoruz */
+  flex-direction: column; /* İkonları dikeyde hizalıyoruz */
+  gap: 40px; /* İkonlar arasında 10px boşluk */
+}
+
+.sidebar-bottom{
+  display: block;
+}
+
+.sidebar-bottom-image{
+  border: 2px  rgb(135, 138, 146) solid ;
+  padding: 1px;
+  cursor: pointer;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+
+}
+
+.sidebar-bottom-image:hover {
+  border: 1px  aliceblue solid ;
+  transform: scale(1.02);
+}
+
+/* Content (Profile ve Chat) alanı */
+.content-container {
+  display: flex;
+  flex-grow: 1; /* Kalan alanı doldur */
+  flex-direction: row; /* Yan yana sıralama */
+}
+
+/* Profile stilini değiştirme */
+.content {
+  background-color: rgb(255, 255, 255);
+  box-shadow: 0px 0px 15px 2px #6f6d6d40;
+  width: 300px;
+  flex-shrink: 0; /* Profil alanı genişliği sabit */
+}

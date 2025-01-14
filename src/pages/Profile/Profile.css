@@ -1,0 +1,103 @@
+.profile-container {
+  position: relative;
+  margin-bottom: 50px;
+}
+
+.profile-main {
+  padding: 10px;
+  max-height: 450px; /* Maksimum yükseklik */
+  overflow-y: auto; /* Dikey kaydırma çubuğu */
+}
+
+/* Scroll bar stilleri */
+.profile-main::-webkit-scrollbar {
+  width: 6px;
+}
+
+.profile-main::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.profile-main::-webkit-scrollbar-thumb {
+  background: #888888a7;
+  border-radius: 10px;
+}
+
+.profile-main::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+
+.profile-bg {
+  width: 100%;
+  height: 160px;
+  background-repeat: no-repeat;
+  object-fit: cover;
+}
+
+.profile-page {
+  border: 5px rgb(234, 234, 241) solid;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  position: absolute;
+  bottom: -40px; /* Resmin yarısının alt kısımda olmasını sağlıyoruz */
+  left: 50%;
+  transform: translateX(-50%); /* Resmi tam ortalamak için */
+  object-fit: cover;
+}
+
+.profile-name {
+  margin-bottom: 0;
+  text-align: center;
+}
+
+.shadow-line {
+  background-color: rgba(128, 128, 128, 0.245);
+  height: 1px;
+}
+
+.profile-job {
+  color: rgba(73, 80, 87, 0.75);
+  margin-bottom: 20px;
+  font-size: 14px;
+  font-weight: 400;
+  text-align: center;
+  display: block;
+}
+
+.profile-about {
+  font-size: 14px;
+  color: rgba(73, 80, 87, 0.75);
+  font-weight: 400;
+}
+
+.profile-contact {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 16px;
+  color: #333;
+}
+
+.icon {
+  font-size: 20px;
+  color: #55555591;
+}
+
+.contact-item a {
+  text-decoration: none;
+  color: #0073e6; /* Mavi link rengi */
+}
+
+.contact-item a:hover {
+  text-decoration: underline;
+}

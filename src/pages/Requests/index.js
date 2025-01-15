@@ -48,7 +48,7 @@ const Index = () => {
   return (
     <div>
       <div className="Mymessages-add">
-        <span className="Mymessages-title">Requests List</span>
+        <span className="Mymessages-title">Arkadaşlık istekleri</span>
       </div>
       <div className="friends-list-container">
         {incomingRequests.length > 0 ? (

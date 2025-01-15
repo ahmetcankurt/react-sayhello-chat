@@ -1,10 +1,11 @@
-import { useState } from "react";
-import { BsFillChatSquareTextFill } from "react-icons/bs";
+import { useEffect, useState } from "react";
 import { BsPersonCircle } from "react-icons/bs";
 import { FiSettings } from "react-icons/fi";
 import { MdOutlineChat } from "react-icons/md";
 import { MdOutlinePeopleAlt } from "react-icons/md";
 import { BsFillPersonPlusFill } from "react-icons/bs";
+import { CgMenuLeft } from "react-icons/cg";
+import FriendsProfile from "./FriendsProfile"
 import Chat from "./ChatBox/Chat";
 import Requests from "./Requests"
 import Profile from "./Profile";
@@ -25,7 +26,7 @@ const iconData = [
   { icon: <FiSettings />, tooltip: "Settings", name: "settings" },
 ];
 
-const Sidebar = ({ onLinkClick }) => {
+const Sidebar = ({ onLinkClick, activePage, toggleContentVisibility }) => {
   return (
     <div className="sidebar">
       <div>
@@ -37,7 +38,7 @@ const Sidebar = ({ onLinkClick }) => {
           height="auto"
           borderRadius="8px"
         >
-          <BsFillChatSquareTextFill className="sayy-hello-icon" />
+          <CgMenuLeft className="sayy-hello-icon" onClick={toggleContentVisibility} />
         </CustomTooltip>
       </div>
       <div className="sidebar-icon-group">
@@ -53,7 +54,7 @@ const Sidebar = ({ onLinkClick }) => {
             padding
           >
             <div
-              className="sidebar-icon"
+              className={`sidebar-icon ${activePage === item.name ? 'active' : ''}`}
               onClick={() => onLinkClick(item.name)}
             >
               {item.icon}
@@ -62,7 +63,7 @@ const Sidebar = ({ onLinkClick }) => {
         ))}
       </div>
       <div className="sidebar-bottom">
-        <img src={MeImage} className="sidebar-bottom-image" />
+        <img src={MeImage} className="sidebar-bottom-image" alt="me-image" />
       </div>
     </div>
   );
@@ -70,6 +71,8 @@ const Sidebar = ({ onLinkClick }) => {
 
 const App = () => {
   const [activePage, setActivePage] = useState("profile");
+  const [isContentVisible, setIsContentVisible] = useState(true); // Yeni state
+  const [isProfileVisible, setIsProfileVisible] = useState(false);
 
   const handleLinkClick = (page) => {
     setActivePage(page);
@@ -77,25 +80,39 @@ const App = () => {
 
   const [selectedUser, setSelectedUser] = useState(null);
 
+
+  const toggleContentVisibility = () => {
+    setIsContentVisible((prev) => !prev); // İçeriğin görünürlüğünü değiştir
+  };
+
+  useEffect(() => {
+    setIsContentVisible(true);
+  }, [activePage]);
+
+  const handleProfileClick = () => {
+    setIsProfileVisible((prev) => !prev); // Profil görünürlüğünü değiştir
+  };
+
   return (
     <div className="app-container">
-      <Sidebar onLinkClick={handleLinkClick} />
-      <div className="content">
+      <Sidebar onLinkClick={handleLinkClick} activePage={activePage} toggleContentVisibility={toggleContentVisibility} />
+      <div className={`content ${isContentVisible ? 'visible' : 'hidden'}`}>
         {activePage === "profile" && <Profile />}
         {activePage === "messages" && <Mymessages setSelectedUser={setSelectedUser} selectedUser={selectedUser} />}
         {activePage === "friends" && <FriendsList setSelectedUser={setSelectedUser} selectedUser={selectedUser} />}
         {activePage === "settings" && <ProfileSettings />}
         {activePage === "requests" && <Requests />}
-
       </div>
       <div className="message-box">
         {selectedUser ? (
-          <Chat selectedUser={selectedUser} />
+          <Chat selectedUser={selectedUser} handleProfileClick={handleProfileClick} />
         ) : (
           <div className="not-chat">Mesajlaşmak için mesajlarınızı seçin. </div>
         )}
       </div>
-
+      {isProfileVisible && 
+        <FriendsProfile  selectedUser={selectedUser}/>
+      }
     </div>
   );
 };

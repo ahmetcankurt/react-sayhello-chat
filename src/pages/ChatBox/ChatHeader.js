@@ -1,9 +1,8 @@
 import React, { useState, useEffect, memo } from "react";
-import ImageMe from "../../assest/image/imageAdmin.jpeg";
 import axios from "axios";
 import "./ChatHeaderFooter.css";
 
-function ChatHeader({ selectedUser }) {
+function ChatHeader({ selectedUser, handleProfileClick }) {
   const [userInfo, setUserInfo] = useState(null);
 
   useEffect(() => {
@@ -37,7 +36,7 @@ function ChatHeader({ selectedUser }) {
         />
       </div>
       <div className="chat-info">
-        <span className="chat-name">{userInfo.name} {userInfo.surname}</span>
+        <span className="chat-name" onClick={handleProfileClick}>{userInfo.name} {userInfo.surname}</span>
         <span className={`chat-status ${userInfo.isActive ? "Online" : "Offline"}`}>
           {userInfo.isActive ? "Online" : "Offline"}
         </span>
@@ -46,4 +45,4 @@ function ChatHeader({ selectedUser }) {
   );
 }
 
-export default memo(ChatHeader) ;
+export default memo(ChatHeader);

@@ -18,16 +18,20 @@
   display: flex; 
   flex-direction: column; 
   justify-content: space-between; 
-  padding: 20px 0 ;
+  padding: 30px 0 ;
   text-align: center;
 }
 
 .sidebar-icon {
   text-align: center;
   font-size: 28px;
-  display: block;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 40px;
   cursor: pointer;
   color: rgb(135, 138, 146);
+
 }
 
 .sayy-hello-icon {
@@ -75,9 +79,31 @@
 }
 
 /* Profile stilini değiştirme */
+
+.sidebar-icon.active {
+  border-right: 4px solid rgb(17, 120, 209); 
+  color: rgb(17, 120, 209); /* Aktif ikonun rengi */
+}
+
 .content {
   background-color: rgb(255, 255, 255);
   box-shadow: 0px 0px 15px 2px #6f6d6d40;
   width: 300px;
-  flex-shrink: 0; /* Profil alanı genişliği sabit */
+  flex-shrink: 0;
+  overflow: hidden;
+  opacity: 1; /* Başlangıçta içerik görünür */
+  transform: scale(1) rotate(0deg); /* Başlangıçta normal boyut ve dönme */
+  transition: opacity 0.5s ease, transform 0.5s ease; /* Geçiş süreleri */
+  visibility: visible; /* İçerik görünür */
+}
+
+.content.hidden {
+  opacity: 0; /* Görünürlüğü kaybettirir */
+  transform: scale(0.1) rotate(90deg); /* Küçültür ve döndürür */
+  display: none;
+}
+
+.content.visible {
+  opacity: 1; /* Görünürlüğü tekrar sağlar */
+  transform: scale(1) rotate(0deg); /* Eski boyut ve açıya geri döner */
 }

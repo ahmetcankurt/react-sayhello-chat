@@ -1,20 +1,12 @@
 import React, { memo, useEffect, useState } from "react";
 import { MdAdd } from "react-icons/md";
 import { FaSearch } from "react-icons/fa";
-import ImageMe from "../../assest/image/imageAdmin.jpeg";
-import ImageAli from "../../assest/image/login-bg-1.webp"; // Farklı bir kişi için profil resmi
-import ImageVeli from "../../assest/image/image_header.jpg"; // Başka bir kişi için profil resmi
-import "./Mymessages.css";
 import axios from "axios";
+import "./Mymessages.css";
 
 function Messages({ message, setSelectedUser }) {
   // Mesajın 30 karakterden fazla olup olmadığını kontrol ediyoruz ve fazlasını "..." ile kısıyoruz
   const shortenedMessage = message.lastMessage?.length > 30 ? message?.lastMessage.slice(0, 30) + "..." : message.lastMessage;
-
-  // User objesinin var olup olmadığını kontrol ediyoruz
-  const user = message.user || {}; // Eğer user yoksa boş bir obje dönecek
-
-  console.log(message)
 
   return (
     <div className="messages-blog" onClick={() => setSelectedUser(message.userId)} >

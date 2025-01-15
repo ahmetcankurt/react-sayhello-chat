@@ -2,7 +2,6 @@ import { useState, useEffect, memo } from "react";
 import { FaSearch, FaTrash } from "react-icons/fa";
 import { MdAdd } from "react-icons/md";
 import { BsThreeDotsVertical } from "react-icons/bs";
-import ImageMe from "../../assest/image/imageAdmin.jpeg";
 import axios from "axios";
 import "./FriendsList.css";
 import Modal from "./Modal";

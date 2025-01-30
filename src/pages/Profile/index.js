@@ -36,8 +36,9 @@ function Index() {
   }, [userId, token]);
 
   if (!userInfo) {
-    return <div>Yükleniyor...</div>;
+    return
   }
+
 
   return (
     <>
@@ -50,19 +51,17 @@ function Index() {
         <img src={`http://localhost:3000/${userInfo.profileImage}` || ImageMe} className="profile-page" alt="Profile" />
       </div>
       <div className="profile-main">
-        <div className="mb-3">
-          <p className="profile-name">
-            {userInfo.name || "Name"} {userInfo.surname || "Surname"}
-          </p>
-          <span className="profile-job">{userInfo.jobs || "Jobs"}</span>
-        </div>
-        <div className="shadow-line" />
+        <p className="profile-name">
+          {userInfo.name || "Name"} {userInfo.surname || "Surname"}
+        </p>
+        <span className="profile-job">{userInfo.jobs || "Jobs"}</span>
+        <hr className="p-0  m-0" />
         <div>
           <p className="profile-about py-4">
             {userInfo.aboutme || "Hakkında Yazısı"}
           </p>
         </div>
-        <div className="shadow-line" />
+        <hr className="p-0  m-0" />
         <div className="profile-contact">
           <div className="contact-item">
             <FaEnvelope className="icon" />

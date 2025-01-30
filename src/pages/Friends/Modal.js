@@ -4,19 +4,9 @@ import { MdClose } from "react-icons/md";
 import { MdAdd } from "react-icons/md";
 import { FaUserCheck } from 'react-icons/fa';
 import { BsThreeDots } from "react-icons/bs";
-import Swal from 'sweetalert2';  // SweetAlert2'yi import ettik
+import Swal from 'sweetalert2';  
 import axios from 'axios';
 import './Modal.css';
-
-// Debounce Hook
-const useDebounce = (value, delay) => {
-    const [debouncedValue, setDebouncedValue] = useState(value);
-    useEffect(() => {
-        const handler = setTimeout(() => setDebouncedValue(value), delay);
-        return () => clearTimeout(handler);
-    }, [value, delay]);
-    return debouncedValue;
-};
 
 const UserList = ({ users, onAddFriend, handleRemoveFriendRequest }) => {
     if (users.length === 0) return <p>Hiç kullanıcı bulunamadı.</p>;
@@ -33,7 +23,7 @@ const UserList = ({ users, onAddFriend, handleRemoveFriendRequest }) => {
                         />
                         <p>{user.name} {user.surname} (@{user.username})</p>
                     </div>
-                    <span >
+                    <span>
                         {user.friendshipStatus === 'friend_request_pending' ? (
                             <BsThreeDots title='bekliyor' className='modal-friends-add-button' onClick={() => handleRemoveFriendRequest(user.userId)} />
                         ) : user.friendshipStatus === 'friend_request_accepted' ? (
@@ -54,31 +44,28 @@ const UserList = ({ users, onAddFriend, handleRemoveFriendRequest }) => {
 const Modal = ({ onClose }) => {
     const [searchQuery, setSearchQuery] = useState('');
     const [users, setUsers] = useState([]);
-    const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
+    const [isClosing, setIsClosing] = useState(false);
+    const [loading, setLoading] = useState(false);
     const token = localStorage.getItem('token');
-    const debouncedQuery = useDebounce(searchQuery, 500);
 
-    // Arkadaşlık isteği gönderme
     const handleAddFriend = async (receiverId) => {
         try {
-            const userId = localStorage.getItem('userId'); // Kullanıcının kendi id'sini alıyoruz
+            const userId = localStorage.getItem('userId');
             const response = await axios.post(`http://localhost:3000/friend-requests/${userId}/friend-request/${receiverId}`, {}, {
                 headers: { Authorization: `Bearer ${token}` }
             });
 
-            // SweetAlert2 ile başarı mesajı gösterme
             Swal.fire({
                 title: 'Başarıyla Gönderildi!',
                 text: response.data.message,
-                icon: 'success', // Başarı ikonu
+                icon: 'success',
                 timer: 3000,
                 showConfirmButton: false,
                 position: "top-end",
                 toast: true,
             });
 
-            // Kullanıcılar listesini güncelleme
             setUsers((prevUsers) =>
                 prevUsers.map((user) =>
                     user.userId === receiverId
@@ -88,39 +75,29 @@ const Modal = ({ onClose }) => {
             );
 
         } catch (err) {
-            // SweetAlert2 ile hata mesajı gösterme
             Swal.fire({
                 title: 'Hata!',
                 text: err.response?.data?.message || 'Bir hata oluştu.',
-                icon: 'error', // Hata ikonu
+                icon: 'error',
                 confirmButtonText: 'Tamam'
             });
         }
     };
 
-    // Her harf için arama isteği
     const handleSearch = useCallback(async () => {
         setLoading(true);
         setError('');
         try {
-            const response = await axios.get(`http://localhost:3000/users/search?q=${debouncedQuery}`, {
+            const response = await axios.get(`http://localhost:3000/users/search?q=${searchQuery}`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
-            setUsers(response.data);
+            setUsers(response.data);  // Kullanıcıları sadece yeni arama geldiğinde güncelle
         } catch (err) {
             setError(err.response?.status === 404 ? 'Arama sonucu bulunamadı' : 'Bir hata oluştu');
         } finally {
             setLoading(false);
         }
-    }, [debouncedQuery, token]);
-
-    useEffect(() => {
-        if (debouncedQuery) {
-            handleSearch(); // Debounced sorgu ile her harf için istek atılıyor
-        } else {
-            setUsers([]); // Eğer arama boşsa, sonuçları temizle
-        }
-    }, [debouncedQuery, handleSearch]);
+    }, [searchQuery, token]);
 
     const handleRemoveFriendRequest = async (receiverId) => {
         try {
@@ -129,7 +106,6 @@ const Modal = ({ onClose }) => {
                 headers: { Authorization: `Bearer ${token}` }
             });
 
-            // SweetAlert2 ile başarı mesajı gösterme
             Swal.fire({
                 title: 'Başarıyla İstek iptal Edildi!',
                 icon: "success",
@@ -140,17 +116,15 @@ const Modal = ({ onClose }) => {
                 showConfirmButton: false,
             });
 
-            // Kullanıcılar listesini güncelleme
             setUsers((prevUsers) =>
                 prevUsers.map((user) =>
                     user.userId === receiverId
-                        ? { ...user, friendshipStatus: 'none' } // İsteği iptal et
+                        ? { ...user, friendshipStatus: 'none' }
                         : user
                 )
             );
 
         } catch (err) {
-            // SweetAlert2 ile hata mesajı gösterme
             Swal.fire({
                 title: 'Hata!',
                 text: err.response?.data?.message || 'Bir hata oluştu.',
@@ -160,24 +134,35 @@ const Modal = ({ onClose }) => {
         }
     };
 
+    const handleClose = () => {
+        setIsClosing(true);
+        setTimeout(() => onClose(), 500);
+    };
+
+    useEffect(() => {
+        if (isClosing) {
+            document.querySelector('.modal-container').classList.add('closing');
+        }
+    }, [isClosing]);
+
     return (
-        <div className="modal-overlay">
-            <div className="modal-container">
-                <button onClick={onClose} className="modal-close-button">
+        <div className="modal-overlay" onClick={handleClose}>
+            <div className={`modal-container ${isClosing ? 'closing' : ''}`} onClick={(e) => e.stopPropagation()}>
+                <button onClick={handleClose} className="modal-close-button">
                     <MdClose />
                 </button>
-                <label htmlFor="Email" className="form-label">Kullanıcı Ara</label>
+                <label htmlFor="Email" className="modal-title">Kullanıcı Ara</label>
                 <div className="modal-search-container mb-3">
                     <input
                         autoComplete="off"
                         id="Email"
                         type="text"
                         placeholder="Search..."
-                        className="search-input "
+                        className="search-input"
                         value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)} // Her harf değişiminde searchQuery'yi güncelle
+                        onChange={(e) => setSearchQuery(e.target.value)}
                     />
-                    <FaSearch className="search-icon" />
+                    <FaSearch className="search-icon" onClick={handleSearch} />
                 </div>
                 {loading ? (
                     <p>Yükleniyor...</p>
@@ -192,4 +177,4 @@ const Modal = ({ onClose }) => {
     );
 };
 
-export default memo(Modal)
+export default memo(Modal);

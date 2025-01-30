@@ -1,59 +1,70 @@
-import React, { memo, useEffect, useState } from "react";
+import React, { memo, useEffect, useState, useCallback } from "react";
+import axios from "axios";
 import { MdAdd } from "react-icons/md";
 import { FaSearch } from "react-icons/fa";
-import axios from "axios";
+import SearchInput from "../../Component/input/searchInput";
 import "./Mymessages.css";
 
+// Kısa mesaj fonksiyonu
+const getShortenedMessage = (message, maxLength = 30) => {
+  return message?.length > maxLength ? `${message.slice(0, maxLength)}...` : message;
+};
+
+// Kullanıcı resmini render etme fonksiyonu
+const UserImage = ({ src, isActive }) => (
+  <div className="chat-img-container me-2">
+    <img
+      src={`http://localhost:3000/${src}`}
+      className="chat-img-me"
+      alt="Profile"
+    />
+    <span className={`status-light ${isActive ? "active" : "inactive"}`} />
+  </div>
+);
+
+// Message bileşeni
 function Messages({ message, setSelectedUser }) {
-  // Mesajın 30 karakterden fazla olup olmadığını kontrol ediyoruz ve fazlasını "..." ile kısıyoruz
-  const shortenedMessage = message.lastMessage?.length > 30 ? message?.lastMessage.slice(0, 30) + "..." : message.lastMessage;
+  const { lastMessage, name, surname, userId, profileImage, isActive ,lastMessageSender} = message;
+  const shortenedMessage = getShortenedMessage(lastMessage);
 
   return (
-    <div className="messages-blog" onClick={() => setSelectedUser(message.userId)} >
-      <div className="chat-img-container me-2">
-        {/* User objesinin image özelliği varsa göster, yoksa varsayılan bir resim göster */}
-        <img 
-        src={`http://localhost:3000/${message?.profileImage}`}
-        className="chat-img-me" alt="Profile" />
-        <span className={`status-light ${message.isActive ? "active" : "inactive"}`} />   
-      </div>
+    <div className="messages-blog" onClick={() => setSelectedUser(userId)}>
+      <UserImage src={profileImage} isActive={isActive} />
       <div>
-        <span>{message.name} {message.surname}</span>
-        <p className="messages-detail">{shortenedMessage}</p>
+        <span>{name} {surname}</span>
+        <p className="messages-detail">{lastMessageSender} : {shortenedMessage}</p>
       </div>
     </div>
   );
 }
 
+// Index bileşeni
 function Index({ selectedUser, setSelectedUser }) {
-  const [messages, setMessages] = useState([]); // Mesajlar state'i
+  const [messages, setMessages] = useState([]);
   const userId = localStorage.getItem("userId");
 
-  useEffect(() => {
+  const fetchMessages = useCallback(async () => {
     if (userId) {
-      const fetchMessages = async () => {
-        try {
-          const response = await axios.get(`http://localhost:3000/messages/users/${userId}`);
-          setMessages(response.data.contacts);
-        } catch (error) {
-          console.error("Mesajları alma hatası:", error);
-        }
-      };
-      fetchMessages();
+      try {
+        const response = await axios.get(`http://localhost:3000/messages/users/${userId}`);
+        setMessages(response.data.contacts);
+      } catch (error) {
+        console.error("Mesajları alma hatası:", error);
+      }
     }
-  }, [selectedUser]); // selectedUser değiştiğinde tekrar API'yi çağıracak 
+  }, [userId]);
+
+  useEffect(() => {
+    fetchMessages();
+  }, [fetchMessages, selectedUser]); // `fetchMessages` fonksiyonunu bağımlılık olarak ekledik
 
   return (
-    <div className="Mymessages-container">
+    <div>
       <div className="Mymessages-add">
-        <span className="Mymessages-title">Chats</span>
-        <MdAdd className="Mymessages-icon" />
+        <span className="Mymessages-title">Mesajlarım</span>
+        {/* <MdAdd className="Mymessages-icon" /> */}
       </div>
-      <div className="search-container">
-        <input type="text" placeholder="Search..." className="search-input" />
-        <FaSearch className="search-icon" />
-      </div>
-      {/* Mesajları döngü ile render ediyoruz */}
+      <SearchInput />
       <div className="messages-list">
         {messages.map((message, index) => (
           <Messages
@@ -61,7 +72,7 @@ function Index({ selectedUser, setSelectedUser }) {
             message={message}
             setSelectedUser={setSelectedUser}
           />
-        ))} 
+        ))}
       </div>
     </div>
   );

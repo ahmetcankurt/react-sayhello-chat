@@ -9,6 +9,10 @@
   background-color: #55555518;
   /* justify-content: flex-start; Mesajları baştan başlayacak şekilde hizalar */
 }
+.day-header {
+ 
+}
+
 
 .chat-box::-webkit-scrollbar {
   width: 6px;
@@ -31,7 +35,7 @@
 .message {
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: baseline;
   max-width: 60%;
   position: relative;
   margin-bottom: 10px; /* Mesajlar arasındaki boşluğu ayarlayabilirsiniz */
@@ -39,16 +43,13 @@
 
 .message-content {
   margin: 5px 0;
-  padding: 10px;
+  padding: 6px 10px;
   border-radius: 5px;
   font-size: 16px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  align-items: center;
   display: flex;
   flex-direction: column;
-  justify-content: center; /* Dikeyde ortalar */
   position: relative;
-  word-break: break-word;
 }
 
 .chat-dots-icon {
@@ -69,7 +70,6 @@
   margin-top: 5px; /* Zamanın biraz aşağıda olmasını sağlamak için */
 }
 
-
 .message:hover .chat-dots-icon {
   opacity: 1; /* Show when message content is hovered */
 }
@@ -80,14 +80,14 @@
   text-align: right;
 }
 
-.message-content.senderId {
-  background-color: #dcefed;
-}
-
 /* Receiver's message - left side */
 .message.receiverId {
   align-self: flex-start;
   text-align: left;
+}
+
+.message-content.senderId {
+  background-color: #dcefed;
 }
 
 .message-content.receiverId {
@@ -99,8 +99,8 @@
   background-color: white;
   border: 1px solid #ddd;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  border-radius: 20px;
-  padding: 10px;
+  border-radius: 5px;
+  padding: 3px 0;
 }
 
 .dropdown-chat-icon {

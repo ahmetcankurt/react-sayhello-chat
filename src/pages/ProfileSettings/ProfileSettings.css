@@ -5,9 +5,13 @@
 
 .profile-settings-bg {
   width: 100%;
-  height: 160px;
+  height: 180px;
   background-repeat: no-repeat;
   object-fit: cover;
+}
+
+.profile-container{
+  position: relative;
 }
 
 .profile-settings-me {
@@ -30,8 +34,8 @@
   margin: 10px;
   text-align: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: 35px;
+  height: 35px;
   font-size: 24px; /* İkon boyutu */
   color: rgb(0, 0, 0); /* İkon rengi */
   cursor: pointer;
@@ -49,16 +53,15 @@
 
 .camera-icon-profil {
   position: absolute;
-  top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(+45% , +50%);
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 5px;
   width: 30px;
   height: 30px;
-  background-color: rgba(255, 255, 255, 0.6);
+  background-color: rgba(255, 255, 255, 0.837);
   border-radius: 50%;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   cursor: pointer;
@@ -68,13 +71,13 @@
   font-size: 24px;
   color: rgb(0, 0, 0);
 }
-/* 
-.camera-icon-profil:hover {
-  background-color: rgb(0, 0, 0);
-  color: rgba(255, 255, 255, 0.6);
-} */
 
-.profile-settings-me:hover {
+.camera-icon-profil .icon:hover {
+  color: #007bff;
+}
+
+.camera-icon-bg .icon:hover {
+  color: #007bff;
 }
 
 .form-container {
@@ -87,24 +90,6 @@
   overflow-y: auto;
 }
 
-.form-container::-webkit-scrollbar {
-  width: 6px;
-}
-
-.form-container::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 10px;
-}
-
-.form-container::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 10px;
-}
-
-.form-container::-webkit-scrollbar-thumb:hover {
-  background: #555;
-}
-
 .form-container-button {
   padding: 10px 15px;
   background-color: #007bff;
@@ -114,16 +99,6 @@
   cursor: pointer;
   margin: 10px 0px 15px 0;
 }
-
-.form-container-button:hover {
-  background-color: #0056b3;
-}
-
-.form-container-textarea {
-  height: 150px; /* Yüksekliği artırın */
-}
-
-/* ProfileSettings.css */
 
 .form-control-settings {
   font-size: 14px; /* Yazı boyutunu küçült */
@@ -137,8 +112,6 @@
   height: 80px; /* Yüksekliği küçült */
 }
 
-.form-container-button {
-  font-size: 14px; /* Buton yazı boyutunu küçült */
-  padding: 10px 15px; /* Buton iç boşluğu */
-  height: auto; /* Buton yüksekliğini ayarla */
+.form-container-button:hover {
+  background-color: #0056b3;
 }

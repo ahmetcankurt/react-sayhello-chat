@@ -1,15 +1,16 @@
 
 // Pages > web
-import Pages from "../pages/web";
+import Login from "../pages/Login";
+import Home from "../pages/Home";
 
-const publicRoutes= [
-  { path: "/", exact: true, component: <Pages /> },
+const privateRoutes = [
+  { path: "/", component: <Home /> },
   { path: "*", component: <div>404</div> },
 ];
 
-const publicRoutesLogin = [
-// { path: "/login", component: <Login /> },
+const publicRoutes = [
+  { path: "/login",  exact: true, component: <Login /> },
 ];
 
 
-export {  publicRoutes , publicRoutesLogin };
+export { privateRoutes, publicRoutes };

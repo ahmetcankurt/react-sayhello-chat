@@ -2,7 +2,6 @@
 .message-box {
   flex-grow: 1; /* Geriye kalan alanı al */
   height: 100vh;
-  
 }
 
 .chat-img-container {
@@ -102,6 +101,10 @@
   font-size: 24px;
   color: #727272;
   cursor: pointer;
+}
+
+.chat-icon:hover {
+  color: #007bff;
 }
 
 .chat-search-input {

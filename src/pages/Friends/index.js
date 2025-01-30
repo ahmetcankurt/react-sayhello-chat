@@ -6,6 +6,7 @@ import axios from "axios";
 import "./FriendsList.css";
 import Modal from "./Modal";
 import Swal from "sweetalert2";
+import SearchInput from "../../Component/input/searchInput";
 
 const Index = ({ setSelectedUser, selectedUser }) => {
   const [friends, setFriends] = useState([]);
@@ -72,23 +73,14 @@ const Index = ({ setSelectedUser, selectedUser }) => {
     }
   };
 
-
   return (
     <div>
       <div className="Mymessages-add">
-        <span className="Mymessages-title">Friends List</span>
+        <span className="Mymessages-title" >Arkadaşlarım</span>
         <MdAdd className="Mymessages-icon" onClick={openModal} />
       </div>
-      <div className="search-container mt-4">
-        <input
-          type="text"
-          placeholder="Search..."
-          className="search-input"
-          value={searchTerm}
-          onChange={handleSearchChange}
-        />
-        <FaSearch className="search-icon" />
-      </div>
+      <SearchInput searchTerm={searchTerm} handleSearchChange={handleSearchChange}/>
+    
       <div className="friends-list-container">
         {Object.keys(groupedFriends)
           .sort()
@@ -135,6 +127,7 @@ const Index = ({ setSelectedUser, selectedUser }) => {
       </div>
       {isModalOpen && <Modal onClose={closeModal} />} {/* Modal açma/kapatma */}
     </div>
+
   );
 };
 

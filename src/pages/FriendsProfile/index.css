@@ -18,9 +18,13 @@
   border-radius: 5px;
 }
 
+.shadow-left{
+  box-shadow: 0px 0px 200px 1px #6f6d6d40;
+
+}
+
 .container-friends {
   background-color: rgb(255, 255, 255);
-  box-shadow: 0px 0px 15px 2px #6f6d6d40;
   width: 350px;
   flex-shrink: 0;
   overflow: hidden;
@@ -29,6 +33,7 @@
   transition: opacity 0.5s ease, transform 0.5s ease;
   visibility: visible;
 }
+
 
 .friend-status {
   height: 12px;

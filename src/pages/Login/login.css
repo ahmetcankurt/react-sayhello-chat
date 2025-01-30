@@ -9,7 +9,7 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  backdrop-filter: blur(25px); /* Bulanıklık efekti */
+  backdrop-filter: blur(40px); /* Bulanıklık efekti */
   border: 1px rgba(255, 255, 255, 0.362) solid;
   -webkit-backdrop-filter: blur(10px); /* Safari desteği */
 }
@@ -30,10 +30,10 @@
   left: 0;
   right: 0;
   top: 0;
-  background-image: url("../../assest/image/login-bg-1.webp");
+  /* background-image: url("../../assest/image/login-bg-1.webp");
   background-size: cover;
   background-position: center;
-  background-repeat: no-repeat;
+  background-repeat: no-repeat; */
 }
 
 
@@ -55,7 +55,6 @@
   padding: 10px;
   border-radius: 5px;
   cursor: pointer;
-  transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
   border: 1px rgba(255, 255, 255, 0.278)  solid  ;
   font-weight: 700;
 }

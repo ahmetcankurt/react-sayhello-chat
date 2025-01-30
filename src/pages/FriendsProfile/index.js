@@ -31,7 +31,7 @@ function Index({ selectedUser }) {
 
     return (
         <>
-            <div className="">
+            <div className="shadow-left">
                 <div className='container-friends' style={{ position: 'relative', display: 'inline-block' }}>
                     <img className='profile-bg-friends' src={`http://localhost:3000/${userInfo.profileImage}` || ProfileBg} alt="Example" />
                     <span className='profile-friends-name'>

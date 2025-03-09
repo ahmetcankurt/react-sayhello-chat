@@ -16,6 +16,7 @@ const CustomTooltip = ({
     position: "relative",
     display: "inline-block",
     cursor: "pointer",
+    zIndex: 1000000,
   };
 
   const tooltipContentStyle = {
@@ -26,7 +27,7 @@ const CustomTooltip = ({
     padding: "8px",
     borderRadius: borderRadius,
     position: "absolute",
-    zIndex: 1,
+    zIndex: 100,
     width: width,
     height: height,
     opacity: isVisible ? 1 : 0,
@@ -103,6 +104,7 @@ const CustomTooltip = ({
       style={tooltipStyle}
       onMouseEnter={() => setIsVisible(true)}
       onMouseLeave={() => setIsVisible(false)}
+      className='tooltip-div'
     >
       {children}
       <div style={{ ...tooltipContentStyle, ...positionStyles[position] }}>

@@ -45,11 +45,10 @@ const Notifications = ({ selectedUser })  => {
 
   // Bildirimi okundu olarak işaretleme fonksiyonu
   const markAsRead = (notificationId) => {
-    console.log("notificationId", notificationId);
     axios
       .put(`http://localhost:3000/notifications/${notificationId}/read`)
       .then((response) => {
-        console.log(response.data.message); // Başarı mesajını kontrol et
+        // console.log(response.data.message); // Başarı mesajını kontrol et
       })
       .catch((error) => {
         console.error("Okundu olarak işaretleme hatası:", error);
@@ -59,7 +58,6 @@ const Notifications = ({ selectedUser })  => {
    useEffect(() => {
       socket.on('newNotification', (message) => {
           setNotifications(prevMessages => [...prevMessages, message]); 
-          console.log(prevMessages => [...prevMessages, message])
       });
       return () => {
         socket.off('newNotification'); // Temizleme
@@ -70,7 +68,6 @@ const Notifications = ({ selectedUser })  => {
    useEffect(() => {
     socket.on('newNotificationMessage', (message) => {
         setNotifications(prevMessages => [...prevMessages, message]); 
-        console.log(prevMessages => [...prevMessages, message])
     });
     return () => {
       socket.off('newNotificationMessage'); 

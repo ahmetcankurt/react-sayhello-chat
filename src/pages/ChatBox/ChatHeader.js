@@ -1,8 +1,9 @@
 import React, { useState, useEffect, memo } from "react";
 import axios from "axios";
 import "./ChatHeaderFooter.css";
-
-function ChatHeader({ selectedUser, handleProfileClick }) {
+import UserImage from "../../Component/UserImage";
+import { TbCircleArrowLeft } from "react-icons/tb";
+function ChatHeader({ selectedUser, handleProfileClick ,clearSelectedUser }) {
   const [userInfo, setUserInfo] = useState(null);
 
   useEffect(() => {
@@ -18,27 +19,19 @@ function ChatHeader({ selectedUser, handleProfileClick }) {
         });
     }
   }, [selectedUser]);
-
   if (!selectedUser) {
-    return <div>Kullanıcı seçilmedi.</div>;
+    return
   }
 
-  if (!userInfo) {
-    return <div>Yükleniyor...</div>; // userInfo yüklenene kadar bir yükleme durumu göster
-  }
 
   return (
     <div className="chat-header">
-      <div className="chat-img-container me-2">
-        <img src={`http://localhost:3000/${userInfo?.profileImage}`} className="chat-img-me" alt="Profile" />
-        <span
-          className={`status-light ${userInfo.isActive ? "active" : "inactive"}`}
-        />
-      </div>
+      <TbCircleArrowLeft className="header-close-icon" onClick={clearSelectedUser} />
+      <UserImage src={userInfo?.profileImage} isActive={userInfo?.isActive} />
       <div className="chat-info">
-        <span className="chat-name" onClick={handleProfileClick}>{userInfo.name} {userInfo.surname}</span>
-        <span className={`chat-status ${userInfo.isActive ? "Online" : "Offline"}`}>
-          {userInfo.isActive ? "Online" : "Offline"}
+        <span className="chat-name" onClick={handleProfileClick}>{userInfo?.name} {userInfo?.surname}</span>
+        <span className={`chat-status ${userInfo?.isActive ? "Online" : "Offline"}`}>
+          {userInfo?.status}
         </span>
       </div>
     </div>

@@ -7,6 +7,7 @@ import "./FriendsList.css";
 import Modal from "./Modal";
 import Swal from "sweetalert2";
 import SearchInput from "../../Component/input/searchInput";
+import UserImage from "../../Component/UserImage";
 
 const Index = ({ setSelectedUser, selectedUser }) => {
   const [friends, setFriends] = useState([]);
@@ -79,8 +80,8 @@ const Index = ({ setSelectedUser, selectedUser }) => {
         <span className="Mymessages-title" >Arkadaşlarım</span>
         <MdAdd className="Mymessages-icon" onClick={openModal} />
       </div>
-      <SearchInput searchTerm={searchTerm} handleSearchChange={handleSearchChange}/>
-    
+      <SearchInput searchTerm={searchTerm} handleSearchChange={handleSearchChange} />
+
       <div className="friends-list-container">
         {Object.keys(groupedFriends)
           .sort()
@@ -94,20 +95,8 @@ const Index = ({ setSelectedUser, selectedUser }) => {
               {groupedFriends[letter].map((friend) => (
                 <div key={friend.userId} className="friends-list-blog" onClick={() => setSelectedUser(friend.userId)}>
                   <div className="d-flex">
-                    <div className="friends-list-img-container me-2">
-                      <img
-                        src={`http://localhost:3000/${friend?.profileImage}`}
-                        className="friends-list-img-me"
-                        alt="Profile"
-                      />
-                      {/* <span
-                        className={`status-light ${friend.isActive ? "isActive" : "inactive"
-                          }`}
-                      /> */}
-                    </div>
-                    <div>
-                      <span>{friend?.name} {friend?.surname}</span>
-                    </div>
+                    <UserImage src={friend?.profileImage} isActive={friend.isActive} />
+                    <span>{friend?.name} {friend?.surname}</span>
                   </div>
                   <div className="dropdown-wrapper">
                     <BsThreeDotsVertical

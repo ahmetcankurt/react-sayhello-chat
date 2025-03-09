@@ -2,6 +2,7 @@
 .message-box {
   flex-grow: 1; /* Geriye kalan alanı al */
   height: 100vh;
+  z-index: 10;
 }
 
 .chat-img-container {
@@ -15,6 +16,12 @@
   border-radius: 50%;
   object-fit: cover;
   object-position: top; /* Resmin üst kısmını göstermek için */
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.chat-img-me.loaded {
+  opacity: 1;
 }
 
 .status-light {
@@ -66,16 +73,21 @@
   display: flex;
   flex-direction: column; /* Header, ChatBox ve Footer için dikey sıralama */
   height: 100%; /* Tüm ekranı kaplasın */
+  position: relative;
 }
 
 /* Header'ın üstte sabitlenmesi */
 .chat-header {
-  background-color: #f1f1f1;
-  position: sticky;
-  top: 0;
+  position: absolute;
   display: flex;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Hafif gölge */
   padding: 16px 24px;
+  z-index: 1000;
+  width: 100%;
+  align-items: center;
+  backdrop-filter: blur(5px); /* Bulanıklık efekti */
+  -webkit-backdrop-filter: blur(2px); /* Safari desteği */
+  border-bottom: 1px solid rgb(234, 234, 241);
+  box-shadow: 0 0 1px rgb(203, 203, 204);
 }
 
 /* Footer'ın altta sabitlenmesi */
@@ -86,15 +98,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1); /* Hafif gölge */
   padding: 24px;
-}
-
-/* ChatBox'ın geri kalan alanı kaplamasını sağlama */
-.chat-box {
-  flex-grow: 1; /* Kalan alanı al */
-  overflow-y: auto; /* Uzun sohbetler için kaydırma */
-  padding: 10px;
+  border-top: 1px solid rgb(234, 234, 241);
+  box-shadow: 0 0 1px rgb(203, 203, 204);
 }
 
 .chat-icon {
@@ -122,4 +128,28 @@
 .chat-search-input:focus {
   border-color: #007bff;
   box-shadow: 0 0 3px rgba(0, 123, 255, 0.5);
+}
+
+.header-close-icon {
+  font-size: 40px;
+  justify-content: center;
+  display: flex;
+  margin-right: 10px;
+  cursor: pointer;
+  border-radius: 50%;
+  color: #121119;
+}
+.header-close-icon:hover{
+  color: #1da0c3;
+}
+
+
+@media screen and (max-width: 768px) {
+  .message-box {
+    height: auto;
+  }
+
+  .chat-header {
+    position: fixed;
+  }
 }

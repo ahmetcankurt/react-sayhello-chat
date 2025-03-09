@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react'
-import ImageMe from "../../assest/image/imageAdmin.jpeg";
-import ProfileBg from "../../assest/image/image_header.jpg";
+import React, { memo, useEffect, useState } from 'react'
+import ProfileBg from "../../assets/image/image_header.jpg";
+import NotUserImage from "../../Component/NotUserImage"
 import axios from 'axios';
 import "./index.css"
-function Index({ selectedUser }) {
+import { TbCircleArrowLeft } from 'react-icons/tb';
+function Index({ selectedUser ,handleProfileClick }) {
     const [userInfo, setUserInfo] = useState(null);
 
     useEffect(() => {
@@ -21,34 +22,39 @@ function Index({ selectedUser }) {
     }, [selectedUser]);
 
     if (!selectedUser) {
-        return <div>Kullanıcı seçilmedi.</div>;
+        return
     }
 
     if (!userInfo) {
-        return <div>Yükleniyor...</div>; // userInfo yüklenene kadar bir yükleme durumu göster
+        return
     }
 
 
     return (
-        <>
-            <div className="shadow-left">
-                <div className='container-friends' style={{ position: 'relative', display: 'inline-block' }}>
-                    <img className='profile-bg-friends' src={`http://localhost:3000/${userInfo.profileImage}` || ProfileBg} alt="Example" />
-                    <span className='profile-friends-name'>
-                        <span >{userInfo.name} {userInfo.surname}</span>
-                        <span className='friend-status-box '>
-                            <span
-                                className={`friend-status ${userInfo.isActive ? "isActive" : "inactive"}`}
-                            />
-                            <span className={`friends-status ${userInfo.isActive ? "Online" : "Offline"}`}>
-                                {userInfo.isActive ? "Online" : "Offline"}
-                            </span>
+        <div className="">
+              <TbCircleArrowLeft className="header-close-icon mobile-none" onClick={handleProfileClick} />
+            <div className='container-friends' style={{ position: 'relative', display: 'inline-block' }}>
+                {
+                    userInfo?.profileImage
+                        ? <img className='profile-bg-friends' src={`http://localhost:3000/${userInfo?.profileImage}` || ProfileBg} alt="Example" />
+                        : <NotUserImage height={"auto"} width={"auto"} />
+
+                }
+                <span className='profile-friends-name'>
+                    <span >{userInfo.name} {userInfo.surname}</span>
+                    <span className='friend-status-box '>
+                        <span
+                            className={`friend-status ${userInfo.isActive ? "isActive" : "inactive"}`}
+                        />
+                        <span className={`friends-status ${userInfo.isActive ? "Online" : "Offline"}`}>
+                            {userInfo.isActive ? "Online" : "Offline"}
                         </span>
                     </span>
-                </div>
+                </span>
             </div>
-        </>
+        
+        </div>
     )
 }
 
-export default Index
+export default memo(Index)

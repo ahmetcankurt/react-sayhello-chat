@@ -3,32 +3,6 @@
   margin-bottom: 50px;
 }
 
-.profile-main {
-  padding: 10px;
-  max-height: 450px; /* Maksimum yükseklik */
-  overflow-y: auto; /* Dikey kaydırma çubuğu */
-}
-
-/* Scroll bar stilleri */
-.profile-main::-webkit-scrollbar {
-  width: 6px;
-}
-
-.profile-main::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 10px;
-}
-
-.profile-main::-webkit-scrollbar-thumb {
-  background: #888888a7;
-  border-radius: 10px;
-}
-
-.profile-main::-webkit-scrollbar-thumb:hover {
-  background: #555;
-}
-
-
 .profile-bg {
   width: 100%;
   height: 180px;
@@ -73,31 +47,28 @@
   font-weight: 400;
 }
 
-.profile-contact {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  margin-top: 20px;
+
+.icon-container{
+  overflow: auto;
 }
 
-.contact-item {
+.icon-wrapper {
   display: flex;
+  margin-bottom: 5px;
+  padding: 5px 10px ;
+  gap: 8px;
   align-items: center;
-  gap: 10px;
-  font-size: 16px;
-  color: #333;
+
 }
 
-.icon {
-  font-size: 20px;
-  color: #55555591;
+.icon-wrapper .icon{
+  font-size: 22px;
+  color: #373737d6;
+  cursor: pointer;
 }
 
-.contact-item a {
-  text-decoration: none;
-  color: #0073e6; /* Mavi link rengi */
-}
 
-.contact-item a:hover {
+.icon:hover {
   text-decoration: underline;
+  color: #222121f5;
 }

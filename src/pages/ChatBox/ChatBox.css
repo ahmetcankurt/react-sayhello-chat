@@ -1,35 +1,17 @@
 .chat-box {
   display: flex;
-  flex-direction: column-reverse; /* Mesajları en son geleni üstte gösterir */
+  flex-direction: column; /* Mesajları en son geleni üstte gösterir */
   align-items: flex-start;
   padding: 10px;
-  height: 100%;
-  overflow-y: auto;
-  background-image: url("../../assest/image/message-bg.png");
-  background-color: #55555518;
-  /* justify-content: flex-start; Mesajları baştan başlayacak şekilde hizalar */
-}
-.day-header {
- 
+  background-image: url("../../assets/image/chat-background/pattern-01.png");
+  background-color: hsla(0, 0%, 33%, 0.094);
+  overflow: auto;
 }
 
 
-.chat-box::-webkit-scrollbar {
-  width: 6px;
-}
-
-.chat-box::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 10px;
-}
-
-.chat-box::-webkit-scrollbar-thumb {
-  background: #888888a7;
-  border-radius: 10px;
-}
-
-.chat-box::-webkit-scrollbar-thumb:hover {
-  background: #555;
+.message-isDeleted {
+  /* background-color: #ff000039!important; */
+  color: #33333369 !important;
 }
 
 .message {
@@ -38,13 +20,18 @@
   align-items: baseline;
   max-width: 60%;
   position: relative;
-  margin-bottom: 10px; /* Mesajlar arasındaki boşluğu ayarlayabilirsiniz */
+  margin-bottom: 10px; /* Mesajlar arasındaki boşluk */
+}
+
+/* İlk mesaj için margin-top */
+.message:first-child {
+  margin-top: 100px;
 }
 
 .message-content {
-  margin: 5px 0;
-  padding: 6px 10px;
-  border-radius: 5px;
+  margin: 3px 0;
+  padding: 8px 10px;
+  border-radius: 3px;
   font-size: 16px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   display: flex;
@@ -91,7 +78,7 @@
 }
 
 .message-content.receiverId {
-  background-color: #b5d8ff;
+  background-color: white;
 }
 
 /* Dropdown Style */
@@ -113,3 +100,100 @@
 .dropdown-chat-icon:hover {
   color: #000000;
 }
+
+.message-trash {
+  color: white !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  background-color: #e34d1b82 !important;
+  padding: 4px !important;
+  border-radius: 5px;
+  height: 28px;
+  width: 28px;
+  display: flex;
+}
+
+
+
+.new-message-alert-span {
+  background-color: #ffcc00;
+  color: #333;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  transition: opacity 0.3s ease-in-out;
+  position: relative;
+}
+
+.new-message-alert-span::after {
+  content: '';
+  position: absolute;
+  bottom: -9px; /* Okun mesajın altında biraz boşluk bırakacak */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 10px solid #ffcc00; /* Ok rengi, mesajın rengiyle aynı olacak */
+}
+
+.new-message-alert {
+  position: fixed;
+  display: flex;
+  z-index: 1000;
+  left: 50%;
+  bottom: 110px;
+  transform: translate(-50%, -50%);
+  flex-direction: column;
+  align-items: center;
+  animation: upDown 2s infinite ease-in-out, ring 0.5s infinite ease-in-out;
+}
+
+@keyframes upDown {
+  0% {
+    transform: translate(-50%, -50%) translateY(0);
+  }
+  50% {
+    transform: translate(-50%, -50%) translateY(-10px);
+  }
+  100% {
+    transform: translate(-50%, -50%) translateY(0);
+  }
+}
+
+@keyframes ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  15% {
+    transform: rotate(3deg);
+  }
+  30% {
+    transform: rotate(-3deg);
+  }
+  45% {
+    transform: rotate(3deg);
+  }
+  60% {
+    transform: rotate(-3deg);
+  }
+  75% {
+    transform: rotate(2deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+
+
+@media screen and (max-width: 768px) {
+  .message{
+    max-width: 90%;
+  }
+  
+}
+
+

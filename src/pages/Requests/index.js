@@ -1,7 +1,7 @@
 
 import { useState, useEffect, memo } from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
-import ImageMe from "../../assest/image/imageAdmin.jpeg";
+import ImageMe from "../../assets/image/imageAdmin.jpeg";
 import axios from "axios";
 import { FaCheck, FaTrash } from "react-icons/fa6";
 import "./index.css";
@@ -86,7 +86,6 @@ function Index() {
   const renderRequestList = (requests, isIncoming) => {
     return requests.length > 0 ? (
       requests.map((request) => (
-        console.log(requests),
         <div key={request[isIncoming ? "sender" : "receiver"].userId} className="friends-list-blog">
           <div className="d-flex">
             <div className="friends-list-img-container me-2">
@@ -140,7 +139,7 @@ function Index() {
   };
 
   return (
-    <div>
+    <div >
       <div className="Mymessages-add">
         <span className="Mymessages-title">Arkadaşlık İstekleri</span>
       </div>

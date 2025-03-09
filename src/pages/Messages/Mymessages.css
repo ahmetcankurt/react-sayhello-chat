@@ -13,7 +13,8 @@
   display: flex; /* Flexbox kullanarak öğeleri yatayda hizalar */
   justify-content: space-between; /* Yazıyı sola, ikonu sağa yerleştirir */
   align-items: center; /* Yükseklik açısından ortalar */
-  margin: 25px 10px 10px 15px;
+  padding:  10px ;
+  height: 82px;
 }
 
 .Mymessages-icon {
@@ -55,12 +56,16 @@
 
 .messages-blog {
   display: flex;
-  background-color: #9a98980a;
-  border-radius: 3px;
-  margin: 10px;
-  padding: 5px;
+  /* background-color: #9a98980a; */
+  padding: 8px 10px ;
   cursor: pointer;
 }
+
+
+.messages-blog.active {
+  background-color: rgb(181, 216, 255); /* Aktif öğe mavi renkte olacak */
+}
+
 
 .messages-blog:hover {
   background-color: rgb(181, 216, 255);
@@ -68,35 +73,6 @@
 
 .messages-detail {
   font-size: 14px;
-  white-space: nowrap; /* Metnin tek satırda kalmasını sağlar */
-  overflow: hidden; /* Taşan metni gizler */
   text-overflow: ellipsis; /* Taşan metni "..." ile gösterir */
 }
 
-/* Mesajlar kısmı kaydırılabilir olacak şekilde */
-.messages-list {
-  flex: 1; /* Ekrandaki kalan alanı alır */
-  overflow-y: auto; /* Yalnızca dikey kaydırma çubuğu ekler */
-  max-height: calc(
-    100vh - 150px
-  ); /* Mesajlar kısmının yüksekliğini ayarlıyoruz (başlık ve arama barı hariç) */
-}
-
-/* Scroll bar stilleri */
-.messages-list::-webkit-scrollbar {
-  width: 6px;
-}
-
-.messages-list::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 10px;
-}
-
-.messages-list::-webkit-scrollbar-thumb {
-  background: #888888a7;
-  border-radius: 10px;
-}
-
-.messages-list::-webkit-scrollbar-thumb:hover {
-  background: #555;
-}

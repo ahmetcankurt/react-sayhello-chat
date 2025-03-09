@@ -1,8 +1,3 @@
-.profile-settings-container {
-  position: relative;
-  margin-bottom: 50px;
-}
-
 .profile-settings-bg {
   width: 100%;
   height: 180px;
@@ -10,7 +5,7 @@
   object-fit: cover;
 }
 
-.profile-container{
+.profile-container {
   position: relative;
 }
 
@@ -54,7 +49,7 @@
 .camera-icon-profil {
   position: absolute;
   left: 50%;
-  transform: translate(+45% , +50%);
+  transform: translate(+45%, +50%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -86,8 +81,8 @@
   gap: 10px;
   border-radius: 8px;
   padding: 10px;
-  max-height: 450px;
   overflow-y: auto;
+  height: calc(100vh - 230px); /* Ekranın geri kalanını kaplasın */
 }
 
 .form-container-button {
@@ -114,4 +109,11 @@
 
 .form-container-button:hover {
   background-color: #0056b3;
+}
+
+
+@media screen and (max-width: 768px) {
+  .form-container {
+    height: calc(100vh - 300px); /* Ekranın geri kalanını kaplasın */
+  }
 }

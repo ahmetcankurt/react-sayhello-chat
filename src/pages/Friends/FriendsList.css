@@ -6,12 +6,12 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 5px;
-  background-color: #9a98980a; 
   border-radius: 3px;
   margin-bottom: 10px;
   position: relative; /* Dropdown için gerekli */
   cursor: pointer;
+  padding: 10px;
+
 }
 
 .friends-list-blog:hover{
@@ -76,7 +76,7 @@
 .letter-header {
   display: flex;
   align-items: center;
-  margin: 10px 0;
+  padding: 0 5px;
 }
 
 .letter-header h5 {

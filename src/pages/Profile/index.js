@@ -1,106 +1,63 @@
-import { useState, useEffect, memo } from "react";
-import ProfileBg from "../../assest/image/image_header.jpg";
-import ImageMe from "../../assest/image/imageAdmin.jpeg";
+import { memo } from "react";
 import {
   FaEnvelope,
-  FaMapMarkerAlt,
-  FaBirthdayCake,
-  FaGithub,
-  FaLinkedin,
+  FaInstagramSquare,
   FaPhone,
+  FaLinkedin,
+  FaGithub,
+  FaTwitter,
 } from "react-icons/fa";
 import "./Profile.css";
-import axios from "axios";
+
+import ScrollContainer from "../../Component/ScrollContainer";
+import { useSelector } from "react-redux";
+import { API_URL } from "../../config";
+
+// Skeleton komponentinizi import edin
+import Skeleton from "../../Component/Skeleton"; // yolunuzu güncelleyin
+
+const icons = [
+  { component: FaEnvelope, key: "email", valueKey: "email", label: "E-mail" },
+  { component: FaInstagramSquare, key: "instagram", valueKey: "instagram", label: "Instagram" },
+  { component: FaPhone, key: "phone", valueKey: "phone", label: "Phone" },
+  { component: FaLinkedin, key: "linkedin", valueKey: "linkedin", label: "Linkedin" },
+  { component: FaGithub, key: "github", valueKey: "github", label: "Github" },
+  { component: FaTwitter, key: "twitter", valueKey: "twitter", label: "Twitter" },
+];
 
 function Index() {
-  const userId = localStorage.getItem("userId");
-  const token = localStorage.getItem("token"); // Token'ı localStorage'dan alıyoruz
-  const [userInfo, setUserInfo] = useState(null);
-
-  useEffect(() => {
-    if (userId && token) {
-      // Backend'e token ile istek gönderiyoruz
-      axios
-        .get("http://localhost:3000/users/my", {
-          headers: {
-            Authorization: `Bearer ${token}`, // Token'ı Authorization başlığında gönderiyoruz
-          },
-        })
-        .then((response) => {
-          setUserInfo(response.data); // Gelen kullanıcı bilgilerini state'e kaydet
-        })
-        .catch((error) => {
-          console.error("Kullanıcı bilgileri alınırken hata:", error);
-        });
-    }
-  }, [userId, token]);
+  const userInfo = useSelector((state) => state.userInformation.user);
 
   if (!userInfo) {
-    return
+    // Veri yüklenmediğinde Skeleton placeholder'lar gösteriliyor
+    return (
+    <Skeleton width="100%" height="100vh" borderRadius="0" />
+    )
   }
 
-
+  // Veriler yüklendiğinde normal içerik render ediliyor
   return (
     <>
-      <div className="profile-container">
-        <img
-          src={`http://localhost:3000/${userInfo.backgroundImage}` || ProfileBg}
-          className="profile-bg"
-          alt="Profile Background"
-        />
-        <img src={`http://localhost:3000/${userInfo.profileImage}` || ImageMe} className="profile-page" alt="Profile" />
-      </div>
-      <div className="profile-main">
+      <div >
+        <div className="profile-container">
+          <img src={`${API_URL}/${userInfo.backgroundImage}`} className="profile-bg" alt="Profile Background" />
+          <img src={`${API_URL}/${userInfo.profileImage}`} className="profile-page" alt="Profile" />
+        </div>
         <p className="profile-name">
-          {userInfo.name || "Name"} {userInfo.surname || "Surname"}
+          {userInfo.name} {userInfo.surname}
         </p>
-        <span className="profile-job">{userInfo.jobs || "Jobs"}</span>
-        <hr className="p-0  m-0" />
-        <div>
-          <p className="profile-about py-4">
-            {userInfo.aboutme || "Hakkında Yazısı"}
-          </p>
-        </div>
-        <hr className="p-0  m-0" />
-        <div className="profile-contact">
-          <div className="contact-item">
-            <FaEnvelope className="icon" />
-            <span>{userInfo.email || "ahmetcankurt@gmail.com"}</span>
-          </div>
-          <div className="contact-item">
-            <FaMapMarkerAlt className="icon" />
-            <span>{userInfo.location || "İstanbul, Türkiye"}</span>
-          </div>
-          <div className="contact-item">
-            <FaPhone className="icon" />
-            <span>{userInfo.phone || "+90 555 123 4567"}</span>
-          </div>
-          <div className="contact-item">
-            <FaLinkedin className="icon" />
-            <a
-              href={userInfo.linkedin || "https://linkedin.com/in/ahmetcankurt"}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              linkedin.com/in/ahmetcankurt
-            </a>
-          </div>
-          <div className="contact-item">
-            <FaGithub className="icon" />
-            <a
-              href={userInfo.github || "https://github.com/ahmetcankurt"}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              github.com/ahmetcankurt
-            </a>
-          </div>
-          <div className="contact-item">
-            <FaBirthdayCake className="icon" />
-            <span>{userInfo.birthdate || "1 Ocak 1990"}</span>
-          </div>
-        </div>
+        <span className="profile-job">{userInfo.jobs}</span>
       </div>
+      <hr className="p-0 m-0 box-shadow-global" />
+      <ScrollContainer className="container-scroll">
+        <p className="profile-about py-3 px-2">{userInfo.aboutme}</p>
+        {icons.map(({ component: Icon, key, label }) => (
+          <div key={key} className="icon-wrapper">
+            <Icon className="icon" />
+            {label}
+          </div>
+        ))}
+      </ScrollContainer>
     </>
   );
 }

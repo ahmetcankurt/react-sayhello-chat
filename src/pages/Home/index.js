@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { BsChatText } from "react-icons/bs";
+import { memo, useEffect, useState } from "react";
+import SplashScreen from "../../Component/SplashScreen";
 import FriendsProfile from "../FriendsProfile";
 import Chat from "../ChatBox/Chat";
 import Requests from "../Requests";
@@ -8,21 +8,36 @@ import Mymessages from "../Messages";
 import FriendsList from "../Friends";
 import ProfileSettings from "../ProfileSettings";
 import NotChat from "./NotChat";
-
 import Notifications from "../../Component/Notification";
 import Sidebar from "../../Component/Sidebar";
-
+import { useDispatch } from "react-redux";
+import { getUsers } from "../../redux/slices/userInformation";
 import "./Home.css";
+import useMobileMode from "../../hooks/useMobileMode";
 
 const App = () => {
+  const isMobile = useMobileMode();
   const [state, setState] = useState({
     activePage: "profile",
     isContentVisible: true,
     isProfileVisible: false,
     selectedUser: null,
   });
-
   const { activePage, isContentVisible, isProfileVisible, selectedUser } = state;
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getUsers());
+  }, [dispatch]);
+
+  const [isPageLoaded, setIsPageLoaded] = useState(false);
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsPageLoaded(true);
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, []);
 
   const toggleVisibility = (key) => {
     setState((prev) => ({ ...prev, [key]: !prev[key] }));
@@ -32,9 +47,18 @@ const App = () => {
     setState((prev) => ({
       ...prev,
       activePage: page,
-      isContentVisible: true, // Reset visibility when page changes
+      isContentVisible: true,
     }));
   };
+
+  useEffect(() => {
+    if (isMobile) {
+      setState((prev) => ({
+        ...prev,
+        isContentVisible: !selectedUser,
+      }));
+    }
+  }, [selectedUser, isMobile]);
 
   const renderContent = {
     profile: <Profile />,
@@ -59,29 +83,42 @@ const App = () => {
   }[activePage] || null;
 
   return (
-    <div className="d-flex">
-      <Notifications selectedUser={selectedUser} />
-      <Sidebar
-        onLinkClick={handlePageChange}
-        activePage={activePage}
-        toggleContentVisibility={() => toggleVisibility("isContentVisible")}
-      />
-      <div className={`content ${isContentVisible ? "visible" : "hidden"}`}>
-        {renderContent}
-      </div>
-      <div className="message-box">
-        {selectedUser ? (
-          <Chat
-            selectedUser={selectedUser}
-            handleProfileClick={() => toggleVisibility("isProfileVisible")}
-          />
-        ) : (
-          <NotChat />
-        )}
-      </div>
-      {isProfileVisible && <FriendsProfile selectedUser={selectedUser} />}
-    </div>
+    <>
+      {/* <SplashScreen isPageLoaded={isPageLoaded} /> */}
+      {isPageLoaded && (
+        <div className="layout-dizayn">
+          <Notifications selectedUser={selectedUser} />
+          {
+            (!isMobile || selectedUser === null) &&
+            <Sidebar
+              onLinkClick={handlePageChange}
+              activePage={activePage}
+              toggleContentVisibility={() => toggleVisibility("isContentVisible")}
+            />
+          }
+          <div className={`content ${isContentVisible ? "visible" : "hidden"}`}>
+            {renderContent}
+          </div>
+          <div className="message-box">
+            {selectedUser ? (
+              <Chat
+                selectedUser={selectedUser}
+                handleProfileClick={() => toggleVisibility("isProfileVisible")}
+                setSelectedUser={(user) => setState((prev) => ({ ...prev, selectedUser: user }))}
+              />
+            ) : (
+              <NotChat />
+            )}
+          </div>
+          {isProfileVisible && (
+            <div className="friends-profile-overlay">
+              <FriendsProfile selectedUser={selectedUser} handleProfileClick={() => toggleVisibility("isProfileVisible")}/>
+            </div>
+          )}
+        </div>
+      )}
+    </>
   );
 };
 
-export default App;
+export default memo(App);

@@ -1,0 +1,48 @@
+.container-box {
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+  }
+  
+  .sidebar {
+    background-color: red;
+    width: 75px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .content, .chat-box, .friend-details {
+    flex-grow: 1; /* İçeriğin kalan alanı kaplamasını sağla */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: white;
+  }
+  
+  .content { background-color: green; }
+  .chat-box { background-color: purple; }
+  .friend-details { background-color: orange; }
+  
+  /* Mobilde sadece aktif olanı göster */
+  @media (max-width: 768px) {
+    .container-box {
+      flex-direction: column-reverse;
+    }
+  
+    .sidebar {
+      width: 100%;
+      height: 50px;
+      flex-direction: row;
+      justify-content: space-around;
+      /* margin-top: 10px; */
+    }
+  
+    .content, .chat-box, .friend-details {
+      width: 100%;
+      /* height: calc(100vh - 50px); Sidebar'ın yüksekliği kadar azalt */
+    }
+  }
+  

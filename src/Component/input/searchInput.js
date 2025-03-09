@@ -4,7 +4,7 @@ import "./style.css"
 
 function SearchInput({ searchTerm, handleSearchChange }) {
     return (
-        <div className="search-container mt-4">
+        <div className="search-container ">
             <input
                 type="text"
                 placeholder="Search..."

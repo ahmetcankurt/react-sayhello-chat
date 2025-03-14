@@ -1,29 +1,25 @@
-import { memo, useState } from "react";
-import NotUserImage from "./NotUserImage";
+import { memo } from "react";
+import "./UserImage.css";
+import { API_URL } from "../config";
 
 const UserImage = ({ src, isActive }) => {
-  const [imageLoaded, setImageLoaded] = useState(false);
-
-  const handleImageLoad = () => {
-    setImageLoaded(true);
-  };
-
   return (
     <div className="chat-img-container me-2">
-      {src ? (
-        <>
-          {!imageLoaded && <NotUserImage />}
+      <div className="image-wrapper">
+        {src ? (
           <img
-            src={`http://localhost:3000/${src}`}
-            className={`chat-img-me ${imageLoaded ? "loaded" : ""}`}
+            src={`${API_URL}/${src}`}
+            className={`chat-img-me ${src ? "loaded" : ""}`}
             alt="Profile"
-            onLoad={handleImageLoad}
+            onLoad={(e) => {
+              e.target.classList.add("loaded");
+            }}
           />
-        </>
-      ) : (
-        <NotUserImage />
-      )}
-      <span className={`status-light ${isActive ? "active" : "inactive"}`} />
+        ) : (
+          <div className="image-placeholder" />
+        )}
+        <span className={`status-light ${isActive ? "active" : "inactive"}`} />
+      </div>
     </div>
   );
 };

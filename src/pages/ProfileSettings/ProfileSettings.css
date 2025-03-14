@@ -82,7 +82,7 @@
   border-radius: 8px;
   padding: 10px;
   overflow-y: auto;
-  height: calc(100vh - 230px); /* Ekranın geri kalanını kaplasın */
+  height: calc(100vh - 274px); /* Ekranın geri kalanını kaplasın */
 }
 
 .form-container-button {
@@ -90,9 +90,7 @@
   background-color: #007bff;
   color: white;
   border: none;
-  border-radius: 5px;
   cursor: pointer;
-  margin: 10px 0px 15px 0;
 }
 
 .form-control-settings {
@@ -107,9 +105,25 @@
   height: 80px; /* Yüksekliği küçült */
 }
 
+/* Normal buton hover efekti */
 .form-container-button:hover {
   background-color: #0056b3;
+  border-color: #0056b3;
 }
+
+/* Disabled (pasif) buton stili */
+.form-container-button:disabled {
+  background-color: #8c8c8c;  /* Daha koyu gri */
+  border-color: #707070;     /* Daha koyu gri sınır */
+  cursor: not-allowed;
+}
+
+/* Disabled buton hover efekti (kapalı renk) */
+.form-container-button:disabled:hover {
+  background-color: #8c8c8c;  /* Koyu gri kalacak */
+  border-color: #707070;     /* Koyu gri sınır kalacak */
+}
+
 
 
 @media screen and (max-width: 768px) {

@@ -26,7 +26,6 @@ function NotChat() {
                     ))}
                 </p>
                 <img src={ChatImage} className='not-chat-icon' alt='ChatImage-png' />
-
             </motion.div>
         </div>
     )

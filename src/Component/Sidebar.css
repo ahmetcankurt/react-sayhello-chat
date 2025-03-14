@@ -60,6 +60,18 @@
   z-index: 1;
 }
 
+.sidebar-bottom-div {
+  position: relative
+}
+
+.popup {
+  position: absolute;
+  background-color: red;
+  width: 50px;
+  height: 50px;
+}
+
+
 
 
 @media screen and (max-width: 768px) {

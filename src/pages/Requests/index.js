@@ -4,8 +4,9 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 import ImageMe from "../../assets/image/imageAdmin.jpeg";
 import axios from "axios";
 import { FaCheck, FaTrash } from "react-icons/fa6";
-import "./index.css";
 import Swal from "sweetalert2";
+import { API_URL } from "../../config";
+import "./index.css";
 
 function Index() {
   const userId = localStorage.getItem("userId");
@@ -18,7 +19,7 @@ function Index() {
 
   // Request'leri almak için genel bir fonksiyon
   const fetchRequests = async (type) => {
-    const url = `http://localhost:3000/friend-requests/${userId}/${type}`;
+    const url = `${API_URL}/friend-requests/${userId}/${type}`;
     try {
       const response = await axios.get(url);
       type === "incoming-requests"
@@ -41,7 +42,7 @@ function Index() {
   const handleRequest = async (senderId, action) => {
     try {
       await axios.put(
-        `http://localhost:3000/friend-requests/${userId}/friend-request/${senderId}`,
+        `${API_URL}/friend-requests/${userId}/friend-request/${senderId}`,
         { action }
       );
       setIncomingRequests((prevRequests) =>
@@ -56,7 +57,7 @@ function Index() {
   const handleRemoveFriendRequest = async (receiverId) => {
     try {
       const response = await axios.delete(
-        `http://localhost:3000/friend-requests/${userId}/friend-request/${receiverId}`,
+        `${API_URL}/friend-requests/${userId}/friend-request/${receiverId}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
@@ -90,7 +91,7 @@ function Index() {
           <div className="d-flex">
             <div className="friends-list-img-container me-2">
               <img
-                src={`http://localhost:3000/${request[isIncoming ? "sender" : "receiver"].profileImage}` || ImageMe}
+                src={`${API_URL}/${request[isIncoming ? "sender" : "receiver"].profileImage}` || ImageMe}
                 className="friends-list-img-me"
                 alt="Profile"
               />

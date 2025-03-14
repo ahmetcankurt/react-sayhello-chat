@@ -1,34 +1,120 @@
-@keyframes moveParticle {
+.login-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 400px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.16);
+  box-sizing: border-box;
+}
+
+.login-form {
+  padding: 35px;
+  background-color: #fff;
+  border-radius: 10px;
+  position: relative;
+}
+
+.login-input {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px 15px;
+  margin-bottom: 15px;
+  width: 100%;
+}
+
+.login-button {
+  background-color: #4a77f7;
+  color: #fff;
+  border: 1px solid transparent; /* Başlangıçta border var ama görünmez */
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease; /* Geçiş efekti */
+}
+
+.login-button:hover {
+  color: #4a77f7;
+  background-color: #fff;
+  border: 1px solid #4a77f7; /* Hover olduğunda border görünür */
+}
+
+
+.login-title {
+  text-align: center;
+  font-size: 20px;
+  font-family:  sans-serif  ;
+  text-align: center;
+   font-weight: 600;
+}
+
+.login-icon-container {
+  position: absolute;
+  padding: 10px;
+  height: 85px;
+  width: 85px;
+  top: -50px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #4a77f7;
+  z-index: 1;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+}
+
+.login-icon {
+  position: absolute;
+  height: 50px;
+  height: 50px;
+  z-index: -1;
+}
+
+
+@keyframes ripple {
   0% {
-    transform: translate(var(--start-left), var(--start-top)) rotate(0deg);
+    transform: scale(1);
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.6;
   }
   100% {
-    transform: translate(var(--end-left), var(--end-top)) rotate(360deg);
+    transform: scale(1.7);
+    opacity: 0;
   }
 }
 
-.particle {
+.login-icon-container::before,
+.login-icon-container::after {
+  content: "";
   position: absolute;
-  color: black;
-  font-size: 12px;
-  font-family: monospace;
-  pointer-events: none;
-  background-color: #f6edac;
-  border-radius: 20px;
-  padding: 5px 10px;
-  animation: moveParticle infinite;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(74, 119, 247, 0.5);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0; /* İlk başta görünmesin */
+  animation: ripple 2s infinite ease-out;
+  animation-fill-mode: backwards; /* İlk kareyi düzgün başlat */
 }
 
-.particle-container {
-  position: relative;
-  width: 100%;
-  height: 100vh;
-  overflow: hidden;
-  background-color: #e2e2e2;
-  background-image: url("../../assets/image/login-bg-1.webp");
-  background-size: cover;
-  background-position: top;
-  background-repeat: no-repeat;
-  filter: sepia(20%) contrast(90%) brightness(95%) grayscale(5%);
-  background-blend-mode: multiply;
+.login-icon-container::after {
+  animation-delay: 1.2s;
+}
+
+.login-register {
+  text-align: end;
+  margin: 10px 0;
+}
+
+.login-route {
+  margin-left: 5px;
+  color: #4a77f7;
+  text-decoration: none;
 }

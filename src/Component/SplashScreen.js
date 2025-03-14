@@ -19,7 +19,7 @@ const SplashScreen = ({ isPageLoaded }) => {
             right: 0,
             bottom: 0,
             background: "#fff",
-            zIndex: 2000,
+            zIndex: 100000,
             display: "flex",
             justifyContent: "center",
             alignItems: "center",

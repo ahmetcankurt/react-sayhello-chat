@@ -1,4 +1,4 @@
-/* 
+
 ul {
   list-style-type: none;
   padding: 0;
@@ -17,7 +17,7 @@ p{
 body {
   overflow: hidden;
   box-sizing: border-box;
-} */
+}
 
 .box-shadow-global{
   border: 1px solid rgba(0, 0, 0, 0.258);

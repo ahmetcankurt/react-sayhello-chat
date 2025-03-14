@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import axios from 'axios';
+import { API_URL } from '../config';
 
 function AuthProtected({ children }) {
   const [isTokenValid, setIsTokenValid] = useState(null);
@@ -13,7 +14,7 @@ function AuthProtected({ children }) {
         return;
       }
       try {
-        const response = await axios.post(`http://localhost:3000/validate-token`, {}, {
+        const response = await axios.post(`${API_URL}/validate-token`, {}, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         setIsTokenValid(response.data.isValid);

@@ -3,7 +3,8 @@ import { BsThreeDots } from "react-icons/bs";
 import { BiSolidSend } from "react-icons/bi";
 import axios from "axios";
 import { io } from "socket.io-client";  // Socket.IO istemcisi
-const socket = io("http://localhost:3000");
+import { API_URL } from "../../config";
+const socket = io(API_URL);
 
 function ChatFooter({ selectedUser }) {
   const [message, setMessage] = useState('');
@@ -13,7 +14,7 @@ function ChatFooter({ selectedUser }) {
     if (!message.trim()) return;
 
     try {
-      const response = await axios.post('http://localhost:3000/messages', {
+      const response = await axios.post(`${API_URL}/messages`, {
         senderId: userId,
         receiverId: selectedUser,
         content: message,

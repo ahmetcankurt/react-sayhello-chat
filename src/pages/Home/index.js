@@ -1,3 +1,4 @@
+import { motion, AnimatePresence } from "framer-motion";
 import { memo, useEffect, useState } from "react";
 import SplashScreen from "../../Component/SplashScreen";
 import FriendsProfile from "../FriendsProfile";
@@ -12,8 +13,8 @@ import Notifications from "../../Component/Notification";
 import Sidebar from "../../Component/Sidebar";
 import { useDispatch } from "react-redux";
 import { getUsers } from "../../redux/slices/userInformation";
-import "./Home.css";
 import useMobileMode from "../../hooks/useMobileMode";
+import "./Home.css";
 
 const App = () => {
   const isMobile = useMobileMode();
@@ -44,6 +45,8 @@ const App = () => {
   };
 
   const handlePageChange = (page) => {
+    if (page === state.activePage) return; // Eğer zaten aktif sayfa ise, fonksiyonu çalıştırma.
+  
     setState((prev) => ({
       ...prev,
       activePage: page,
@@ -84,7 +87,7 @@ const App = () => {
 
   return (
     <>
-      {/* <SplashScreen isPageLoaded={isPageLoaded} /> */}
+      <SplashScreen isPageLoaded={isPageLoaded} />
       {isPageLoaded && (
         <div className="layout-dizayn">
           <Notifications selectedUser={selectedUser} />
@@ -96,9 +99,18 @@ const App = () => {
               toggleContentVisibility={() => toggleVisibility("isContentVisible")}
             />
           }
-          <div className={`content ${isContentVisible ? "visible" : "hidden"}`}>
-            {renderContent}
-          </div>
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activePage}
+              initial={{ opacity: 0, x: 10 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -10 }}
+              transition={{ duration: 0.3 }}
+              className={`content ${isContentVisible ? "visible" : "hidden"}`}
+            >
+              {renderContent}
+            </motion.div>
+          </AnimatePresence>
           <div className="message-box">
             {selectedUser ? (
               <Chat

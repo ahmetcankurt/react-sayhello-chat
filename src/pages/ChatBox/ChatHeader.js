@@ -1,8 +1,8 @@
 import React, { useState, useEffect, memo } from "react";
 import axios from "axios";
-import "./ChatHeaderFooter.css";
 import UserImage from "../../Component/UserImage";
 import { TbCircleArrowLeft } from "react-icons/tb";
+import { API_URL } from "../../config";
 function ChatHeader({ selectedUser, handleProfileClick ,clearSelectedUser }) {
   const [userInfo, setUserInfo] = useState(null);
 
@@ -10,7 +10,7 @@ function ChatHeader({ selectedUser, handleProfileClick ,clearSelectedUser }) {
     if (selectedUser) {
       // Backend'e token ile istek gönderiyoruz
       axios
-        .get(`http://localhost:3000/users/my-friends-profile/${selectedUser}`)
+        .get(`${API_URL}/users/my-friends-profile/${selectedUser}`)
         .then((response) => {
           setUserInfo(response.data); // Gelen kullanıcı bilgilerini state'e kaydet
         })

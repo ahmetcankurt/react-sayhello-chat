@@ -8,6 +8,7 @@ import Modal from "./Modal";
 import Swal from "sweetalert2";
 import SearchInput from "../../Component/input/searchInput";
 import UserImage from "../../Component/UserImage";
+import { API_URL } from "../../config";
 
 const Index = ({ setSelectedUser, selectedUser }) => {
   const [friends, setFriends] = useState([]);
@@ -18,7 +19,7 @@ const Index = ({ setSelectedUser, selectedUser }) => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:3000/friend-requests/${userId}/friends-status`)
+      .get(`${API_URL}/friend-requests/${userId}/friends-status`)
       .then((response) => {
         setFriends(response.data);
       })
@@ -55,7 +56,7 @@ const Index = ({ setSelectedUser, selectedUser }) => {
 
   const handleFriendshipDelete = async (friendId) => {
     try {
-      await axios.delete(`http://localhost:3000/friend-requests/${userId}/friend/${friendId}`);
+      await axios.delete(`${API_URL}/friend-requests/${userId}/friend/${friendId}`);
       setFriends((prevFriends) =>
         prevFriends.filter((friend) => friend.userId !== friendId)
       );

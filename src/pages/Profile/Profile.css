@@ -72,3 +72,16 @@
   text-decoration: underline;
   color: #222121f5;
 }
+
+.container-scroll {
+  overflow: auto;
+  height: calc(100vh - 300px); /* Ekranın geri kalanını kaplasın */
+}
+
+
+@media screen and (max-width: 768px) {
+  .container-scroll {
+    height: calc(100vh - 365px); /* Ekranın geri kalanını kaplasın */
+    padding: 15px 0;
+  }
+}

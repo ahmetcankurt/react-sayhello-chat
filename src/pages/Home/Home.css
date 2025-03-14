@@ -44,48 +44,36 @@
   }
 }
 
-/* Content (Profile ve Chat) alanı */
-.content-container {
-  display: flex;
-  flex-grow: 1; /* Kalan alanı doldur */
-  flex-direction: row; /* Yan yana sıralama */
-}
-
-/* Profile stilini değiştirme */
-
 .content {
   border-right: 1px solid rgb(234, 234, 241);
   box-shadow: 0 0 1px rgb(203, 203, 204);
   width: 300px;
+  z-index: 1001;
+  transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
 .content.hidden {
-  opacity: 0; /* Görünürlüğü kaybettirir */
-  transform: scale(0.1) rotate(90deg); /* Küçültür ve döndürür */
+  opacity: 0;
+  transform: scale(0.1) rotate(90deg);
   display: none;
 }
 
 .content.visible {
-  opacity: 1; /* Görünürlüğü tekrar sağlar */
+  opacity: 1;
+}
+
+.content.transitioning {
+  opacity: 0;
+  transform: scale(0.9);
 }
 
 /* Mobil uyumlu stil */
 
 
 
-.container-scroll {
-  overflow: auto;
-  height: calc(100vh - 300px); /* Ekranın geri kalanını kaplasın */
-}
-
-
-
 
 @media screen and (max-width: 768px) {
-  .container-scroll {
-    height: calc(100vh - 365px); /* Ekranın geri kalanını kaplasın */
-    padding: 15px 0;
-  }
+
   .not-chat {
     display: none;
   }

@@ -1,31 +1,25 @@
-import { memo, useCallback, useEffect, useRef, useState } from "react";
+import { Fragment, memo, useCallback, useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { io } from "socket.io-client";
-import NewMessageAlert from "./NewMessageAlert";
 import ChatFooter from "./ChatFooter";
 import ChatHeader from "./ChatHeader";
 import MessageBlock from "./MessageBlock";
-import SplashScreen from "../../Component/SplashScreen"
+import { groupMessagesByDate } from "./groupMessagesByDate";
+import { API_URL } from "../../config";
 import "./ChatBox.css";
+import ScrollContainer from "../../Component/ScrollContainer";
 
 const Chat = ({ selectedUser, handleProfileClick, setSelectedUser }) => {
   const [messages, setMessages] = useState([]);
-  const [newMessageAlert, setNewMessageAlert] = useState(false);
   const [loading, setLoading] = useState(true); // Yükleme durumu
+  const [newMessageNotification, setNewMessageNotification] = useState(false); // Yeni mesaj bildirimi
   const chatBoxRef = useRef(null);
   const socketRef = useRef(null);
-  const messagesEndRef = useRef(null);
   const userId = Number(localStorage.getItem("userId"));
-
-  const scrollToBottom = () => {
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
-    }
-  };
 
   useEffect(() => {
     axios
-      .get(`http://localhost:3000/messages/${userId}/${selectedUser}`)
+      .get(`${API_URL}/messages/${userId}/${selectedUser}`)
       .then((response) => {
         setMessages(response.data.messages.reverse());
         setLoading(false); // Veriler yüklendi, yükleme durumunu false yap
@@ -38,7 +32,7 @@ const Chat = ({ selectedUser, handleProfileClick, setSelectedUser }) => {
 
   const handleUpdate = useCallback(async (messageId) => {
     try {
-      await axios.put(`http://localhost:3000/messages/update/${messageId}`);
+      await axios.put(`${API_URL}/messages/update/${messageId}`);
 
       setMessages((prev) =>
         prev.map((msg) =>
@@ -53,7 +47,7 @@ const Chat = ({ selectedUser, handleProfileClick, setSelectedUser }) => {
   }, []);
 
   useEffect(() => {
-    socketRef.current = io("http://localhost:3000");
+    socketRef.current = io(API_URL);
 
     socketRef.current.on("newMessage", (message) => {
       if (!message.messageId) {
@@ -65,9 +59,8 @@ const Chat = ({ selectedUser, handleProfileClick, setSelectedUser }) => {
         (message.senderId === selectedUser && message.receiverId === userId)
       ) {
         setMessages((prev) => [...prev, message]);
-
-        if (message.receiverId === userId && !message.isRead) {
-          setNewMessageAlert(true);
+        if (message.senderId !== userId) {
+          setNewMessageNotification(true); // Yeni mesaj geldiğinde bildirimi göster
         }
       }
     });
@@ -86,10 +79,7 @@ const Chat = ({ selectedUser, handleProfileClick, setSelectedUser }) => {
           msg.messageId == messageId ? { ...msg, isRead } : msg
         )
       );
-
-      if (isRead) {
-        setNewMessageAlert(false);
-      }
+      setNewMessageNotification(false); // Mesaj okunduğunda bildirimi kaldır
     });
 
     return () => {
@@ -97,34 +87,27 @@ const Chat = ({ selectedUser, handleProfileClick, setSelectedUser }) => {
     };
   }, [userId, selectedUser]);
 
-  const handleNewMessageAlertClick = () => {
-    scrollToBottom();
-    setNewMessageAlert(false);
-  };
-
-  useEffect(() => {
-    const handleScroll = () => {
-      if (chatBoxRef.current) {
-        const { scrollTop, scrollHeight, clientHeight } = chatBoxRef.current;
-        if (scrollHeight - scrollTop === clientHeight) {
-          setNewMessageAlert(false);
-        }
-      }
-    };
-
-    const chatBoxElement = chatBoxRef.current;
-    if (chatBoxElement) {
-      chatBoxElement.addEventListener("scroll", handleScroll);
-    }
-
-    return () => {
-      if (chatBoxElement) {
-        chatBoxElement.removeEventListener("scroll", handleScroll);
-      }
-    };
-  }, []);
+  const groupedMessages = groupMessagesByDate(messages);
 
   const clearSelectedUser = () => setSelectedUser(null);
+
+  // Scroll to the bottom of the chat box
+  const scrollToBottom = () => {
+    if (chatBoxRef.current) {
+      chatBoxRef.current.scrollTop = chatBoxRef.current.scrollHeight;
+    }
+  };
+
+  // Yeni mesaj bildirimi tıklandığında sayfayı aşağı kaydır
+  const handleNotificationClick = () => {
+    setNewMessageNotification(false); // Yeni mesaj bildirimi kapanır
+    scrollToBottom(); // Sayfanın altına kaydır
+  };
+
+  // Mesajlar güncellenince de sayfayı aşağı kaydır
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
   if (loading) {
     return 
@@ -133,23 +116,39 @@ const Chat = ({ selectedUser, handleProfileClick, setSelectedUser }) => {
   return (
     <div className="chat-container">
       <ChatHeader selectedUser={selectedUser} handleProfileClick={handleProfileClick} clearSelectedUser={clearSelectedUser} />
-
-      <div className="chat-box" ref={chatBoxRef}>
-        {messages.map((message, index) => (
-          <MessageBlock
-            message={message}
-            key={`${message.senderId}-${message.createdAt}-${index}`}
-            index={index}
-            userId={userId}
-            handleUpdate={handleUpdate}
-          />
+      {newMessageNotification && (
+        <div className="new-message-notification" onClick={handleNotificationClick}>
+          Yeni mesajınız var!
+        </div>
+      )}
+      <ScrollContainer className="chat-box" ref={chatBoxRef}>
+        {Object.keys(groupedMessages).map((date, index) => (
+          <Fragment key={date}>
+            <div className="date-separator">
+              <span className="date-separator-text">
+                {date}
+              </span>
+            </div>
+            {groupedMessages[date].map((message, idx) => (
+              <Fragment key={message.messageId}>
+                {message.isRead === false && (
+                  <div className="messagedeneme">
+                    <span className="message-read-text">Okunmadı</span>
+                  </div>
+                )}
+                <MessageBlock
+                  message={message}
+                  key={`${date}-${index}-${idx}`}
+                  index={index}
+                  userId={userId}
+                  handleUpdate={handleUpdate}
+                />
+              </Fragment>
+            ))}
+          </Fragment>
         ))}
-      </div>
-
-      <NewMessageAlert newMessageAlert={newMessageAlert} handleNewMessageAlertClick={handleNewMessageAlertClick} />
-
+      </ScrollContainer>
       <ChatFooter selectedUser={selectedUser} />
-      <div ref={messagesEndRef} />
     </div>
   );
 };

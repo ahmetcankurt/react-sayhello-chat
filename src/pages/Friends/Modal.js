@@ -6,6 +6,7 @@ import { FaUserCheck } from 'react-icons/fa';
 import { BsThreeDots } from "react-icons/bs";
 import Swal from 'sweetalert2';  
 import axios from 'axios';
+import { API_URL } from '../../config';
 import './Modal.css';
 
 const UserList = ({ users, onAddFriend, handleRemoveFriendRequest }) => {
@@ -17,7 +18,7 @@ const UserList = ({ users, onAddFriend, handleRemoveFriendRequest }) => {
                 <li key={user.userId} className="modal-user-item">
                     <div className='modal-user-item-div'>
                         <img
-                            src={`http://localhost:3000/${user.profileImage}` || 'default-avatar.png'}
+                            src={`${API_URL}/${user.profileImage}` || 'default-avatar.png'}
                             alt={`${user.name} ${user.surname}`}
                             className="modal-profile-image"
                         />
@@ -52,7 +53,7 @@ const Modal = ({ onClose }) => {
     const handleAddFriend = async (receiverId) => {
         try {
             const userId = localStorage.getItem('userId');
-            const response = await axios.post(`http://localhost:3000/friend-requests/${userId}/friend-request/${receiverId}`, {}, {
+            const response = await axios.post(`${API_URL}/friend-requests/${userId}/friend-request/${receiverId}`, {}, {
                 headers: { Authorization: `Bearer ${token}` }
             });
 
@@ -88,7 +89,7 @@ const Modal = ({ onClose }) => {
         setLoading(true);
         setError('');
         try {
-            const response = await axios.get(`http://localhost:3000/users/search?q=${searchQuery}`, {
+            const response = await axios.get(`${API_URL}/users/search?q=${searchQuery}`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
             setUsers(response.data);  // Kullanıcıları sadece yeni arama geldiğinde güncelle
@@ -102,7 +103,7 @@ const Modal = ({ onClose }) => {
     const handleRemoveFriendRequest = async (receiverId) => {
         try {
             const userId = localStorage.getItem('userId');
-            const response = await axios.delete(`http://localhost:3000/friend-requests/${userId}/friend-request/${receiverId}`, {
+            const response = await axios.delete(`${API_URL}/friend-requests/${userId}/friend-request/${receiverId}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
 

@@ -1,0 +1,40 @@
+.chat-img-me {
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: top; /* Resmin üst kısmını göstermek için */
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+  }
+  
+  .chat-img-me.loaded {
+    opacity: 1;
+  }
+
+  .image-placeholder {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #e0e0e0; /* Placeholder color */
+    animation: shimmer 1.5s infinite linear; /* Shimmer animation */
+  }
+  
+  @keyframes shimmer {
+    0% {
+      background-position: -200px 0;
+    }
+    100% {
+      background-position: 200px 0;
+    }
+  }
+  
+  .chat-img-me.loading {
+    opacity: 0;
+  }
+  
+  .chat-img-me.loaded {
+    opacity: 1;
+    transition: opacity 1s ease-in-out;
+  }
+  

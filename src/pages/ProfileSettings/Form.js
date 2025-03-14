@@ -1,18 +1,21 @@
 // Form.js
-import {  useEffect, memo, useState } from "react";
+import { useEffect, memo, useState } from "react";
 import Swal from "sweetalert2";
 import ScrollContainer from "../../Component/ScrollContainer";
 import { useDispatch, useSelector } from "react-redux";
-import {  updateUserInfo } from "../../redux/slices/userInformation";
+import { updateUserInfo } from "../../redux/slices/userInformation";
 import "./ProfileSettings.css";
 
 function Form() {
   const dispatch = useDispatch();
-  const user  = useSelector((state) => state.userInformation.user);
+  const user = useSelector((state) => state.userInformation.user);
   const [userInfo, setUserInfo] = useState({});
+  const [initialUserInfo, setInitialUserInfo] = useState({});
+
   useEffect(() => {
     if (user) {
       setUserInfo(user);
+      setInitialUserInfo(user);
     }
   }, [user]);
 
@@ -48,6 +51,8 @@ function Form() {
       });
   };
 
+  const isFormChanged = JSON.stringify(userInfo) !== JSON.stringify(initialUserInfo);
+
   const inputFields = [
     { label: "Name", name: "name", type: "text" },
     { label: "Surname", name: "surname", type: "text" },
@@ -67,37 +72,44 @@ function Form() {
     { label: "Birthday", name: "birthday", type: "text" },
     { label: "Facebook", name: "facebook", type: "text" },
   ];
-  return (
-    <ScrollContainer className="form-container">
-      {inputFields.map((field) => (
-        <div className="mb-1" key={field.name}>
-          <label className="form-label" htmlFor={field.label}>
-            {field.label}
-          </label>
-          {field.type === "textarea" ? (
-            <textarea
-              className="form-control form-container-textarea"
-              name={field.name}
-              value={userInfo[field.name] || ""}
-              onChange={handleInputChange}
-            />
-          ) : (
-            <input
-              id={field.label}
-              type={field.type}
-              className="form-control"
-              name={field.name}
-              value={userInfo[field.name] || ""}
-              onChange={handleInputChange}
-            />
-          )}
-        </div>
-      ))}
 
-      <button className="form-container-button w-100" onClick={handleSave}>
+  return (
+    <>
+      <ScrollContainer className="form-container">
+        {inputFields.map((field) => (
+          <div className="mb-1" key={field.name}>
+            <label className="form-label" htmlFor={field.label}>
+              {field.label}
+            </label>
+            {field.type === "textarea" ? (
+              <textarea
+                className="form-control form-container-textarea"
+                name={field.name}
+                value={userInfo[field.name] || ""}
+                onChange={handleInputChange}
+              />
+            ) : (
+              <input
+                id={field.label}
+                type={field.type}
+                className="form-control"
+                name={field.name}
+                value={userInfo[field.name] || ""}
+                onChange={handleInputChange}
+              />
+            )}
+          </div>
+        ))}
+      </ScrollContainer>
+
+      <button
+        className="form-container-button w-100"
+        onClick={handleSave}
+        disabled={!isFormChanged}
+      >
         Kaydet
       </button>
-    </ScrollContainer>
+    </>
   );
 }
 

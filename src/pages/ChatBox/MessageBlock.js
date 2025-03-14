@@ -5,6 +5,7 @@ import Dropdown from "./Dropdown";
 import { motion } from "framer-motion";
 import ISReady from "./ISReady";
 import axios from "axios";
+import { API_URL } from "../../config";
 
 function MessageBlock({ message, userId, handleUpdate, messages }) {
   const [dropdownVisible, setDropdownVisible] = useState(null);
@@ -20,7 +21,7 @@ function MessageBlock({ message, userId, handleUpdate, messages }) {
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting && message.receiverId === userId && !message.isRead) {
-            axios.put(`http://localhost:3000/messages/read/${message.messageId}`)
+            axios.put(`${API_URL}/messages/read/${message.messageId}`)
               .then(() => {
                 console.log("Mesaj okundu olarak işaretlendi.");
               })
@@ -50,6 +51,8 @@ function MessageBlock({ message, userId, handleUpdate, messages }) {
     }
   }, [messages, message.senderId, userId]);
 
+
+
   return (
     <div className={`message ${message.senderId === userId ? 'senderId' : 'receiverId'}`}>
       {message.senderId === userId && !message.isDeleted && (
@@ -62,6 +65,7 @@ function MessageBlock({ message, userId, handleUpdate, messages }) {
             className="chat-dots-icon"
             onClick={() => toggleDropdown(message.messageId)}
           />
+
         </>
       )}
       <div>
@@ -78,6 +82,8 @@ function MessageBlock({ message, userId, handleUpdate, messages }) {
           {message.senderId === userId && <ISReady isRead={message.isRead} />}
           <span className="message-clock">{formatTime(message.createdAt)}</span>
         </motion.div>
+
+
       </div>
       <div ref={messagesEndRef} />
     </div>

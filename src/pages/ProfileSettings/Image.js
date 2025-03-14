@@ -6,6 +6,7 @@ import ImageMe from "../../assets/image/imageAdmin.jpeg";
 import "./ProfileSettings.css";
 import { useSelector, useDispatch } from "react-redux";
 import { updateUserImage } from "../../redux/slices/userInformation";
+import { API_URL } from "../../config";
 
 function Image() {
   const dispatch = useDispatch();
@@ -58,7 +59,7 @@ function Image() {
       <div className="profile-container">
         {/* Arka plan resmi */}
         <img
-          src={user?.backgroundImage ? `http://localhost:3000/${user.backgroundImage}` : ProfileBg}
+          src={user?.backgroundImage ? `${API_URL}/${user.backgroundImage}` : ProfileBg}
           className="profile-settings-bg"
           alt="Profile Background"
         />
@@ -76,7 +77,7 @@ function Image() {
         {/* Profil resmi */}
         <div className="profile-container">
           <img
-            src={user?.profileImage ? `http://localhost:3000/${user.profileImage}` : ImageMe}
+            src={user?.profileImage ? `${API_URL}/${user.profileImage}` : ImageMe}
             className="profile-settings-me"
             alt="Profile"
           />

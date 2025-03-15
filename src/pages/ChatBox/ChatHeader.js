@@ -31,7 +31,7 @@ function ChatHeader({ selectedUser, handleProfileClick ,clearSelectedUser }) {
       <div className="chat-info">
         <span className="chat-name" onClick={handleProfileClick}>{userInfo?.name} {userInfo?.surname}</span>
         <span className={`chat-status ${userInfo?.isActive ? "Online" : "Offline"}`}>
-          {userInfo?.status}
+          {userInfo?.isActive}
         </span>
       </div>
     </div>

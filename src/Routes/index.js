@@ -3,11 +3,12 @@ import { AuthProtected } from "./AuthProtected";
 
 // Layouts
 import { privateRoutes, publicRoutes } from "./allRoutes";
-import { BrowserRouter } from "react-router-dom";
+
+import { HashRouter } from "react-router-dom";
 
 export default function Index() {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <Routes>
         {privateRoutes.map((route, idx) => (
           <Route
@@ -21,6 +22,6 @@ export default function Index() {
           <Route path={route.path} element={<>{route.component}</>} key={idx} />
         ))}
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
   );
 }

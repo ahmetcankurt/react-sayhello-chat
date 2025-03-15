@@ -1,7 +1,7 @@
 {
   "name": "react-sayhello-chat",
   "version": "0.1.0",
-  "homepage": "https://ahmetcankurt.github.io/react-sayhello-chat",
+  "homepage": "https://react-sayhello-chat.up.railway.app",
   "private": true,
   "dependencies": {
     "@react-oauth/google": "^0.12.1",

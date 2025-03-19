@@ -1,0 +1,90 @@
+.Mymessages-container {
+  display: flex;
+  flex-direction: column; /* Vertical düzen için flex yönünü dikey yapıyoruz */
+  height: 100vh; /* Ekranın tamamını kapsayacak şekilde yükseklik veriyoruz */
+}
+
+.Mymessages-title {
+  font-size: x-large;
+  color: #555;
+}
+
+.Mymessages-add {
+  display: flex; /* Flexbox kullanarak öğeleri yatayda hizalar */
+  justify-content: space-between; /* Yazıyı sola, ikonu sağa yerleştirir */
+  align-items: center; /* Yükseklik açısından ortalar */
+  padding:  10px ;
+  height: 82px;
+}
+
+.Mymessages-icon {
+  background-color: rgba(78, 172, 109, 0.1);
+  font-size: large;
+  border-radius: 5px;
+  padding: 5px;
+  height: 40px;
+  width: 40px;
+  cursor: pointer;
+}
+
+
+.search-input {
+  padding: 10px 40px 10px 10px; /* Sağda ikon için padding */
+  width: 100%;
+  border: 1px solid #ccc;
+  font-size: 16px;
+  background-color: #55555518;
+}
+
+.search-icon {
+  position: absolute;
+  right: 10px; /* İkonu sağa yerleştirir */
+  font-size: 18px;
+  color: #aaa; /* İkonun rengi */
+  cursor: pointer;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #007bff; /* Input focus olduğunda sınır rengi değişir */
+}
+
+.search-icon:hover {
+  color: #007bff; /* İkon üzerine gelindiğinde renk değişir */
+}
+
+.messages-blog {
+  display: flex;
+  /* background-color: #9a98980a; */
+  padding: 8px 10px ;
+  align-items: center;
+  cursor: pointer;
+  height: 55px
+}
+
+
+.messages-blog.active {
+  background-color: rgb(181, 216, 255); /* Aktif öğe mavi renkte olacak */
+}
+
+
+.messages-blog:hover {
+  background-color: rgb(181, 216, 255);
+}
+
+.messages-detail {
+  font-size: 14px;
+  text-overflow: ellipsis; /* Taşan metni "..." ile gösterir */
+}
+
+
+.messages-scroll{
+  overflow: auto;
+}
+
+@media screen and (max-width: 768px) {
+  .messages-scroll{
+    overflow: auto;
+    background-color: red;
+  }
+}

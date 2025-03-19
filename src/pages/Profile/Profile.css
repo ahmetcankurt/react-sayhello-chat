@@ -1,0 +1,76 @@
+.profile-container {
+  position: relative;
+  margin-bottom: 50px;
+}
+
+.profile-bg {
+  width: 100%;
+  height: 180px;
+  background-repeat: no-repeat;
+  object-fit: cover;
+}
+
+.profile-page {
+  border: 5px rgb(234, 234, 241) solid;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  position: absolute;
+  bottom: -40px; /* Resmin yarısının alt kısımda olmasını sağlıyoruz */
+  left: 50%;
+  transform: translateX(-50%); /* Resmi tam ortalamak için */
+  object-fit: cover;
+}
+
+.profile-name {
+  margin-bottom: 0;
+  text-align: center;
+}
+
+.shadow-line {
+  background-color: rgba(128, 128, 128, 0.245);
+  height: 1px;
+}
+
+.profile-job {
+  color: rgba(73, 80, 87, 0.75);
+  margin-bottom: 20px;
+  font-size: 14px;
+  font-weight: 400;
+  text-align: center;
+  display: block;
+}
+
+.profile-about {
+  font-size: 14px;
+  color: rgba(73, 80, 87, 0.75);
+  font-weight: 400;
+}
+
+
+.icon-container{
+  overflow: auto;
+}
+
+.icon-wrapper {
+  display: flex;
+  margin-bottom: 5px;
+  padding: 5px 10px ;
+  gap: 8px;
+  align-items: center;
+
+}
+
+.icon-wrapper .icon{
+  font-size: 22px;
+  color: #373737d6;
+  cursor: pointer;
+}
+
+
+.icon:hover {
+  text-decoration: underline;
+  color: #222121f5;
+}
+
+

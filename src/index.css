@@ -1,0 +1,65 @@
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+p{
+    margin: 0;
+    padding: 0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+
+body {
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.box-shadow-global{
+  border: 1px solid rgba(0, 0, 0, 0.258);
+}
+
+
+/* Tüm sayfada scroll efektini uygula */
+body {
+  margin: 0;
+  padding: 0;
+}
+
+/* Scroll bar stilleri */
+body::-webkit-scrollbar {
+  width: 6px;
+  opacity: 0; /* Başlangıçta scroll bar'ı gizle */
+  transition: opacity 0.3s; /* Yumuşak geçiş efekti */
+}
+
+body::-webkit-scrollbar-track {
+  border-radius: 10px;
+}
+
+body::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  transition: background 0.3s; /* Yumuşak geçiş efekti */
+}
+
+/* Scroll bar üzerine geldiğinde görünmesini sağla */
+body:hover::-webkit-scrollbar {
+  opacity: 1; /* Scroll bar'ı göster */
+}
+
+body:hover::-webkit-scrollbar-thumb {
+  background: #555555c1; /* Üzerine gelindiğinde scroll bar rengi değişsin */
+}
+
+/* İçeriğe odaklanıldığında scroll bar görünmesini sağla */
+body:focus-within::-webkit-scrollbar {
+  opacity: 1; /* Scroll bar'ı göster */
+}
+
+body:focus-within::-webkit-scrollbar-thumb {
+  background: #555; /* Üzerine gelindiğinde scroll bar rengi değişsin */
+}

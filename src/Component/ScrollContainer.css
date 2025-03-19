@@ -1,0 +1,43 @@
+.scroll-container {
+  overflow-y: auto;
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+  max-width: 100%;
+  max-height: 100vh; /* Sayfa boyutuna göre otomatik ayarlanır */
+  height: 100%;
+}
+
+/* Scroll bar stilleri */
+.scroll-container::-webkit-scrollbar {
+  width: 6px;
+  opacity: 0; /* Başlangıçta scroll bar'ı gizle */
+  transition: opacity 0.3s; /* Yumuşak geçiş efekti */
+}
+
+.scroll-container::-webkit-scrollbar-track {
+  border-radius: 10px;
+}
+
+.scroll-container::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  transition: background 0.3s; /* Yumuşak geçiş efekti */
+}
+
+/* Scroll bar üzerine geldiğinde görünmesini sağla */
+.scroll-container:hover::-webkit-scrollbar {
+  opacity: 1; /* Scroll bar'ı göster */
+}
+
+.scroll-container:hover::-webkit-scrollbar-thumb {
+  background: #555555c1; /* Üzerine gelindiğinde scroll bar rengi değişsin */
+}
+
+/* İçeriğe odaklanıldığında scroll bar görünmesini sağla */
+.scroll-container:focus-within::-webkit-scrollbar {
+  opacity: 1; /* Scroll bar'ı göster */
+}
+
+.scroll-container:focus-within::-webkit-scrollbar-thumb {
+  background: #555; /* Üzerine gelindiğinde scroll bar rengi değişsin */
+}
+

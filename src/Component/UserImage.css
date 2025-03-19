@@ -1,0 +1,63 @@
+.chat-img-me {
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: top; /* Resmin üst kısmını göstermek için */
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+  }
+  
+  .chat-img-me.loaded {
+    opacity: 1;
+  }
+
+  .image-placeholder {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #e0e0e0; /* Placeholder color */
+    animation: shimmer 1.5s infinite linear; /* Shimmer animation */
+  }
+  
+  @keyframes shimmer {
+    0% {
+      background-position: -200px 0;
+    }
+    100% {
+      background-position: 200px 0;
+    }
+  }
+  
+  .chat-img-me.loading {
+    opacity: 0;
+  }
+  
+  .chat-img-me.loaded {
+    opacity: 1;
+    transition: opacity 1s ease-in-out;
+  }
+
+  .status-light {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    height: 12px;
+    width: 12px;
+    border-radius: 50%;
+    border: 2px solid white; /* Dış çerçeve */
+  }
+  
+  .status-light.active {
+    background-color: green;
+  }
+  
+  .status-light.inactive {
+    background-color: red;
+  }
+  
+  
+.chat-img-container {
+  position: relative;
+  display: inline-block;
+}

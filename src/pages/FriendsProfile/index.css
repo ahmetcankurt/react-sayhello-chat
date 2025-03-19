@@ -1,0 +1,101 @@
+ .deneme-container{
+  background-color: #ff0000;
+  
+}
+.profile-bg-friends {
+  width: 100%;
+  height: 250px;
+  background-repeat: no-repeat;
+  object-fit: cover;
+} 
+
+.profile-friends-name {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  font-size: 24px;
+  color: rgb(0, 0, 0);
+  background-color: rgba(240, 248, 255, 0.66);
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.shadow-left{
+  box-shadow: 0px 0px 200px 1px #6f6d6d40;
+
+}
+
+.container-friends {
+  background-color: rgb(255, 255, 255);
+  width: 350px;
+  flex-shrink: 0;
+  overflow: hidden;
+  opacity: 1;
+  visibility: visible;
+} 
+
+
+.friend-status {
+  height: 12px;
+  width: 12px;
+  border-radius: 50%;
+}
+
+.friend-status.isActive {
+  background-color: rgb(33, 233, 33); 
+}
+
+.friend-status.inactive {
+  background-color: red;
+  color: red;
+}
+
+
+.friend-status-box{
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.friends-status {
+  font-size: 14px;
+  color: rgb(0, 0, 0); 
+}
+
+.friends-status.Online {
+  font-size: 14px;
+  color: rgb(0, 0, 0); 
+
+}
+
+.friends-status.Offline {
+  font-size: 14px;
+  color: red;
+}
+
+.mobile-none{
+  display: none!important;
+}
+
+@media screen and (max-width: 768px) {
+  .friends-profile-overlay {
+    position: fixed;
+    height: 100vh;
+    width: 100vw;
+    top: 0;
+    left: 0;
+    background-color: rgb(247, 246, 246); /* Semi-transparent background */
+    display: flex;
+    z-index: 1000; /* Ensure it's on top of other elements */
+    overflow: hidden;
+    padding: 5px;
+  }
+ 
+  .container-friends{
+    width: 100vw;
+  }
+  .mobile-none{
+    display: block!important;
+  }
+} 

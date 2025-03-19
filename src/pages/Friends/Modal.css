@@ -1,0 +1,162 @@
+/* Modal.css */
+
+/* Overlay */
+.modal-overlay {
+  position: fixed; /* Sabit konumlandırma */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex; /* Flexbox ile ortalama */
+  justify-content: center; /* Yatayda ortalar */
+  z-index: 100000!important;
+  backdrop-filter: blur(3px); /* Bulanıklık efekti */
+  -webkit-backdrop-filter: blur(3px); /* Safari desteği */
+}
+
+/* Modal İçeriği */
+.modal-container {
+  background-color: #fff;
+  padding: 20px 10px;
+  overflow: hidden; /* Taşmayı engeller */
+  border-radius: 8px;
+  width: 400px;
+  max-height: 400px;
+  margin-top: 40px;
+  text-align: center;
+  position: relative;
+  border: 1px solid rgba(227, 146, 146, 0.081);
+  animation: slideDown 0.5s ease-out; /* Açılırken animasyon */
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
+}
+
+/* Kapanırken animasyon eklemek için */
+.modal-container.closing {
+  animation: slideUp 0.5s ease-in-out forwards; /* Kapanırken animasyon */
+}
+
+/* Kapatma Butonu */
+.modal-close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 20px;
+  cursor: pointer;
+  color: #555555ac;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  height: 30px;
+  width: 30px;
+  border-radius: 50%;
+  border: 1px solid rgba(227, 146, 146, 0.081);
+}
+
+.modal-close-button:hover {
+  color:#000000;
+}
+
+/* Hata Mesajı */
+.modal-error {
+  color: red;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+/* Kullanıcı Listesi */
+.modal-user-list {
+  overflow: auto;
+  max-height: 270px;
+  list-style: none;
+  padding: 10px 0;
+  margin: 0;
+  animation: slideDown 0.3s ease-in-out;
+}
+
+.modal-user-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  text-align: left;
+  border: 1px solid #ccc;
+  background-color: #9a989827;
+  border-radius: 3px;
+  padding: 5px;
+  cursor: pointer;
+}
+
+.modal-user-item:hover {
+  background-color: rgb(181, 216, 255);
+}
+
+/* Profil Fotoğrafı */
+.modal-profile-image {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 10px;
+  object-fit: cover;
+}
+
+/* Arama Kutusu */
+.modal-search-container {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+/* Animasyon */
+@keyframes slideDown {
+  from {
+      opacity: 0;
+      transform: translateY(-100px); /* Yukarıdan başla */
+  }
+  to {
+      opacity: 1;
+      transform: translateY(0); /* Normal pozisyona gel */
+  }
+}
+@keyframes slideUp {
+  from {
+      opacity: 1;
+      transform: translateY(0); /* Normal pozisyon */
+  }
+  to {
+      opacity: 0;
+      transform: translateY(-120px); /* Yukarıya kaydır */
+  }
+}
+
+
+/* Arkadaş Ekleme Butonu */
+.modal-friends-add-button {
+  text-align: center;
+  border-radius: 5px;
+  background-color: #8888887d;
+  height: 30px;
+  width: 30px;
+  font-size: 14px !important;
+  padding: 2px;
+}
+
+.modal-friends-add-button:hover {
+  background-color: #888888;
+}
+
+/* Kullanıcı Elemanları */
+.modal-user-item-div {
+  display: flex;
+  align-items: center;
+}
+
+.modal-title{
+  margin-bottom: 10px;
+  font-size: large;
+}
+
+@media (max-width: 768px) {
+  .modal-container {
+    width:  90%;
+  }
+}

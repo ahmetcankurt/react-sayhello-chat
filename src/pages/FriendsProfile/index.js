@@ -79,7 +79,7 @@ function Index({ selectedUser, handleProfileClick }) {
                     </span>
                 </span>
             </div>
-            <hr className="p-0 m-0 box-shadow-global" />
+            <hr className="p-0 my-3 box-shadow-global" />
             <ScrollContainer paddingBottom="80px" >
                 <span className="profile-job mt-2 mb-1  px-2" style={{textAlign:"start"}}>
                     {userInfo.jobs ?? <Skeleton className="profile-job" width="150px" height="20px" />}

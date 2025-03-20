@@ -31,7 +31,6 @@ const Notifications = ({ selectedUser }) => {
           }
         })
         .catch((error) => {
-          console.error("Kullanıcı bilgileri alınırken hata:", error);
         });
     };
 
@@ -50,10 +49,8 @@ const Notifications = ({ selectedUser }) => {
     axios
       .put(`${API_URL}/notifications/${notificationId}/read`)
       .then((response) => {
-        // console.log(response.data.message); // Başarı mesajını kontrol et
       })
       .catch((error) => {
-        console.error("Okundu olarak işaretleme hatası:", error);
       });
   };
 

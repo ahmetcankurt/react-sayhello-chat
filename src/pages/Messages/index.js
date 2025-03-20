@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useCallback ,useState} from "react";
+import React, { memo, useEffect, useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MdAdd } from "react-icons/md";
 import { fetchMessages } from "../../redux/slices/messagesSlice";
@@ -6,6 +6,8 @@ import SearchInput from "../../Component/input/searchInput";
 import UserImage from "../../Component/UserImage";
 import "./Mymessages.css";
 import ScrollContainer from "../../Component/ScrollContainer";
+import ISRead from "../../Component/ISRead";
+import { capitalize } from "../../utils/stringUtils";
 
 // Kısa mesaj fonksiyonu
 const getShortenedMessage = (message, maxLength = 20) =>
@@ -13,9 +15,12 @@ const getShortenedMessage = (message, maxLength = 20) =>
 
 // Message bileşeni (memo ile sarmalandı)
 const Messages = memo(({ message, setSelectedUser, selectedUser }) => {
-  const { lastMessage, name, surname, userId, profileImage, isActive, lastMessageSender } = message;
+  const { lastMessage, name, surname, userId, profileImage, isActive, lastMessageSender, isRead } = message;
   const shortenedMessage = getShortenedMessage(lastMessage);
   const isActiveUser = userId === selectedUser;
+
+  const Name = capitalize(name);
+  const Surname = capitalize(surname);
 
   const handleClick = useCallback(() => {
     setSelectedUser(userId);
@@ -25,12 +30,22 @@ const Messages = memo(({ message, setSelectedUser, selectedUser }) => {
     <div className={`messages-blog ${isActiveUser ? "active" : ""}`} onClick={handleClick}>
       <UserImage height={"55px"} src={profileImage} isActive={isActive} />
       <div>
-        <span>{name} {surname}</span>
-        <p className="messages-detail m-0">{lastMessageSender} : {shortenedMessage}</p>
+        <span>{Name} {Surname}</span>
+        <p className="messages-detail m-0">
+          {
+            lastMessageSender === "Ben" ?
+              <span>
+                <ISRead isRead={isRead} />  {shortenedMessage}
+              </span>
+              :
+              <span style={{ color: "#8e8d8d" }}>{shortenedMessage}</span>
+          }
+        </p>
       </div>
     </div>
   );
 });
+
 
 // Index bileşeni
 function Index({ selectedUser, setSelectedUser }) {

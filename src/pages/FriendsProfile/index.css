@@ -1,40 +1,43 @@
- .deneme-container{
+.deneme-container {
   background-color: #ff0000;
-  
 }
 .profile-bg-friends {
   width: 100%;
   height: 250px;
   background-repeat: no-repeat;
   object-fit: cover;
-} 
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  
+}
 
 .profile-friends-name {
   position: absolute;
-  bottom: 10px;
-  left: 10px;
-  font-size: 24px;
-  color: rgb(0, 0, 0);
-  background-color: rgba(240, 248, 255, 0.66);
+  bottom: 25px;
+  left: 25px;
+  color: rgba(0, 0, 0, 0.644);
+  font-size: 16px;
   font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
   padding: 5px;
-  border-radius: 5px;
+  border-radius: 10px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.shadow-left{
+.shadow-left {
   box-shadow: 0px 0px 200px 1px #6f6d6d40;
-
 }
 
 .container-friends {
+  padding: 10px;
   background-color: rgb(255, 255, 255);
-  width: 350px;
+  width: 380px;
   flex-shrink: 0;
   overflow: hidden;
   opacity: 1;
   visibility: visible;
-} 
-
+}
 
 .friend-status {
   height: 12px;
@@ -43,16 +46,14 @@
 }
 
 .friend-status.isActive {
-  background-color: rgb(33, 233, 33); 
+  background-color: rgb(19, 234, 19);
 }
 
 .friend-status.inactive {
   background-color: red;
-  color: red;
 }
 
-
-.friend-status-box{
+.friend-status-box {
   display: flex;
   align-items: center;
   gap: 5px;
@@ -60,13 +61,11 @@
 
 .friends-status {
   font-size: 14px;
-  color: rgb(0, 0, 0); 
+  color: rgb(142, 141, 141);
 }
 
 .friends-status.Online {
   font-size: 14px;
-  color: rgb(0, 0, 0); 
-
 }
 
 .friends-status.Offline {
@@ -74,8 +73,8 @@
   color: red;
 }
 
-.mobile-none{
-  display: none!important;
+.mobile-none {
+  display: none !important;
 }
 
 @media screen and (max-width: 768px) {
@@ -91,11 +90,11 @@
     overflow: hidden;
     padding: 5px;
   }
- 
-  .container-friends{
+
+  .container-friends {
     width: 100vw;
   }
-  .mobile-none{
-    display: block!important;
+  .mobile-none {
+    display: block !important;
   }
-} 
+}

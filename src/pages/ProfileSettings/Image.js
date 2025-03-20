@@ -2,7 +2,6 @@ import { memo, useRef } from "react";
 import { TbCameraPlus } from "react-icons/tb";
 import Swal from "sweetalert2";
 import ProfileBg from "../../assets/image/image_header.jpg";
-import ImageMe from "../../assets/image/imageAdmin.jpeg";
 import "./ProfileSettings.css";
 import { useSelector, useDispatch } from "react-redux";
 import { updateUserImage } from "../../redux/slices/userInformation";

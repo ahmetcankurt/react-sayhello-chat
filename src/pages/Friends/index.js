@@ -1,5 +1,5 @@
 import { useState, useEffect, memo } from "react";
-import { FaSearch, FaTrash } from "react-icons/fa";
+import { FaTrash } from "react-icons/fa";
 import { MdAdd } from "react-icons/md";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import axios from "axios";
@@ -11,10 +11,11 @@ import UserImage from "../../Component/UserImage";
 import { API_URL } from "../../config";
 import ScrollContainer from "../../Component/ScrollContainer";
 import io from "socket.io-client";
+import { capitalize } from "../../utils/stringUtils";
 
 const socket = io(API_URL);
 
-const Index = ({ setSelectedUser, selectedUser }) => {
+const Index = ({ setSelectedUser}) => {
   const [friends, setFriends] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [dropdownVisible, setDropdownVisible] = useState(null);
@@ -28,7 +29,6 @@ const Index = ({ setSelectedUser, selectedUser }) => {
         setFriends(response.data);
       })
       .catch((error) => {
-        console.error("Error fetching friends:", error);
       });
   }, [userId]);
 
@@ -87,7 +87,6 @@ const Index = ({ setSelectedUser, selectedUser }) => {
             });
           })
           .catch((err) => {
-            console.error("Error deleting friendship:", err);
             Swal.fire("Hata!", "Arkadaş silinemedi, lütfen tekrar deneyin.", "error");
           });
       }
@@ -131,7 +130,7 @@ const Index = ({ setSelectedUser, selectedUser }) => {
                   <div key={friend.userId} className="friends-list-blog" >
                     <div className="d-flex" onClick={() => setSelectedUser(friend.userId)}>
                       <UserImage src={friend?.profileImage} isActive={friend.isActive} />
-                      <span>{friend?.name} {friend?.surname}</span>
+                      <span>{capitalize(friend?.name)} {capitalize(friend?.surname)}</span>
                     </div>
                     <div className="dropdown-wrapper">
                       <BsThreeDotsVertical

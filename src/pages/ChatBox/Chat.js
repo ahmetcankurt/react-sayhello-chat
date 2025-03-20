@@ -27,7 +27,6 @@ const Chat = ({ selectedUser, handleProfileClick, setSelectedUser }) => {
         setLoading(false); // Veriler yüklendi, yükleme durumunu false yap
       })
       .catch((error) => {
-        console.error("API çağrısı hatası:", error);
         setLoading(false); // Hata durumunda da yükleme durumunu false yap
       });
   }, [userId, selectedUser]);
@@ -44,7 +43,6 @@ const Chat = ({ selectedUser, handleProfileClick, setSelectedUser }) => {
 
       socketRef.current.emit("messageDeleted", { messageId });
     } catch (error) {
-      console.error("Mesaj silinirken hata oluştu:", error);
     }
   }, []);
 

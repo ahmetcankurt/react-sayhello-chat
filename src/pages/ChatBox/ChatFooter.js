@@ -32,7 +32,6 @@ function ChatFooter({ selectedUser }) {
 
       setMessage('');
     } catch (error) {
-      console.error('Mesaj gönderme hatası:', error);
     }
   };
 

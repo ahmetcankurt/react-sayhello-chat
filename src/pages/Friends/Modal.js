@@ -100,7 +100,6 @@ const Modal = ({ onClose }) => {
                 headers: { Authorization: `Bearer ${token}` },
             });
             setUsers(response.data);
-        console.log(response.data)
         } catch (err) {
             // 400 hatası alındığında özel mesaj göster
             if (err.response?.status === 400) {

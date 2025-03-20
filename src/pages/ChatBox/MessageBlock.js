@@ -3,7 +3,7 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 import formatTime from "../../hooks/formatTime";
 import Dropdown from "./Dropdown";
 import { motion } from "framer-motion";
-import ISReady from "./ISReady";
+import ISReady from "../../Component/ISRead";
 import axios from "axios";
 import { API_URL } from "../../config";
 

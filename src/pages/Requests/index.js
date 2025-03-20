@@ -6,6 +6,7 @@ import { FaCheck, FaTrash } from "react-icons/fa6";
 import Swal from "sweetalert2";
 import { API_URL } from "../../config";
 import UserImage from "../../Component/UserImage";
+import { capitalize } from "../../utils/stringUtils";
 import "./index.css";
 
 function Index() {
@@ -47,7 +48,6 @@ function Index() {
         prevRequests.filter((request) => request.sender.userId !== senderId)
       );
     } catch (err) {
-      console.error("Error processing the friend request:", err);
       alert("Could not process the request. Please try again.");
     }
   };
@@ -95,8 +95,10 @@ function Index() {
               />
             </div>
             <div>
-              <span>{`${request[isIncoming ? "sender" : "receiver"].name} ${request[isIncoming ? "sender" : "receiver"].surname
-                }`}</span>
+              <span>
+                {capitalize(request[isIncoming ? "sender" : "receiver"].name)}{" "}
+                {capitalize(request[isIncoming ? "sender" : "receiver"].surname)}
+              </span>
             </div>
           </div>
           <div className="dropdown-wrapper">

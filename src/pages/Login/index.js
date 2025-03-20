@@ -25,7 +25,6 @@ const LoginForm = () => {
           navigate("/"); // Token geçerliyse ana sayfaya yönlendir
         }
       } catch (error) {
-        console.error("Token doğrulama hatası:", error);
         localStorage.removeItem("token"); // Geçersiz token'ı temizle
       }
     };
@@ -62,7 +61,6 @@ const LoginForm = () => {
         title: "Giriş başarısız",
         text: error.response?.data?.error || "Lütfen tekrar deneyin.",
       });
-      console.error("Giriş hatası:", error.message);
     }
   };
 

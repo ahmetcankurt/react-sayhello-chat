@@ -12,9 +12,12 @@ import ScrollContainer from "../../Component/ScrollContainer";
 import { useSelector, shallowEqual } from "react-redux";
 import { API_URL } from "../../config";
 import Skeleton from "../../Component/Skeleton";
+import { capitalize } from "../../utils/stringUtils";
 
 const Index = () => {
   const userInfo = useSelector((state) => state.userInformation.user, shallowEqual);
+  const Name = capitalize(userInfo.name);
+  const Surname = capitalize(userInfo.surname);
 
   const icons = useMemo(
     () => [
@@ -55,8 +58,8 @@ const Index = () => {
       </div>
 
       <p className="profile-name">
-        {userInfo.name ?? <Skeleton className="profile-name mt-4" width="200px" height="20px" />}
-        <span className="ms-2">{userInfo.surname}</span>
+        {Name ?? <Skeleton className="profile-name mt-4" width="200px" height="20px" />}
+        <span className="ms-2">{Surname}</span>
       </p>
 
       <span className="profile-job">

@@ -1,15 +1,7 @@
 .deneme-container {
   background-color: #ff0000;
 }
-.profile-bg-friends {
-  width: 100%;
-  height: 250px;
-  background-repeat: no-repeat;
-  object-fit: cover;
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  
-}
+
 
 .profile-friends-name {
   position: absolute;
@@ -31,13 +23,18 @@
 }
 
 .container-friends {
-  padding: 10px;
-  background-color: rgb(255, 255, 255);
   width: 380px;
-  flex-shrink: 0;
-  overflow: hidden;
-  opacity: 1;
-  visibility: visible;
+  padding: 10px;
+}
+
+.profile-bg-friends {
+  width: 100%;
+  height: 250px;
+  background-repeat: no-repeat;
+  object-fit: cover;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  
 }
 
 .friend-status {
@@ -89,12 +86,17 @@
     display: flex;
     z-index: 1000; /* Ensure it's on top of other elements */
     overflow: hidden;
-    padding: 5px;
   }
 
-  .container-friends {
+  .header-close-icon{
+    margin: 10px 10px 5px 10px;
+  }
+
+  .container-friends{
+    padding: 10px;
     width: 100vw;
   }
+  
   .mobile-none {
     display: block !important;
   }

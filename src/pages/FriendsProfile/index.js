@@ -47,6 +47,7 @@ function Index({ selectedUser, handleProfileClick }) {
         []
     );
 
+    const [imageError, setImageError] = useState(false);
 
     if (!selectedUser) {
         return
@@ -61,11 +62,17 @@ function Index({ selectedUser, handleProfileClick }) {
         <div className="">
             <TbCircleArrowLeft className="header-close-icon mobile-none" onClick={handleProfileClick} />
             <div className='container-friends' style={{ position: 'relative', display: 'inline-block' }}>
-                {
-                    userInfo?.profileImage
-                        ? <img className='profile-bg-friends' src={`${API_URL}/${userInfo?.profileImage}` || ProfileBg} alt="Example" />
-                        : <Skeleton className="profile-bg-friends" height={"250px"} />
-
+            {
+                    !imageError && userInfo?.profileImage ? (
+                        <img 
+                            className='profile-bg-friends' 
+                            src={`${API_URL}/${userInfo?.profileImage}`} 
+                            alt="Profile Background" 
+                            onError={() => setImageError(true)} // Set error state if image fails
+                        />
+                    ) : (
+                        <Skeleton className="profile-bg-friends" height={"250px"} />
+                    )
                 }
                 <span className='profile-friends-name'>
                     <span className='profile-f-name' >{capitalize(userInfo.name)} {capitalize(userInfo.surname)}</span>

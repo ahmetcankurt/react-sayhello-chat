@@ -4,7 +4,7 @@ import { RiLogoutCircleLine } from "react-icons/ri";
 import CustomTooltip from "./Tooltip";
 import ICON_DATA from "../constants/sidebarIcons";
 import ProfileBg from "../assets/image/image_header.jpg";
-import { memo } from "react";
+import { memo, useState } from "react";
 import { useSelector } from "react-redux";
 import { API_URL } from "../config";
 import "./Sidebar.css";
@@ -12,6 +12,7 @@ import "./Sidebar.css";
 const Sidebar = ({ onLinkClick, activePage, toggleContentVisibility }) => {
   const userInfo = useSelector((state) => state.userInformation.user);
   const navigate = useNavigate();
+  const [imageError, setImageError] = useState(false); // Track image error
 
   const handleLogout = () => {
     localStorage.clear();
@@ -36,19 +37,19 @@ const Sidebar = ({ onLinkClick, activePage, toggleContentVisibility }) => {
           ))}
         </div>
         <div className="dropdown">
-          <img
-            src={userInfo?.profileImage ? `${API_URL}/${userInfo?.profileImage}` : ProfileBg}
-            className="sidebar-bottom-image"
-            alt="me-image"
-            style={{ cursor: "pointer" }}
-            data-bs-toggle="dropdown"
-          />
-
-          <ul className="dropdown-menu mb-2 ms-1" style={{ zIndex: 1002 }}>
-            <button className="dropdown-item d-flex align-items-center" onClick={handleLogout}>
-              <RiLogoutCircleLine className="me-2" /> Logout
-            </button>
-          </ul>
+            <img
+                src={imageError || !userInfo?.profileImage ? ProfileBg : `${API_URL}/${userInfo?.profileImage}`}
+                className="sidebar-bottom-image"
+                alt="me-image"
+                style={{ cursor: "pointer" }}
+                data-bs-toggle="dropdown"
+                onError={() => setImageError(true)} // Handle image error
+            />
+            <ul className="dropdown-menu mb-2 ms-1" style={{ zIndex: 1002 }}>
+                <button className="dropdown-item d-flex align-items-center" onClick={handleLogout}>
+                    <RiLogoutCircleLine className="me-2" /> Logout
+                </button>
+            </ul>
         </div>
       </div>
     </aside>

@@ -2,7 +2,7 @@
 .chat-container {
   display: flex;
   flex-direction: column; /* Header, ChatBox ve Footer için dikey sıralama */
-  height: 100%; /* Tüm ekranı kaplasın */
+  height: 100vh;
   position: relative;
   background-image: url("../../assets/image/chat-background/pattern-01.png");
   background-attachment: fixed; /* Keeps the background fixed */
@@ -13,6 +13,7 @@
   flex-direction: column;
   padding: 0px 28px 0 34px;
   overflow: auto;
+  grid-row: 1;
   height: 100%;
 }
 
@@ -170,6 +171,8 @@
   border-top: 1px solid rgb(234, 234, 241);
   box-shadow: 0 0 1px rgb(203, 203, 204);
   z-index: 2;
+  position: sticky;
+  bottom: 0;
 }
 
 .chat-footer-container {

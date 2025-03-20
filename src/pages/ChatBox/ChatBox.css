@@ -4,7 +4,7 @@
   align-items: flex-start;
   padding: 0px 28px 0 34px;
   overflow: auto;
-  flex-grow: 1;
+  height: 100%;
 }
 
 .chat-box::after {

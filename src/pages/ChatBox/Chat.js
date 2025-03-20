@@ -7,10 +7,10 @@ import MessageBlock from "./MessageBlock";
 import { groupMessagesByDate } from "./groupMessagesByDate";
 import { API_URL } from "../../config";
 import { motion } from "framer-motion";
+import SplashScreen from "../../Component/SplashScreen";
 import "./ChatBox.css";
 import "./chatBox-scrool.css";
 
-import SplashScreen from "../../Component/SplashScreen";
 
 const Chat = ({ selectedUser, handleProfileClick, setSelectedUser }) => {
   const [messages, setMessages] = useState([]);

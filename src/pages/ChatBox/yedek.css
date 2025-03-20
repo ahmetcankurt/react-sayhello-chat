@@ -1,16 +1,7 @@
-
-.chat-container {
-  display: flex;
-  flex-direction: column; /* Header, ChatBox ve Footer için dikey sıralama */
-  height: 100%; /* Tüm ekranı kaplasın */
-  position: relative;
-  background-image: url("../../assets/image/chat-background/pattern-01.png");
-  background-attachment: fixed; /* Keeps the background fixed */
-}
-
 .chat-box {
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
   padding: 0px 28px 0 34px;
   overflow: auto;
   height: 100%;
@@ -32,14 +23,32 @@
   z-index: -2; /* Diğer içeriklerin üstünde değil, alt kısmında olmasını sağlar */
 }
 
+.no-messages-container {
+  display: flex;
+  justify-content: center;
+  flex-direction: column; /* İçeriği dikey sıralar */
+  width: 100%;
+  align-items: center;
+  height: 100vh; /* Ekranın tamamını kapsasın */
+}
+
+.no-messages-text {
+  font-size: 20px;
+  color: #888;
+  font-weight: bold;
+}
+
 .message-isDeleted {
+  /* background-color: #ff000039!important; */
   color: #33333369 !important;
 }
 
 .message {
   display: flex;
+  justify-content: center;
+  /* align-items: baseline; */
   max-width: 60%;
-  margin-bottom: 5px;
+  position: relative;
 }
 
 .message-content {
@@ -52,7 +61,18 @@
   position: relative;
 }
 
+.chat-dots-icon {
+  height: 40px;
+  font-size: 20px;
+  color: #727272;
+  cursor: pointer;
+  margin: 0 15px;
+  opacity: 0; /* Initially hidden */
+}
 
+.chat-dots-icon:hover {
+  color: black;
+}
 
 .message-clock {
   color: #676565;
@@ -84,25 +104,6 @@
   background-color: white;
 }
 
-.chat-dots-icon {
-  min-width: 25px; /* Minimum genişlik */
-  min-height: 25px; /* Minimum yükseklik */
-  font-size: 20px;
-  color: #727272;
-  cursor: pointer;
-  margin: 0 15px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  position: relative;
-}
-
-
-.chat-dots-icon:hover {
-  color: black;
-}
-
 /* Dropdown Style */
 .dropdown-chat {
   background-color: white;
@@ -110,7 +111,6 @@
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   border-radius: 5px;
   padding: 3px 0;
-  position: absolute;
 }
 
 .dropdown-chat-icon {
@@ -140,6 +140,10 @@
   height: 100vh;
 }
 
+.chat-info {
+  display: flex;
+  flex-direction: column; /* Alt alta yerleştirme */
+}
 
 .chat-name {
   font-size: 16px;
@@ -147,9 +151,34 @@
   cursor: pointer;
 }
 
+.chat-status {
+  font-size: 14px;
+  color: green; /* Online için yeşil renk */
+}
+
+.chat-status.Online {
+  font-size: 14px;
+  color: green; /* Online için yeşil renk */
+}
+
+.chat-status.Offline {
+  font-size: 14px;
+  color: red;
+}
+
+/* Ana chat container */
+.chat-container {
+  display: flex;
+  flex-direction: column; /* Header, ChatBox ve Footer için dikey sıralama */
+  height: 100%; /* Tüm ekranı kaplasın */
+  position: relative;
+  background-image: url("../../assets/image/chat-background/pattern-01.png");
+  background-attachment: fixed; /* Keeps the background fixed */
+}
 
 /* Header'ın üstte sabitlenmesi */
 .chat-header {
+  /* position: absolute; */
   height: 70px;
   display: flex;
   padding: 16px 24px;
@@ -162,16 +191,18 @@
   box-shadow: 0 0 1px rgb(203, 203, 204);
 }
 
+/* Footer'ın altta sabitlenmesi */
 .chat-footer {
+  /* background-color: #f1f1f1; */
+  bottom: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 15px 24px;
-  border-top: 1px solid rgb(234, 234, 241);
-  box-shadow: 0 0 1px rgb(203, 203, 204);
+  /* border-top: 1px solid rgb(234, 234, 241); */
+  /* box-shadow: 0 0 1px rgb(203, 203, 204); */
   z-index: 2;
 }
-
 .chat-footer-container {
   width: 100%;
   backdrop-filter: blur(2px); /* Bulanıklık efekti */
@@ -184,6 +215,13 @@
   font-size: 20px;
   cursor: pointer;
   margin: 0 10px;
+}
+
+.chat-search-input {
+  flex-grow: 1;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
 }
 
 /* ✅ Menü container */
@@ -257,7 +295,6 @@
   border-radius: 50%;
   color: #121119;
 }
-
 .header-close-icon:hover {
   color: #1da0c3;
 }
@@ -270,11 +307,10 @@
   font-weight: bold;
   padding: 5px 0;
   width: 100%;
-  margin-bottom: 15px;
 }
 
 .date-separator-text {
-  background-color: #555;
+  background-color: #20a5d8;
   color: white;
   padding: 2px 10px;
   border-radius: 20px;

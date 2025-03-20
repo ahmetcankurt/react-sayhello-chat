@@ -73,7 +73,7 @@ function MessageBlock({ message, userId, handleUpdate, messages }) {
           <p className={`message-content ${message.senderId === userId ? 'senderId' : 'receiverId'} ${message.isDeleted && "message-isDeleted"}`}>
             {message.isDeleted ? "🚫 Bu mesaj silindi" : message.content}
           </p>
-          {message.senderId === userId && <ISReady isRead={message.isRead} />}
+          {message.senderId === userId && <ISReady className="me-1" isRead={message.isRead} />}
           <span className="message-clock">{formatTime(message.createdAt)}</span>
         </motion.div>
 

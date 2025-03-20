@@ -26,6 +26,7 @@ const Messages = memo(({ message, setSelectedUser, selectedUser }) => {
     setSelectedUser(userId);
   }, [setSelectedUser, userId]);
 
+
   return (
     <div className={`messages-blog ${isActiveUser ? "active" : ""}`} onClick={handleClick}>
       <UserImage height={"55px"} src={profileImage} isActive={isActive} />
@@ -33,7 +34,7 @@ const Messages = memo(({ message, setSelectedUser, selectedUser }) => {
         <span>{Name} {Surname}</span>
         <p className="messages-detail m-0">
           {
-            lastMessageSender === "Ben" ?
+            lastMessageSender === "ben" ?
               <span>
                 <ISRead isRead={isRead} />  {shortenedMessage}
               </span>

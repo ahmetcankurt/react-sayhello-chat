@@ -1,33 +1,33 @@
 /* Scroll bar stilleri */
 .chat-box::-webkit-scrollbar {
-    width: 6px;
-    opacity: 0; /* Başlangıçta scroll bar'ı gizle */
-    transition: opacity 0.3s; /* Yumuşak geçiş efekti */
-  }
-  
-  .chat-box::-webkit-scrollbar-track {
-    border-radius: 10px;
-  }
-  
-  .chat-box::-webkit-scrollbar-thumb {
-    border-radius: 10px;
-    transition: background 0.3s; /* Yumuşak geçiş efekti */
-  }
-  
-  /* Scroll bar üzerine geldiğinde görünmesini sağla */
-  .chat-box:hover::-webkit-scrollbar {
-    opacity: 1; /* Scroll bar'ı göster */
-  }
-  
-  .chat-box:hover::-webkit-scrollbar-thumb {
-    background: #555555c1; /* Üzerine gelindiğinde scroll bar rengi değişsin */
-  }
-  
-  /* İçeriğe odaklanıldığında scroll bar görünmesini sağla */
-  .chat-box:focus-within::-webkit-scrollbar {
-    opacity: 1; /* Scroll bar'ı göster */
-  }
-  
-  .chat-box:focus-within::-webkit-scrollbar-thumb {
-    background: #555; /* Üzerine gelindiğinde scroll bar rengi değişsin */
-  }
+  width: 6px;
+  opacity: 0; /* Başlangıçta scroll bar'ı gizle */
+  transition: opacity 0.3s; /* Yumuşak geçiş efekti */
+}
+
+.chat-box::-webkit-scrollbar-track {
+  border-radius: 10px;
+}
+
+.chat-box::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  transition: background 0.3s; /* Yumuşak geçiş efekti */
+}
+
+/* Scroll bar üzerine geldiğinde görünmesini sağla */
+.chat-box:hover::-webkit-scrollbar {
+  opacity: 1; /* Scroll bar'ı göster */
+}
+
+.chat-box:hover::-webkit-scrollbar-thumb {
+  background: #555555c1; /* Üzerine gelindiğinde scroll bar rengi değişsin */
+}
+
+/* İçeriğe odaklanıldığında scroll bar görünmesini sağla */
+.chat-box:focus-within::-webkit-scrollbar {
+  opacity: 1; /* Scroll bar'ı göster */
+}
+
+.chat-box:focus-within::-webkit-scrollbar-thumb {
+  background: #555; /* Üzerine gelindiğinde scroll bar rengi değişsin */
+}

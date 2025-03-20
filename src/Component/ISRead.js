@@ -1,14 +1,16 @@
 import { memo } from "react";
 import { BsCheck2, BsCheck2All } from "react-icons/bs";
+import "./isRead.css"
 
-const ISReady = ({ isRead }) => (
+
+const ISReady = ({ isRead, className = "" }) => (
     <>
-        {
-            isRead
-                ? <BsCheck2All className="ms-2 me-1 " />
-                : <BsCheck2 className="mx-2" />
-        }
+        {isRead ? (
+            <BsCheck2All className={`is-read ${className}`} />
+        ) : (
+            <BsCheck2 className={`is-read-gray ${className}`} />
+        )}
     </>
-)
+);
 
-export default memo(ISReady)
+export default memo(ISReady);

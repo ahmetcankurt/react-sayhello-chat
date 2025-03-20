@@ -32,12 +32,7 @@ function ChatHeader({ selectedUser, handleProfileClick, clearSelectedUser }) {
     <div className="chat-header">
       <TbCircleArrowLeft className="header-close-icon" onClick={clearSelectedUser} />
       <UserImage src={userInfo?.profileImage} isActive={userInfo?.isActive} />
-      <div className="chat-info">
-        <span className="chat-name" onClick={handleProfileClick}>{Name} {Surname}</span>
-        <span className={`chat-status ${userInfo?.isActive ? "Online" : "Offline"}`}>
-          {userInfo?.isActive}
-        </span>
-      </div>
+      <span className="chat-name" onClick={handleProfileClick}>{Name} {Surname}</span>
     </div>
   );
 }

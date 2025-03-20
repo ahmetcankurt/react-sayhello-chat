@@ -4,6 +4,7 @@
   height: 100vh; /* Ekran yüksekliği kadar alan kaplasın */
   background-image: url("../../assets/image/chat-background/pattern-01.png");
   background-attachment: fixed; /* Keeps the background fixed */
+  z-index: 1;
 }
 
 .chat-container::after {
@@ -13,12 +14,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(
-    169,
-    169,
-    169,
-    0.103
-  ); /* Gri tonunda arka plan rengi */
+  background-color: rgba(169, 169, 169, 0.096); /* Gri tonunda arka plan rengi */
   z-index: -2; /* Diğer içeriklerin üstünde değil, alt kısmında olmasını sağlar */
 }
 
@@ -27,7 +23,6 @@
 }
 
 .main-chat {
-  flex: 1; /* Kalan tüm yüksekliği kaplasın */
   display: flex;
   flex-direction: column;
   overflow: auto;

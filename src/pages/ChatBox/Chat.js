@@ -107,35 +107,86 @@ const Chat = ({ selectedUser, handleProfileClick, setSelectedUser }) => {
 
 
   return (
-    <div className="chat-container">
-      <ChatHeader selectedUser={selectedUser} handleProfileClick={handleProfileClick} clearSelectedUser={clearSelectedUser} />
-        <div className="chat-box">
-          {Object.keys(groupedMessages).map((date, index) => (
-            <Fragment key={date}>
-              <motion.div
-                key={date+"date"}
-                className="date-separator"
-                initial={{ opacity: 0, scale: 0.5 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration:1, ease: "easeOut" }}
-              >
-                <span className="date-separator-text">{date}</span>
-              </motion.div>
+    // <div className="chat-container">
+    //   <ChatHeader selectedUser={selectedUser} handleProfileClick={handleProfileClick} clearSelectedUser={clearSelectedUser} />
+    //   <div className="chat-box">
+    //     {Object.keys(groupedMessages).map((date, index) => (
+    //       <Fragment key={date}>
+    //         <motion.div
+    //           key={date + "date"}
+    //           className="date-separator"
+    //           initial={{ opacity: 0, scale: 0.5 }}
+    //           animate={{ opacity: 1, scale: 1 }}
+    //           transition={{ duration: 1, ease: "easeOut" }}
+    //         >
+    //           <span className="date-separator-text">{date}</span>
+    //         </motion.div>
 
-              {groupedMessages[date].map((message, idx) => (
-                <MessageBlock
-                  message={message}
-                  key={`${date}-${index}-${idx}`}
-                  userId={userId}
-                  handleUpdate={handleUpdate}
-                />
-              ))}
-            </Fragment>
-          ))}
+    //         {groupedMessages[date].map((message, idx) => (
+    //           <MessageBlock
+    //             message={message}
+    //             key={`${date}-${index}-${idx}`}
+    //             userId={userId}
+    //             handleUpdate={handleUpdate}
+    //           />
+    //         ))}
+    //       </Fragment>
+    //     ))}
 
+    //   </div>
+    //   <ChatFooter selectedUser={selectedUser} />
+    // </div >
+
+    <div className="container-1">
+      <div className="header">
+        <ChatHeader selectedUser={selectedUser} handleProfileClick={handleProfileClick} clearSelectedUser={clearSelectedUser} />
+      </div>
+      <div className="main">
+        <div>Ali</div>
+        <div>ahmet</div>
+        <div>ahmet</div>
+        <div>ahmet</div>
+        <div>ahmet</div>
+        <div>ahmet</div>
+        <div>ahmet</div>
+        <div>ahmet</div>
+        <div>ahmet</div>
+        <div>ahmet</div>
+        <div>ahmet</div>
+        <div>ahmet</div>
+        <div>ahmet</div>
+        <div>ahmet</div>
+        <div>ahmet</div>
+        <div>ahmet</div>
+        <div>ahmet</div>
+        <div>ahmet</div>
+        <div>ahmet</div>
+        <div>ahmet</div>
+        <div>ahmet</div>
+        <div>ahmet</div>
+        <div>ahmet</div>
+        <div>ahmet</div>
+        <div>ahmet</div>
+        <div>ahmet</div>
+        <div>ahmet</div>
+        <div>ahmet</div>
+        <div>ahmet</div>
+        <div>ahmet</div>
+        <div>ahmet</div>
+        <div>ahmet</div>
+        <div>ahmet</div>
+        <div>ahmet</div>
+        <div>ahmet</div>
+        <div>ahmet</div>
+        <div>ahmet</div>
+        <div>ahmet</div>
+        <div>ahmet</div>
+        <div>Ali</div>
         </div>
+      <div className="footer">
       <ChatFooter selectedUser={selectedUser} />
-    </div >
+      </div>
+    </div>
   );
 };
 

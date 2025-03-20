@@ -5,8 +5,8 @@ import axios from "axios";
 import { FaCheck, FaTrash } from "react-icons/fa6";
 import Swal from "sweetalert2";
 import { API_URL } from "../../config";
-import "./index.css";
 import UserImage from "../../Component/UserImage";
+import "./index.css";
 
 function Index() {
   const userId = localStorage.getItem("userId");

@@ -6,8 +6,10 @@ import ChatHeader from "./ChatHeader";
 import MessageBlock from "./MessageBlock";
 import { groupMessagesByDate } from "./groupMessagesByDate";
 import { API_URL } from "../../config";
+import { motion } from "framer-motion";
 import "./ChatBox.css";
-import ScrollContainer from "../../Component/ScrollContainer";
+import "./chatBox-scrool.css";
+
 import SplashScreen from "../../Component/SplashScreen";
 
 const Chat = ({ selectedUser, handleProfileClick, setSelectedUser }) => {
@@ -94,7 +96,7 @@ const Chat = ({ selectedUser, handleProfileClick, setSelectedUser }) => {
     }
   };
 
-  
+
 
   // Mesajlar güncellenince de sayfayı aşağı kaydır
   useEffect(() => {
@@ -108,31 +110,34 @@ const Chat = ({ selectedUser, handleProfileClick, setSelectedUser }) => {
 
   return (
     <div className="chat-container">
-    <ChatHeader selectedUser={selectedUser} handleProfileClick={handleProfileClick} clearSelectedUser={clearSelectedUser} />
-    <ScrollContainer ref={chatBoxRef}>
-      <div className="chat-box">
-      {Object.keys(groupedMessages).map((date, index) => (
-          <Fragment key={date}>
-            <div className="date-separator">
-              <span className="date-separator-text">
-                {date}
-              </span>
-            </div>
-            {groupedMessages[date].map((message, idx) => (
-              <MessageBlock
-                message={message}
-                key={`${date}-${index}-${idx}`}
-                index={index}
-                userId={userId}
-                handleUpdate={handleUpdate}
-              />
-            ))}
-          </Fragment>
-        ))}
-      </div>
-    </ScrollContainer>
-    <ChatFooter selectedUser={selectedUser} />
-  </div>
+      <ChatHeader selectedUser={selectedUser} handleProfileClick={handleProfileClick} clearSelectedUser={clearSelectedUser} />
+        <div className="chat-box">
+          {Object.keys(groupedMessages).map((date, index) => (
+            <Fragment key={date}>
+              <motion.div
+                key={date+"date"}
+                className="date-separator"
+                initial={{ opacity: 0, scale: 0.5 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration:1, ease: "easeOut" }}
+              >
+                <span className="date-separator-text">{date}</span>
+              </motion.div>
+
+              {groupedMessages[date].map((message, idx) => (
+                <MessageBlock
+                  message={message}
+                  key={`${date}-${index}-${idx}`}
+                  userId={userId}
+                  handleUpdate={handleUpdate}
+                />
+              ))}
+            </Fragment>
+          ))}
+
+        </div>
+      <ChatFooter selectedUser={selectedUser} />
+    </div >
   );
 };
 

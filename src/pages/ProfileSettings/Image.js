@@ -53,44 +53,50 @@ function Image() {
       });
   };
 
-  return (
-      <div className="profile-container">
-        {/* Arka plan resmi */}
-        <img
-          src={user?.backgroundImage ? `${API_URL}/${user.backgroundImage}` : ProfileBg}
-          className="profile-settings-bg"
-          alt="Profile Background"
-        />
-        <input
-          type="file"
-          ref={backgroundImageInputRef}
-          accept="image/*"
-          style={{ display: "none" }}
-          onChange={(e) => handleFileChange(e, "backgroundImage")}
-        />
-        <div className="camera-icon-bg">
-          <TbCameraPlus className="icon" onClick={() => backgroundImageInputRef.current.click()} />
-        </div>
+  const handleError = (e) => {
+    e.target.src = ProfileBg; // Default image when error occurs
+  };
 
-        {/* Profil resmi */}
-        <div className="profile-container">
-          <img
-            src={user?.profileImage ? `${API_URL}/${user.profileImage}` : ProfileBg}
-            className="profile-settings-me"
-            alt="Profile"
-          />
-          <div className="camera-icon-profil">
-            <TbCameraPlus className="icon" onClick={() => profileImageInputRef.current.click()} />
-          </div>
-        </div>
-        <input
-          type="file"
-          ref={profileImageInputRef}
-          accept="image/*"
-          style={{ display: "none" }}
-          onChange={(e) => handleFileChange(e, "profileImage")}
-        />
+  return (
+    <div className="profile-container">
+      {/* Arka plan resmi */}
+      <img
+        src={user?.backgroundImage ? `${API_URL}/${user.backgroundImage}` : ProfileBg}
+        className="profile-settings-bg"
+        alt="Profile Background"
+        onError={handleError} // Add this line to handle errors
+      />
+      <input
+        type="file"
+        ref={backgroundImageInputRef}
+        accept="image/*"
+        style={{ display: "none" }}
+        onChange={(e) => handleFileChange(e, "backgroundImage")}
+      />
+      <div className="camera-icon-bg">
+        <TbCameraPlus className="icon" onClick={() => backgroundImageInputRef.current.click()} />
       </div>
+
+      {/* Profil resmi */}
+      <div className="profile-container">
+        <img
+          src={user?.profileImage ? `${API_URL}/${user.profileImage}` : ProfileBg}
+          className="profile-settings-image"
+          alt="Profile"
+          onError={handleError} // Add this line to handle errors
+        />
+        <div className="camera-icon-profil">
+          <TbCameraPlus className="icon" onClick={() => profileImageInputRef.current.click()} />
+        </div>
+      </div>
+      <input
+        type="file"
+        ref={profileImageInputRef}
+        accept="image/*"
+        style={{ display: "none" }}
+        onChange={(e) => handleFileChange(e, "profileImage")}
+      />
+    </div>
   );
 }
 

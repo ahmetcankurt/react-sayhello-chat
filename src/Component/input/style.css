@@ -3,5 +3,4 @@
     display: flex; /* Flexbox ile input ve ikon yatayda hizalanır */
     align-items: center; /* İkonu ve input'u dikeyde ortalar */
     position: relative; /* İkonun input'un içinde doğru konumlandırılması için */
-    margin: 0px 10px 20px 10px;
   }

@@ -6,37 +6,37 @@ import { BsThreeDots } from "react-icons/bs";
 import { IoCloseCircleOutline } from "react-icons/io5";
 import Swal from 'sweetalert2';
 import axios from 'axios';
-import ScrollContainer from "../../Component/ScrollContainer"
 import { API_URL } from '../../config';
 import './Modal.css';
 import UserImage from '../../Component/UserImage';
+import SearchInput from "../../Component/input/searchInput"
 
 const UserList = ({ users, onAddFriend, handleRemoveFriendRequest }) => {
     if (users.length === 0) return <p></p>;
 
     return (
-            <ul className="modal-user-list">
-                {users.map(user => (
-                    <li key={user.userId} className="modal-user-item">
-                        <div className='modal-user-item-div'>
-                            <UserImage src={user?.profileImage} isActive={user.isActive} alt={`${user.name} ${user.surname}`}/>
-                            <p>{user.name} {user.surname} (@{user.username})</p>
-                        </div>
-                        <span>
-                            {user.friendshipStatus === 'friend_request_pending' ? (
-                                <BsThreeDots title='bekliyor' className='modal-friends-add-button' onClick={() => handleRemoveFriendRequest(user.userId)} />
-                            ) : user.friendshipStatus === 'friend_request_accepted' ? (
-                                <FaUserCheck className='modal-friends-add-button' />
-                            ) : (
-                                <MdAdd
-                                    className='modal-friends-add-button'
-                                    onClick={() => onAddFriend(user.userId)}
-                                />
-                            )}
-                        </span>
-                    </li>
-                ))}
-            </ul>
+        <ul className="modal-user-list">
+            {users.map(user => (
+                <li key={user.userId} className="modal-user-item">
+                    <div className='modal-user-item-div'>
+                        <UserImage src={user?.profileImage} isActive={user.isActive} alt={`${user.name} ${user.surname}`} />
+                        <p>{user.name} {user.surname} (@{user.username})</p>
+                    </div>
+                    <span>
+                        {user.friendshipStatus === 'friend_request_pending' ? (
+                            <BsThreeDots title='bekliyor' className='modal-friends-add-button' onClick={() => handleRemoveFriendRequest(user.userId)} />
+                        ) : user.friendshipStatus === 'friend_request_accepted' ? (
+                            <FaUserCheck className='modal-friends-add-button' />
+                        ) : (
+                            <MdAdd
+                                className='modal-friends-add-button'
+                                onClick={() => onAddFriend(user.userId)}
+                            />
+                        )}
+                    </span>
+                </li>
+            ))}
+        </ul>
     );
 };
 
@@ -156,25 +156,22 @@ const Modal = ({ onClose }) => {
     };
 
 
+    const handleKeyDown = (e) => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          handleSearch();
+        }
+      };
+
+
     return (
         <div className="modal-overlay" >
             <div className={`modal-container ${isClosing ? 'closing' : ''}`} >
-                <IoCloseCircleOutline onClick={handleClose} className="modal-close-button" />
-                <label htmlFor="Email" className="modal-title">Kullanıcı Ara</label>
-                <div className="modal-search-container mb-3">
-                    <input
-                        autoComplete="off"
-                        id="Email"
-                        type="text"
-                        placeholder="Search..."
-                        className="search-input"
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                    />
-                    <FaSearch className="search-icon" onClick={handleSearch} />
-                </div>
+                <label htmlFor="Email" className="modal-title text-center d-block">Kullanıcı Ara</label>
+                <IoCloseCircleOutline onClick={handleClose} className="modal-friends-close-button" />
+                    <SearchInput searchTerm={searchQuery} handleSearchChange={(e) => setSearchQuery(e.target.value)} handleSearch={handleSearch}  handleKeyDown={handleKeyDown}  />
                 {loading ? (
-                    <p>Yükleniyor...</p>
+                    <p></p>
                 ) : (
                     <>
                         {error && <p className="modal-error">{error}</p>}

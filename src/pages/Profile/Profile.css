@@ -10,16 +10,17 @@
   object-fit: cover;
 }
 
-.profile-page {
-  border: 5px rgb(234, 234, 241) solid;
+.profile-image {
+  border: 5px solid rgb(234, 234, 241);
   width: 80px;
   height: 80px;
   border-radius: 50%;
   position: absolute;
-  bottom: -40px; /* Resmin yarısının alt kısımda olmasını sağlıyoruz */
+  bottom: -40px;
   left: 50%;
-  transform: translateX(-50%); /* Resmi tam ortalamak için */
+  transform: translateX(-50%);
   object-fit: cover;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Gölge efekti */
 }
 
 .profile-name {
@@ -63,7 +64,7 @@
 
 .icon-wrapper .icon{
   font-size: 22px;
-  color: #373737d6;
+  color: #495057bf;
   cursor: pointer;
 }
 
@@ -73,4 +74,19 @@
   color: #222121f5;
 }
 
+.social-link{
+  font-size: 14px;
+  color: rgba(73, 80, 87, 0.75);
+  font-weight: 400;
+  white-space: nowrap; /* Metni tek satıra yerleştirir */
+  overflow: hidden; /* Taşan metni gizler */
+  text-overflow: ellipsis; /* Taşan metnin sonuna '...' ekler */
+  max-width: 250px; /* Maksimum genişliği belirleyin */
+}
 
+@media screen and (max-width: 768px) {
+
+  .social-link{
+  max-width: 80vw;
+}
+}

@@ -15,7 +15,7 @@ import { capitalize } from "../../utils/stringUtils";
 
 const socket = io(API_URL);
 
-const Index = ({ setSelectedUser}) => {
+const Index = ({ setSelectedUser }) => {
   const [friends, setFriends] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [dropdownVisible, setDropdownVisible] = useState(null);
@@ -104,7 +104,7 @@ const Index = ({ setSelectedUser}) => {
     });
 
     return () => {
-      socket.off("userStatus"); // Temizleme işlemi
+      socket.off("userStatus"); // 
     };
   }, []);
 
@@ -114,7 +114,9 @@ const Index = ({ setSelectedUser}) => {
         <span className="Mymessages-title" >Arkadaşlarım</span>
         <MdAdd className="Mymessages-icon" onClick={openModal} />
       </div>
-      <SearchInput searchTerm={searchTerm} handleSearchChange={handleSearchChange} />
+      <div className="mx-2">
+        <SearchInput searchTerm={searchTerm} handleSearchChange={handleSearchChange} />
+      </div>
       <ScrollContainer paddingBottom="80px">
         <div className="friends-scroll-container">
           {Object.keys(groupedFriends)

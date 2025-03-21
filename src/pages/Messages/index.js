@@ -1,13 +1,12 @@
 import React, { memo, useEffect, useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { MdAdd } from "react-icons/md";
 import { fetchMessages } from "../../redux/slices/messagesSlice";
 import SearchInput from "../../Component/input/searchInput";
 import UserImage from "../../Component/UserImage";
-import "./Mymessages.css";
 import ScrollContainer from "../../Component/ScrollContainer";
 import ISRead from "../../Component/ISRead";
 import { capitalize } from "../../utils/stringUtils";
+import "./Mymessages.css";
 
 // Kısa mesaj fonksiyonu
 const getShortenedMessage = (message, maxLength = 20) =>
@@ -91,7 +90,9 @@ function Index({ selectedUser, setSelectedUser }) {
         <div className="Mymessages-add">
           <span className="Mymessages-title">Mesajlarım</span>
         </div>
+        <div className="mx-2">
         <SearchInput searchTerm={searchTerm} handleSearchChange={handleSearchChange} />
+        </div>
       </div>
       <ScrollContainer paddingBottom="80px">{content}</ScrollContainer>
     </div>

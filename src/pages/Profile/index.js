@@ -1,35 +1,30 @@
-import { memo, useMemo } from "react";
-import {
-  FaEnvelope,
-  FaInstagramSquare,
-  FaPhone,
-  FaLinkedin,
-  FaGithub,
-  FaTwitter,
-} from "react-icons/fa";
-import "./Profile.css";
+import { memo, useEffect, useMemo } from "react";
+import { Fancybox } from "@fancyapps/ui";
 import ScrollContainer from "../../Component/ScrollContainer";
 import { useSelector, shallowEqual } from "react-redux";
 import { API_URL } from "../../config";
 import Skeleton from "../../Component/Skeleton";
 import { capitalize } from "../../utils/stringUtils";
+import SocialLinks from "../../Component/SocialLinks";
+import IconsList from "../../constants/profileSocialIcon";
+import "./Profile.css";
 
 const Index = () => {
   const userInfo = useSelector((state) => state.userInformation.user, shallowEqual);
   const Name = capitalize(userInfo.name);
   const Surname = capitalize(userInfo.surname);
+  const icons = useMemo(() => IconsList(), []);
 
-  const icons = useMemo(
-    () => [
-      { component: FaEnvelope, key: "email", valueKey: "email", label: "E-mail" },
-      { component: FaInstagramSquare, key: "instagram", valueKey: "instagram", label: "Instagram" },
-      { component: FaPhone, key: "phone", valueKey: "phone", label: "Phone" },
-      { component: FaLinkedin, key: "linkedin", valueKey: "linkedin", label: "Linkedin" },
-      { component: FaGithub, key: "github", valueKey: "github", label: "Github" },
-      { component: FaTwitter, key: "twitter", valueKey: "twitter", label: "Twitter" },
-    ],
-    []
-  );
+  useEffect(() => {
+    Fancybox.bind("[data-fancybox]", {
+      Toolbar: false, // Üst menüyü kapatır
+      smallBtn: true, // Küçük kapatma butonu gösterir
+    });
+
+    return () => {
+      Fancybox.unbind("[data-fancybox]");
+    };
+  }, []);
 
   if (!userInfo) {
     return <Skeleton width="100%" height="100vh" borderRadius="0" />;
@@ -39,16 +34,20 @@ const Index = () => {
     <div>
       <div className="profile-container">
         {userInfo.backgroundImage ? (
+           <a data-fancybox="Background" href={`${API_URL}/${userInfo.backgroundImage}`}>
           <img src={`${API_URL}/${userInfo.backgroundImage}`} className="profile-bg" alt="Profile Background" />
+          </a>
         ) : (
           <Skeleton width="100%" height="200px" borderRadius="0" />
         )}
 
         {userInfo.profileImage ? (
-          <img src={`${API_URL}/${userInfo.profileImage}`} className="profile-page" alt="Profile" />
+          <a data-fancybox="profile" href={`${API_URL}/${userInfo.profileImage}`}>
+            <img src={`${API_URL}/${userInfo.profileImage}`} className="profile-image" alt="Profile" />
+          </a>
         ) : (
           <Skeleton
-            className="profile-page"
+            className="profile-image"
             width={90}
             height={90}
             style={{ transform: "translate(-50%, -50%)", position: "absolute", bottom: "-50%", left: "50%" }}
@@ -68,7 +67,7 @@ const Index = () => {
 
       <hr className="p-0 m-0 box-shadow-global" />
 
-      <ScrollContainer paddingBottom="80px" >
+      <ScrollContainer paddingBottom="80px">
         <p className="profile-about py-3 px-2">
           {userInfo.aboutme ?? <Skeleton className="mt-2" width="80%" height="30px" />}
         </p>
@@ -79,16 +78,7 @@ const Index = () => {
             ))}
           </div>
         ) : (
-          icons.map(({ component: Icon, key, valueKey }) =>
-            userInfo[valueKey] ? (
-              <div key={key} className="icon-wrapper">
-                <div className="d-flex align-items-center gap-2">
-                  <Icon className="icon" />
-                  <span>{userInfo[valueKey]}</span>
-                </div>
-              </div>
-            ) : null
-          )
+          <SocialLinks icons={icons} userInfo={userInfo} />
         )}
       </ScrollContainer>
     </div>

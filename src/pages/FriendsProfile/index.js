@@ -8,15 +8,9 @@ import { capitalize } from "../../utils/stringUtils";
 import "./index.css"
 import Skeleton from '../../Component/Skeleton';
 import ScrollContainer from '../../Component/ScrollContainer';
+import SocialLinks from "../../Component/SocialLinks";
+import IconsList from "../../constants/profileSocialIcon"
 
-import {
-    FaEnvelope,
-    FaInstagramSquare,
-    FaPhone,
-    FaLinkedin,
-    FaGithub,
-    FaTwitter,
-} from "react-icons/fa";
 
 function Index({ selectedUser, handleProfileClick }) {
     const [userInfo, setUserInfo] = useState(null);
@@ -35,17 +29,8 @@ function Index({ selectedUser, handleProfileClick }) {
         }
     }, [selectedUser]);
 
-    const icons = useMemo(
-        () => [
-            { component: FaEnvelope, key: "email", valueKey: "email", label: "E-mail" },
-            { component: FaInstagramSquare, key: "instagram", valueKey: "instagram", label: "Instagram" },
-            { component: FaPhone, key: "phone", valueKey: "phone", label: "Phone" },
-            { component: FaLinkedin, key: "linkedin", valueKey: "linkedin", label: "Linkedin" },
-            { component: FaGithub, key: "github", valueKey: "github", label: "Github" },
-            { component: FaTwitter, key: "twitter", valueKey: "twitter", label: "Twitter" },
-        ],
-        []
-    );
+      const icons = useMemo(() => IconsList(), []);
+    
 
     const [imageError, setImageError] = useState(false);
 
@@ -101,16 +86,7 @@ function Index({ selectedUser, handleProfileClick }) {
                         ))}
                     </div>
                 ) : (
-                    icons.map(({ component: Icon, key, valueKey }) =>
-                        userInfo[valueKey] ? (
-                            <div key={key} className="icon-wrapper">
-                                <div className="d-flex align-items-center gap-2">
-                                    <Icon className="icon" />
-                                    <span>{userInfo[valueKey]}</span>
-                                </div>
-                            </div>
-                        ) : null
-                    )
+                    <SocialLinks icons={icons} userInfo={userInfo} />
                 )}
             </ScrollContainer>
 

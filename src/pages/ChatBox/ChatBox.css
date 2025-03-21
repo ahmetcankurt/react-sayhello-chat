@@ -42,6 +42,7 @@
   -webkit-backdrop-filter: blur(2px); /* Safari desteği */
   border-bottom: 1px solid rgb(234, 234, 241);
   box-shadow: 0 0 1px rgb(203, 203, 204);
+  padding: 10px;
 }
 
 .header-close-icon {
@@ -249,6 +250,6 @@
   }
 
   .message {
-    max-width: 90%;
+    max-width: 95%;
   }
 }

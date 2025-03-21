@@ -9,7 +9,7 @@
   position: relative;
 }
 
-.profile-settings-me {
+.profile-settings-image {
   border: 5px rgb(234, 234, 241) solid;
   width: 80px;
   height: 80px;
@@ -19,6 +19,8 @@
   left: 50%;
   transform: translateX(-50%); /* Resmi tam ortalamak için */
   object-fit: cover;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Gölge efekti */
+
 }
 
 .camera-icon-bg .icon {

@@ -7,21 +7,7 @@
   z-index: 1;
 }
 
-.chat-container::after {
-  content: ""; /* Pseudo-element için içerik eklenmeli */
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(
-    169,
-    169,
-    169,
-    0.096
-  ); /* Gri tonunda arka plan rengi */
-  z-index: -2; /* Diğer içeriklerin üstünde değil, alt kısmında olmasını sağlar */
-}
+
 
 .message-box {
   flex-grow: 1; /* Geriye kalan alanı al */

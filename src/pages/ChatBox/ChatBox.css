@@ -32,7 +32,7 @@
   flex-direction: column; /* Elemanlar dikey sırayla yerleştirilir */
   overflow: auto; /* Taşan içerik kaydırılabilir hale gelir */
   height: calc(100vh - 142px); /* Ekran yüksekliğinden 142px çıkarılır */
-  flex-grow: 1; /* Esneme oranı belirlenir, alan varsa büyür */
+  border: 3px red solid;
   padding: 0px 28px 0 34px; /* Sağdan 28px, soldan 34px iç boşluk bırakılır */
 }
 

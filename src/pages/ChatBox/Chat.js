@@ -83,18 +83,16 @@ const Chat = ({ selectedUser, handleProfileClick, setSelectedUser }) => {
     };
   }, [userId, selectedUser]);
 
-  const groupedMessages = groupMessagesByDate(messages);
+  const groupedMessages = groupMessagesByDate(messages)
 
-  const clearSelectedUser = () => setSelectedUser(null);
+  const clearSelectedUser = () => setSelectedUser(null)
 
   // Scroll to the bottom of the chat box
   const scrollToBottom = () => {
     if (chatBoxRef.current) {
       chatBoxRef.current.scrollTop = chatBoxRef.current.scrollHeight;
     }
-  };
-
-
+  }
 
   // Mesajlar güncellenince de sayfayı aşağı kaydır
   useEffect(() => {

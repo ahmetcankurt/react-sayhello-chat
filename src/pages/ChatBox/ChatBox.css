@@ -14,7 +14,12 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(169, 169, 169, 0.096); /* Gri tonunda arka plan rengi */
+  background-color: rgba(
+    169,
+    169,
+    169,
+    0.096
+  ); /* Gri tonunda arka plan rengi */
   z-index: -2; /* Diğer içeriklerin üstünde değil, alt kısmında olmasını sağlar */
 }
 
@@ -23,16 +28,16 @@
 }
 
 .main-chat {
-  display: flex;
-  flex-direction: column;
-  overflow: auto;
-  flex-grow: 1;
-  padding: 0px 28px 0 34px;
-
+  display: flex; /* Flexbox düzeni kullanılır */
+  flex-direction: column; /* Elemanlar dikey sırayla yerleştirilir */
+  overflow: auto; /* Taşan içerik kaydırılabilir hale gelir */
+  height: calc(100vh - 142px); /* Ekran yüksekliğinden 142px çıkarılır */
+  flex-grow: 1; /* Esneme oranı belirlenir, alan varsa büyür */
+  padding: 0px 28px 0 34px; /* Sağdan 28px, soldan 34px iç boşluk bırakılır */
 }
 
+
 .chat-header {
-  
   height: 70px;
   display: flex;
   z-index: 1;
@@ -109,7 +114,6 @@
 .chat-offcanvas.open {
   max-height: 200px; /* Menü açıldığında ne kadar genişleyeceği */
 }
-
 
 /* ✅ Menü içeriği */
 .offcanvas-content {
@@ -194,7 +198,6 @@
   opacity: 0; /* Initially hidden */
 }
 
-
 .message-isDeleted {
   /* background-color: #ff000039!important; */
   color: #33333369 !important;
@@ -211,7 +214,7 @@
 .message-content {
   margin: 3px 0;
   padding: 8px 10px;
-  border-radius: 7px ;
+  border-radius: 7px;
   font-size: 0.875rem;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   display: flex;
@@ -241,7 +244,6 @@
   background-color: rgb(217, 253, 211);
 }
 
-
 .message-content.receiverId {
   background-color: white;
 }
@@ -250,14 +252,9 @@
   .chat-box {
     padding: 10px 10px 10px 16px;
   }
-  .chat-header{
-    position: absolute;
-  }
 
   .message {
     max-width: 95%;
   }
-  .date-separator:first-child {
-    padding-top: 100px;
-  }
+ 
 }

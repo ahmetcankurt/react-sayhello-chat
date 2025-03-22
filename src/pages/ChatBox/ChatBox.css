@@ -6,7 +6,7 @@
   background-attachment: fixed;
   z-index: 1;
   position: relative;
-  overflow: hidden; /* Sticky'nin çalışması için üst kapsayıcı overflow içermemeli */
+  overflow: visible; /* overflow: hidden kaldırıldı */
 }
 
 .chat-container::after {
@@ -36,19 +36,14 @@
 
 
 .chat-header {
-  flex: 0 0 auto;
-  height: 70px;
+  position: sticky;
+  top: 1px; /* top: 0 yerine 1px kullanıldı */
+  background-color: #fff;
+  padding: 10px;
+  z-index: 1000;
   display: flex;
   align-items: center;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  width: 100%;
-  backdrop-filter: blur(2px);
-  border-bottom: 1px solid rgb(234, 234, 241);
-  box-shadow: 0 0 1px rgb(203, 203, 204);
-  padding: 10px;
-  background: white; /* Arka plan rengi eklenerek sticky için stabil hale getirildi */
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 
@@ -255,6 +250,10 @@
   .chat-box {
     padding: 10px 10px 10px 16px;
   }
+
+  .chat-header {
+    display: flex !important;
+}
 
   .message {
     max-width: 95%;

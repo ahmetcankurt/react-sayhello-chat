@@ -3,49 +3,50 @@
   flex-direction: column;
   height: 100vh; /* Ekran yüksekliği kadar alan kaplasın */
   background-image: url("../../assets/image/chat-background/pattern-01.png");
-  background-attachment: fixed;
+  background-attachment: fixed; /* Keeps the background fixed */
   z-index: 1;
-  position: relative;
-  overflow: visible; /* overflow: hidden kaldırıldı */
 }
 
 .chat-container::after {
-  content: "";
+  content: ""; /* Pseudo-element için içerik eklenmeli */
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(169, 169, 169, 0.096);
-  z-index: -1;
+  background-color: rgba(
+    169,
+    169,
+    169,
+    0.096
+  ); /* Gri tonunda arka plan rengi */
+  z-index: -2; /* Diğer içeriklerin üstünde değil, alt kısmında olmasını sağlar */
 }
-
 
 .message-box {
   flex-grow: 1; /* Geriye kalan alanı al */
 }
 
 .main-chat {
-  display: flex;
-  flex-direction: column;
-  overflow-y: auto;
-  padding: 0px 28px 0 34px; /* Sağdan ve soldan boşluk bırakır */
-  flex-grow: 1;
-  min-height: 0;
+  display: flex; /* Flexbox düzeni kullanılır */
+  flex-direction: column; /* Elemanlar dikey sırayla yerleştirilir */
+  overflow: auto; /* Taşan içerik kaydırılabilir hale gelir */
+  padding: 0px 28px 0 34px; /* Sağdan 28px, soldan 34px iç boşluk bırakılır */
 }
-
 
 .chat-header {
-  position: sticky;
-  top: 1px; /* top: 0 yerine 1px kullanıldı */
-  background-color: #fff;
-  padding: 10px;
-  z-index: 1000;
+  height: 70px;
   display: flex;
+  flex-shrink: 0;
+  z-index: 1;
+  width: 100%;
   align-items: center;
-  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(2px); /* Bulanıklık efekti */
+  -webkit-backdrop-filter: blur(2px); /* Safari desteği */
+  border-bottom: 1px solid rgb(234, 234, 241);
+  box-shadow: 0 0 1px rgb(203, 203, 204);
+  padding: 10px;
 }
-
 
 
 .header-close-icon {
@@ -62,16 +63,15 @@
 }
 
 .chat-footer {
-  position: sticky;
-  bottom: 0;
-  z-index: 100;
+  /* background-color: #f1f1f1; */
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 15px 24px;
   border-top: 1px solid rgb(234, 234, 241);
   box-shadow: 0 0 1px rgb(203, 203, 204);
-  background: white;
+  z-index: 2;
 }
 
 .chat-footer-container {
@@ -201,9 +201,10 @@
   color: #33333369 !important;
 }
 
-
 .message {
   display: flex;
+  justify-content: center;
+  /* align-items: baseline; */
   max-width: 60%;
   position: relative;
 }
@@ -215,6 +216,7 @@
   font-size: 0.875rem;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   display: flex;
+  position: relative;
 }
 
 .chat-dots-icon:hover {
@@ -250,10 +252,6 @@
   .chat-box {
     padding: 10px 10px 10px 16px;
   }
-
-  .chat-header {
-    display: flex !important;
-}
 
   .message {
     max-width: 95%;

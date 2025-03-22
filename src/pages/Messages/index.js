@@ -35,10 +35,13 @@ const Messages = memo(({ message, setSelectedUser, selectedUser }) => {
           {
             lastMessageSender === "ben" ?
               <span>
-                <ISRead isRead={isRead} />  {shortenedMessage}
+                <ISRead isRead={isRead} />
+                <span className="ms-1" style={{ color: "#555" }}>
+                  {shortenedMessage}
+                </span>
               </span>
               :
-              <span style={{ color: "#8e8d8d" }}>{shortenedMessage}</span>
+              <span className="ms-1" style={{ color: "#555" }}>{shortenedMessage}</span>
           }
         </p>
       </div>
@@ -91,7 +94,7 @@ function Index({ selectedUser, setSelectedUser }) {
           <span className="Mymessages-title">Mesajlarım</span>
         </div>
         <div className="mx-2 mb-2">
-        <SearchInput searchTerm={searchTerm} handleSearchChange={handleSearchChange} />
+          <SearchInput searchTerm={searchTerm} handleSearchChange={handleSearchChange} />
         </div>
       </div>
       <ScrollContainer paddingBottom="80px">{content}</ScrollContainer>

@@ -246,6 +246,14 @@
     padding: 10px 10px 10px 16px;
   }
 
+  .chat-header{
+    position: fixed;
+  }
+
+  .date-separator:first-child {
+    padding-top: 100px;
+  }
+
   .message {
     max-width: 95%;
   }

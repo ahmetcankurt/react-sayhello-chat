@@ -19,7 +19,8 @@
   flex-direction: column;
   flex-grow: 1; /* Header ve Footer arasında kalan alanı kaplar */
   overflow-y: auto; /* Yalnızca dikey kaydırma aktif olsun */
-  padding: 0px 28px 0 34px;
+  padding: 0px 15px;
+  border: 2px solid red;
 }
 
 

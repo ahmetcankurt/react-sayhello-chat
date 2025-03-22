@@ -5,6 +5,7 @@
   background-image: url("../../assets/image/chat-background/pattern-01.png");
   background-attachment: fixed; /* Keeps the background fixed */
   z-index: 1;
+  position: relative;
 }
 
 

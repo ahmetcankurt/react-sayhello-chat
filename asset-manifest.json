@@ -1,6 +1,6 @@
 {
   "files": {
-    "main.css": "/react-sayhello-chat/static/css/main.3de23b1a.css",
+    "main.css": "/react-sayhello-chat/static/css/main.e2706afe.css",
     "main.js": "/react-sayhello-chat/static/js/main.818bc3bf.js",
     "static/js/685.98cf89f4.chunk.js": "/react-sayhello-chat/static/js/685.98cf89f4.chunk.js",
     "static/media/image_header.jpg": "/react-sayhello-chat/static/media/image_header.02a201f685016c4e99d5.jpg",
@@ -9,7 +9,7 @@
     "static/media/icon1.svg": "/react-sayhello-chat/static/media/icon1.cb1d0e4b87bc83d7a5748ec85448ef48.svg"
   },
   "entrypoints": [
-    "static/css/main.3de23b1a.css",
+    "static/css/main.e2706afe.css",
     "static/js/main.818bc3bf.js"
   ]
 }

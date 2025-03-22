@@ -37,7 +37,6 @@
 .chat-header {
   height: 70px;
   display: flex;
-  flex-shrink: 0;
   z-index: 1;
   width: 100%;
   align-items: center;

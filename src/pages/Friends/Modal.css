@@ -149,11 +149,14 @@
   font-size: large;
 }
 
-@media (max-width: 768px) {
-  
-}
+
 
 .modal-container.searching {
   height: auto; /* İçeriğe göre boyutlandır */
   transition: height 0.3s ease-out; /* Yüksekliği yavaşça büyüt */
+}
+@media (max-width: 768px) {
+  .modal-container{
+    width: 95%;
+  }
 }

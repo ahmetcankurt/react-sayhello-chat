@@ -9,6 +9,8 @@ import SocialLinks from "../../Component/SocialLinks";
 import IconsList from "../../constants/profileSocialIcon";
 import "./Profile.css";
 import "@fancyapps/ui/dist/fancybox/fancybox.css";
+import ProfileBg from "../../assets/image/image_header.jpg";
+import DefaultProfileImage from "../../assets/image/image_header.jpg";
 
 const Index = () => {
   const userInfo = useSelector((state) => state.userInformation.user, shallowEqual);
@@ -27,6 +29,14 @@ const Index = () => {
     };
   }, []);
 
+  const handleImageError = (e, type) => {
+    if (type === "background") {
+      e.target.src = ProfileBg;
+    } else {
+      e.target.src = DefaultProfileImage;
+    }
+  };
+
   if (!userInfo) {
     return <Skeleton width="100%" height="100vh" borderRadius="0" />;
   }
@@ -35,8 +45,13 @@ const Index = () => {
     <div>
       <div className="profile-container">
         {userInfo.backgroundImage ? (
-           <a data-fancybox="Background" href={`${API_URL}/${userInfo.backgroundImage}`}>
-          <img src={`${API_URL}/${userInfo.backgroundImage}`} className="profile-bg" alt="Profile Background" />
+          <a data-fancybox="Background" href={`${API_URL}/${userInfo.backgroundImage}`}>
+            <img 
+              src={`${API_URL}/${userInfo.backgroundImage}`} 
+              className="profile-bg" 
+              alt="Profile Background" 
+              onError={(e) => handleImageError(e, "background")} 
+            />
           </a>
         ) : (
           <Skeleton width="100%" height="200px" borderRadius="0" />
@@ -44,7 +59,12 @@ const Index = () => {
 
         {userInfo.profileImage ? (
           <a data-fancybox="profile" href={`${API_URL}/${userInfo.profileImage}`}>
-            <img src={`${API_URL}/${userInfo.profileImage}`} className="profile-image" alt="Profile" />
+            <img 
+              src={`${API_URL}/${userInfo.profileImage}`} 
+              className="profile-image" 
+              alt="Profile" 
+              onError={(e) => handleImageError(e, "profile")} 
+            />
           </a>
         ) : (
           <Skeleton

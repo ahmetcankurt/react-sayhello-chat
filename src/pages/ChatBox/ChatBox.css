@@ -157,7 +157,7 @@
 }
 
 .date-separator:first-child {
-  padding-top: 100px;
+  padding-top: 15px;
 }
 
 /* Dropdown Style */
@@ -256,5 +256,8 @@
 
   .message {
     max-width: 95%;
+  }
+  .date-separator:first-child {
+    padding-top: 100px;
   }
 }

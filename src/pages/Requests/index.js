@@ -1,4 +1,3 @@
-
 import { useState, useEffect, memo } from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import axios from "axios";
@@ -8,6 +7,8 @@ import { API_URL } from "../../config";
 import UserImage from "../../Component/UserImage";
 import { capitalize } from "../../utils/stringUtils";
 import "./index.css";
+import { io } from "socket.io-client";
+const socket = io(API_URL);
 
 function Index() {
   const userId = localStorage.getItem("userId");
@@ -37,6 +38,29 @@ function Index() {
   const toggleDropdown = (userId) => {
     setDropdownVisible(dropdownVisible === userId ? null : userId);
   };
+
+  useEffect(() => {
+    if (!userId) return;
+  
+    socket.emit("joinRoom", userId);
+  
+    // Yeni arkadaşlık isteği geldiğinde güncelle
+    socket.on("newFriendRequest", () => {
+      fetchRequests("incoming-requests");
+    });
+  
+    // Arkadaşlık isteği iptal edildiğinde gelen istekleri güncelle
+    socket.on("friendRequestCancelled", ({ senderId }) => {
+      setIncomingRequests((prevRequests) =>
+        prevRequests.filter((request) => Number(request.sender.userId) !== Number(senderId))
+      );
+    });
+  
+    return () => {
+      socket.off("newFriendRequest");
+      socket.off("friendRequestCancelled");
+    };
+  }, [userId]);
 
   const handleRequest = async (senderId, action) => {
     try {
@@ -136,7 +160,7 @@ function Index() {
   };
 
   return (
-    <div >
+    <div>
       <div className="Mymessages-add">
         <span className="Mymessages-title">Arkadaşlık İstekleri</span>
       </div>

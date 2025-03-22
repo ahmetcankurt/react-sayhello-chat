@@ -121,7 +121,7 @@ const Modal = ({ onClose }) => {
             const response = await axios.delete(`${API_URL}/friend-requests/${userId}/friend-request/${receiverId}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
-
+    
             Swal.fire({
                 title: 'Başarıyla İstek iptal Edildi!',
                 icon: "success",
@@ -131,15 +131,15 @@ const Modal = ({ onClose }) => {
                 toast: true,
                 showConfirmButton: false,
             });
-
+    
             setUsers((prevUsers) =>
                 prevUsers.map((user) =>
                     user.userId === receiverId
-                        ? { ...user, friendshipStatus: 'none' }
+                        ? { ...user, friendshipStatus: 'none' } // Durumu 'none' yerine, doğru statüyle güncelleyebilirsiniz
                         : user
                 )
             );
-
+    
         } catch (err) {
             Swal.fire({
                 title: 'Hata!',
@@ -149,6 +149,7 @@ const Modal = ({ onClose }) => {
             });
         }
     };
+    
 
     const handleClose = () => {
         setIsClosing(true);

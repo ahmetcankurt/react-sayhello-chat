@@ -32,11 +32,12 @@
 }
 
 .chat-header {
-  /* position: absolute; */
+  
   height: 70px;
   display: flex;
   z-index: 1;
   width: 100%;
+  flex-grow: 1;
   align-items: center;
   backdrop-filter: blur(2px); /* Bulanıklık efekti */
   -webkit-backdrop-filter: blur(2px); /* Safari desteği */
@@ -156,7 +157,7 @@
 }
 
 .date-separator:first-child {
-  padding-top: 10px;
+  padding-top: 100px;
 }
 
 /* Dropdown Style */
@@ -247,6 +248,9 @@
 @media screen and (max-width: 768px) {
   .chat-box {
     padding: 10px 10px 10px 16px;
+  }
+  .chat-header{
+    position: absolute;
   }
 
   .message {

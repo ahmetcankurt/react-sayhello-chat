@@ -48,39 +48,34 @@
   font-weight: 400;
 }
 
-
-.icon-container{
+.icon-container {
   overflow: auto;
 }
 
 .icon-wrapper {
   display: flex;
   margin-bottom: 5px;
-  padding: 5px 10px ;
+  padding: 5px 10px;
   gap: 8px;
   align-items: center;
 }
 
-
 .icon-wrapper:hover {
-  color: #222121f5; 
+  color: #222121f5;
 }
 
-
-
-.icon-wrapper .icon{
+.icon-wrapper .icon {
   font-size: 22px;
   color: #495057bf;
   cursor: pointer;
 }
-
 
 .icon:hover {
   text-decoration: underline;
   color: #222121f5;
 }
 
-.social-link{
+.social-link {
   font-size: 14px;
   color: rgba(73, 80, 87, 0.75);
   font-weight: 400;
@@ -93,12 +88,11 @@
 
 .social-link:hover {
   cursor: pointer;
-  color: black; 
+  color: black;
 }
 
 @media screen and (max-width: 768px) {
-
-  .social-link{
-  max-width: 80vw;
-}
+  .social-link {
+    max-width: 80vw;
+  }
 }

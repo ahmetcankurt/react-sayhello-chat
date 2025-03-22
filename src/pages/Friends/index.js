@@ -131,7 +131,7 @@ const Index = ({ setSelectedUser }) => {
                 {groupedFriends[letter].map((friend) => (
                   <div key={friend.userId} className="friends-list-blog" >
                     <div className="d-flex" onClick={() => setSelectedUser(friend.userId)}>
-                      <UserImage src={friend?.profileImage} isActive={friend.isActive} />
+                      <UserImage height={40} width={40} src={friend?.profileImage} isActive={friend.isActive} />
                       <span>{capitalize(friend?.name)} {capitalize(friend?.surname)}</span>
                     </div>
                     <div className="dropdown-wrapper">

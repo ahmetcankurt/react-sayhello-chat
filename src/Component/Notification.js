@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, memo } from "react";
 import axios from "axios";
 import "./Notifications.css";
 import { io } from "socket.io-client";  // Socket.IO istemcisi
@@ -19,39 +19,29 @@ const Notifications = ({ selectedUser }) => {
           setNotifications(notificationsData);
 
           if (notificationsData.length > 0) {
-            // Bildirimleri okundu olarak işaretle
             notificationsData.forEach((notification) => {
-              markAsRead(notification.notificationId); // Bildirimi okundu olarak işaretle
+              markAsRead(notification.notificationId); 
             });
 
-            // 5 saniye sonra bildirimleri temizle
             setTimeout(() => {
-              setNotifications([]); // Bildirimleri ekrandan kaldır
-            }, 5000); // 5 saniye sonra okundu olarak işaretle ve temizle
+              setNotifications([]); 
+            }, 5000); 
           }
         })
         .catch((error) => {
         });
     };
 
-    // İlk başta bildirimleri yükleyelim
     fetchNotifications();
 
-    // Her 5 saniyede bir bildirimleri kontrol et
     const intervalId = setInterval(fetchNotifications, 5000);
 
-    // Temizleme işlemi (component unmount olduğunda interval'ı temizle)
     return () => clearInterval(intervalId);
   }, [userId]);
 
   // Bildirimi okundu olarak işaretleme fonksiyonu
   const markAsRead = (notificationId) => {
-    axios
-      .put(`${API_URL}/notifications/${notificationId}/read`)
-      .then((response) => {
-      })
-      .catch((error) => {
-      });
+    axios.put(`${API_URL}/notifications/${notificationId}/read`)
   };
 
   useEffect(() => {
@@ -87,4 +77,4 @@ const Notifications = ({ selectedUser }) => {
   );
 };
 
-export default Notifications;
+export default memo(Notifications)

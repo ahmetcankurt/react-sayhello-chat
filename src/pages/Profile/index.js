@@ -8,6 +8,7 @@ import { capitalize } from "../../utils/stringUtils";
 import SocialLinks from "../../Component/SocialLinks";
 import IconsList from "../../constants/profileSocialIcon";
 import "./Profile.css";
+import "@fancyapps/ui/dist/fancybox/fancybox.css";
 
 const Index = () => {
   const userInfo = useSelector((state) => state.userInformation.user, shallowEqual);
@@ -34,8 +35,8 @@ const Index = () => {
     <div>
       <div className="profile-container">
         {userInfo.backgroundImage ? (
-          <a data-fancybox="Background" href={`${API_URL}/${userInfo.backgroundImage}`}>
-            <img src={`${API_URL}/${userInfo.backgroundImage}`} className="profile-bg" alt="Profile Background" />
+           <a data-fancybox="Background" href={`${API_URL}/${userInfo.backgroundImage}`}>
+          <img src={`${API_URL}/${userInfo.backgroundImage}`} className="profile-bg" alt="Profile Background" />
           </a>
         ) : (
           <Skeleton width="100%" height="200px" borderRadius="0" />

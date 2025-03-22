@@ -28,7 +28,7 @@ const Messages = memo(({ message, setSelectedUser, selectedUser }) => {
 
   return (
     <div className={`messages-blog ${isActiveUser ? "active" : ""}`} onClick={handleClick}>
-      <UserImage height={"55px"} src={profileImage} isActive={isActive} />
+      <UserImage height="50" width="50" src={profileImage} isActive={isActive} />
       <div>
         <span>{Name} {Surname}</span>
         <p className="messages-detail m-0">
@@ -90,7 +90,7 @@ function Index({ selectedUser, setSelectedUser }) {
         <div className="Mymessages-add">
           <span className="Mymessages-title">Mesajlarım</span>
         </div>
-        <div className="mx-2">
+        <div className="mx-2 mb-2">
         <SearchInput searchTerm={searchTerm} handleSearchChange={handleSearchChange} />
         </div>
       </div>

@@ -31,7 +31,6 @@
   display: flex; /* Flexbox düzeni kullanılır */
   flex-direction: column; /* Elemanlar dikey sırayla yerleştirilir */
   overflow: auto; /* Taşan içerik kaydırılabilir hale gelir */
-  border: 3px red solid;
   padding: 0px 28px 0 34px; /* Sağdan 28px, soldan 34px iç boşluk bırakılır */
   flex-grow: 1;
 }

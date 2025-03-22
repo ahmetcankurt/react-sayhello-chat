@@ -109,7 +109,7 @@ const Chat = ({ selectedUser, handleProfileClick, setSelectedUser }) => {
       <div className="header">
         <ChatHeader selectedUser={selectedUser} handleProfileClick={handleProfileClick} clearSelectedUser={clearSelectedUser} />
       </div>
-      <div className="main-chat">
+      {/* <div className="main-chat">
       {Object.keys(groupedMessages).map((date, index) => (
           <Fragment key={date}>
             <motion.div
@@ -132,7 +132,7 @@ const Chat = ({ selectedUser, handleProfileClick, setSelectedUser }) => {
             ))}
           </Fragment>
         ))}
-        </div>
+        </div> */}
       <div className="footer">
       <ChatFooter selectedUser={selectedUser} />
       </div>

@@ -14,24 +14,30 @@
 }
 
 .main-chat {
-  display: flex; /* Flexbox düzeni kullanılır */
-  flex-direction: column; /* Elemanlar dikey sırayla yerleştirilir */
-  overflow: auto; /* Taşan içerik kaydırılabilir hale gelir */
-  padding: 0px 28px 0 34px; /* Sağdan 28px, soldan 34px iç boşluk bırakılır */
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1; /* Header ve Footer arasında kalan alanı kaplar */
+  overflow-y: auto; /* Yalnızca dikey kaydırma aktif olsun */
+  padding: 0px 28px 0 34px;
 }
 
+
 .chat-header {
+  position: sticky;
+  top: 0;
+  background: white;
+  z-index: 2;
   height: 70px;
   display: flex;
-  z-index: 1;
   width: 100%;
   align-items: center;
-  backdrop-filter: blur(2px); /* Bulanıklık efekti */
-  -webkit-backdrop-filter: blur(2px); /* Safari desteği */
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
   border-bottom: 1px solid rgb(234, 234, 241);
   box-shadow: 0 0 1px rgb(203, 203, 204);
   padding: 10px;
 }
+
 
 
 .header-close-icon {
@@ -48,16 +54,18 @@
 }
 
 .chat-footer {
-  /* background-color: #f1f1f1; */
-  flex-shrink: 0;
+  position: sticky;
+  bottom: 0;
+  background: white;
+  z-index: 2;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 15px 24px;
   border-top: 1px solid rgb(234, 234, 241);
   box-shadow: 0 0 1px rgb(203, 203, 204);
-  z-index: 2;
 }
+
 
 .chat-footer-container {
   width: 100%;

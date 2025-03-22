@@ -31,15 +31,16 @@
   display: flex; /* Flexbox düzeni kullanılır */
   flex-direction: column; /* Elemanlar dikey sırayla yerleştirilir */
   overflow: auto; /* Taşan içerik kaydırılabilir hale gelir */
-  height: calc(100vh - 142px); /* Ekran yüksekliğinden 142px çıkarılır */
   border: 3px red solid;
   padding: 0px 28px 0 34px; /* Sağdan 28px, soldan 34px iç boşluk bırakılır */
+  flex-grow: 1;
 }
 
 
 .chat-header {
   height: 70px;
   display: flex;
+  flex-shrink: 0;
   z-index: 1;
   width: 100%;
   flex-grow: 1;
@@ -66,13 +67,13 @@
 
 .chat-footer {
   /* background-color: #f1f1f1; */
-  bottom: 0;
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 15px 24px;
-  /* border-top: 1px solid rgb(234, 234, 241); */
-  /* box-shadow: 0 0 1px rgb(203, 203, 204); */
+  border-top: 1px solid rgb(234, 234, 241);
+  box-shadow: 0 0 1px rgb(203, 203, 204);
   z-index: 2;
 }
 

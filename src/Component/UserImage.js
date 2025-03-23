@@ -3,7 +3,7 @@ import "./UserImage.css";
 import { API_URL } from "../config";
 import NotUserImage from "./NotUserImage";
 
-const UserImage = ({ src, isActive, alt, height, width }) => {
+const UserImage = ({ src, isActive, alt, height="50", width="50" }) => {
   const [imageError, setImageError] = useState(false);
 
   return (

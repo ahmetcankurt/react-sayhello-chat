@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useCallback, useState } from "react";
+import React, { memo, useEffect, useCallback, useState, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchMessages } from "../../redux/slices/messagesSlice";
 import SearchInput from "../../Component/input/searchInput";
@@ -6,25 +6,24 @@ import UserImage from "../../Component/UserImage";
 import ScrollContainer from "../../Component/ScrollContainer";
 import ISRead from "../../Component/ISRead";
 import { capitalize } from "../../utils/stringUtils";
+import io from "socket.io-client";
 import "./Mymessages.css";
 
 // Kısa mesaj fonksiyonu
 const getShortenedMessage = (message, maxLength = 20) =>
   message?.length > maxLength ? `${message.slice(0, maxLength)}...` : message;
 
-// Message bileşeni (memo ile sarmalandı)
+// Message bileşeni
 const Messages = memo(({ message, setSelectedUser, selectedUser }) => {
   const { lastMessage, name, surname, userId, profileImage, isActive, lastMessageSender, isRead } = message;
   const shortenedMessage = getShortenedMessage(lastMessage);
   const isActiveUser = userId === selectedUser;
-
   const Name = capitalize(name);
   const Surname = capitalize(surname);
 
   const handleClick = useCallback(() => {
     setSelectedUser(userId);
   }, [setSelectedUser, userId]);
-
 
   return (
     <div className={`messages-blog ${isActiveUser ? "active" : ""}`} onClick={handleClick}>
@@ -33,15 +32,24 @@ const Messages = memo(({ message, setSelectedUser, selectedUser }) => {
         <span>{Name} {Surname}</span>
         <p className="messages-detail m-0">
           {
-            lastMessageSender === "ben" ?
+            lastMessageSender === "ben" ? (
               <span>
                 <ISRead isRead={isRead} />
                 <span className="ms-1" style={{ color: "#555" }}>
                   {shortenedMessage}
                 </span>
               </span>
-              :
-              <span className="ms-1" style={{ color: "#555" }}>{shortenedMessage}</span>
+            ) : (
+              <span 
+                className="ms-1" 
+                style={{ 
+                  color: isRead ? "#555" : "black",
+                  fontWeight: isRead ? "normal" : "bold"
+                }}
+              >
+                {shortenedMessage}
+              </span>
+            )
           }
         </p>
       </div>
@@ -49,18 +57,44 @@ const Messages = memo(({ message, setSelectedUser, selectedUser }) => {
   );
 });
 
-
 // Index bileşeni
 function Index({ selectedUser, setSelectedUser }) {
   const dispatch = useDispatch();
   const { messages, status, error } = useSelector((state) => state.messages);
   const [searchTerm, setSearchTerm] = useState("");
 
+  // Socket bağlantısını sadece bir kere oluşturmak için useMemo kullanıyoruz.
+  const socket = useMemo(() => io("http://localhost:3000"), []);
+
   useEffect(() => {
     if (status === "idle") {
       dispatch(fetchMessages());
     }
   }, [dispatch, status]);
+
+  // "newMessage" olayını dinleyerek mesaj listesini güncelle
+  useEffect(() => {
+    socket.on("newMessage", (updatedMessage) => {
+      dispatch(fetchMessages());
+    });
+
+    return () => {
+      socket.off("newMessage");
+    };
+  }, [socket, dispatch]);
+
+  // "messageRead" olayını dinleyerek mesajın okunma durumunu güncelle
+  useEffect(() => {
+    socket.on("messageRead", ({ messageId, isRead }) => {
+      // İsteğe bağlı olarak, sadece ilgili mesajı güncelleyebilirsiniz.
+      // Şimdilik tüm listeyi yeniden çekiyoruz.
+      dispatch(fetchMessages());
+    });
+
+    return () => {
+      socket.off("messageRead");
+    };
+  }, [socket, dispatch]);
 
   // Arama filtresi
   const handleSearchChange = (e) => {
@@ -73,7 +107,7 @@ function Index({ selectedUser, setSelectedUser }) {
 
   let content;
   if (status === "loading") {
-    content = <></>
+    content = <div>Yükleniyor...</div>;
   } else if (status === "failed") {
     content = <div>{error}</div>;
   } else {

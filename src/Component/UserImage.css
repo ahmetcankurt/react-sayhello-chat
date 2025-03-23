@@ -4,6 +4,8 @@
   object-position: top; /* Resmin üst kısmını göstermek için */
   opacity: 0;
   transition: opacity 0.3s ease-in-out;
+  height: 50px;
+  width: 50;
 }
 
 .chat-img-me.loaded {

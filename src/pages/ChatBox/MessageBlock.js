@@ -1,7 +1,6 @@
 import { memo, useState, useEffect, useRef } from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import formatTime from "../../hooks/formatTime";
-import Dropdown from "./Dropdown";
 import { motion } from "framer-motion";
 import ISReady from "../../Component/ISRead";
 import axios from "axios";
@@ -9,13 +8,10 @@ import { API_URL } from "../../config";
 import { FaChevronUp, FaReply, FaTrash } from "react-icons/fa";
 
 function MessageBlock({ message, userId, handleUpdate, messages }) {
-  const [dropdownVisible, setDropdownVisible] = useState(null);
   const messageRef = useRef(null);
   const messagesEndRef = useRef(null);
 
-  const toggleDropdown = (messageId) => {
-    setDropdownVisible((prev) => (prev === messageId ? null : messageId));
-  };
+
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -64,17 +60,21 @@ function MessageBlock({ message, userId, handleUpdate, messages }) {
 
             {message.senderId === userId && !message.isDeleted && (
               <div className="dots-container">
-                <div className="dropdown">
+                <div className="dropdown dropup">
                   <BsThreeDotsVertical
                     data-bs-toggle="dropdown"
                     className="chat-dots-icon"
                   />
                   <div className="dropdown-menu">
-                      <FaTrash className="dropdown-chat-icon" onClick={() => handleUpdate(message.messageId)} />
-                      {/* <FaReply className="dropdown-chat-icon" /> */}
+                    <FaTrash
+                      className="dropdown-chat-icon"
+                      onClick={() => handleUpdate(message.messageId)}
+                    />
+                    {/* <FaReply className="dropdown-chat-icon" /> */}
                   </div>
                 </div>
               </div>
+
             )}
           </div>
           <div>

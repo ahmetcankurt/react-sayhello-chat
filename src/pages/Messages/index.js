@@ -8,6 +8,7 @@ import ISRead from "../../Component/ISRead";
 import { capitalize } from "../../utils/stringUtils";
 import io from "socket.io-client";
 import "./Mymessages.css";
+import { API_URL } from "../../config";
 
 // Kısa mesaj fonksiyonu
 const getShortenedMessage = (message, maxLength = 20) =>
@@ -65,7 +66,7 @@ function Index({ selectedUser, setSelectedUser }) {
   const [searchTerm, setSearchTerm] = useState("");
 
   // Socket bağlantısını sadece bir kere oluşturmak için useMemo kullanıyoruz.
-  const socket = useMemo(() => io("http://localhost:3000"), []);
+  const socket = useMemo(() => io(API_URL), []);
 
   useEffect(() => {
     if (status === "idle") {

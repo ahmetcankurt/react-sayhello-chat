@@ -7,6 +7,7 @@
 
 .profile-container {
   position: relative;
+  width: 300px;
 }
 
 .profile-settings-image {
@@ -124,3 +125,9 @@
   border-color: #707070;     /* Koyu gri sınır kalacak */
 }
 
+@media screen and (max-width: 768px) {
+  .profile-container {
+    position: relative;
+    width: 100%;
+  }
+}

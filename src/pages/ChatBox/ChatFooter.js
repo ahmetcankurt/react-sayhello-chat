@@ -1,28 +1,39 @@
-import { memo, useState } from "react";
+import { memo, useState, useEffect, useRef } from "react";
 import { BsThreeDots } from "react-icons/bs";
 import { BiSolidSend } from "react-icons/bi";
 import axios from "axios";
 import { io } from "socket.io-client";
 import { API_URL } from "../../config";
 
-const socket = io(API_URL);
-
 function ChatFooter({ selectedUser }) {
   const [message, setMessage] = useState('');
   const [isMenuOpen, setIsMenuOpen] = useState(false); // Menü aç/kapa durumu
+  const socketRef = useRef(null);
   const userId = Number(localStorage.getItem("userId"));
+
+  // Socket bağlantısını bileşen mount edildiğinde oluşturun
+  useEffect(() => {
+    socketRef.current = io(API_URL);
+    
+    // Bileşen unmount olduğunda socket bağlantısını kapatın
+    return () => {
+      socketRef.current.disconnect();
+    };
+  }, []);
 
   const handleMessageSend = async () => {
     if (!message.trim()) return;
 
     try {
+      // Mesajı sunucuya kaydet
       const response = await axios.post(`${API_URL}/messages`, {
         senderId: userId,
         receiverId: selectedUser,
         content: message,
       });
 
-      socket.emit('newMessage', {
+      // Socket üzerinden yeni mesaj bildirimi gönder
+      socketRef.current.emit('newMessage', {
         senderId: userId,
         receiverId: selectedUser,
         content: message,
@@ -59,7 +70,6 @@ function ChatFooter({ selectedUser }) {
       e.target.style.overflowY = "hidden";
     }
   };
-  
 
   return (
     <div className="chat-footer-container">

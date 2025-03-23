@@ -1,4 +1,4 @@
-import { Fragment, memo, useCallback, useEffect, useRef, useState } from "react";
+import { Fragment, memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import axios from "axios";
 import { io } from "socket.io-client";
 import ChatFooter from "./ChatFooter";
@@ -20,15 +20,18 @@ const Chat = ({ selectedUser, handleProfileClick, setSelectedUser }) => {
   const userId = Number(localStorage.getItem("userId"));
 
   useEffect(() => {
-    axios
-      .get(`${API_URL}/messages/${userId}/${selectedUser}`)
-      .then((response) => {
+    const fetchMessages = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/messages/${userId}/${selectedUser}`);
         setMessages(response.data.messages.reverse());
+      } catch (error) {
+        console.error("Error fetching messages", error);
+      } finally {
         setLoading(false); // Veriler yüklendi, yükleme durumunu false yap
-      })
-      .catch((error) => {
-        setLoading(false); // Hata durumunda da yükleme durumunu false yap
-      });
+      }
+    };
+
+    fetchMessages();
   }, [userId, selectedUser]);
 
   const handleUpdate = useCallback(async (messageId) => {
@@ -43,6 +46,7 @@ const Chat = ({ selectedUser, handleProfileClick, setSelectedUser }) => {
 
       socketRef.current.emit("messageDeleted", { messageId });
     } catch (error) {
+      console.error("Error updating message", error);
     }
   }, []);
 
@@ -58,7 +62,13 @@ const Chat = ({ selectedUser, handleProfileClick, setSelectedUser }) => {
         (message.senderId === userId && message.receiverId === selectedUser) ||
         (message.senderId === selectedUser && message.receiverId === userId)
       ) {
-        setMessages((prev) => [...prev, message]);
+        setMessages((prev) => {
+          // Check if the message already exists in the list
+          if (!prev.some(msg => msg.messageId === message.messageId)) {
+            return [...prev, message];
+          }
+          return prev;
+        });
       }
     });
 
@@ -83,52 +93,31 @@ const Chat = ({ selectedUser, handleProfileClick, setSelectedUser }) => {
     };
   }, [userId, selectedUser]);
 
-  const groupedMessages = groupMessagesByDate(messages);
+  const groupedMessages = useMemo(() => groupMessagesByDate(messages), [messages]);
 
   const clearSelectedUser = () => setSelectedUser(null);
 
-  // Scroll to the bottom of the chat box
-  const scrollToBottom = () => {
+  // Scroll to the bottom of the chat box only when the user is already at the bottom
+  const scrollToBottom = useCallback(() => {
     if (chatBoxRef.current) {
-      chatBoxRef.current.scrollTop = chatBoxRef.current.scrollHeight;
+      const { scrollTop, scrollHeight, clientHeight } = chatBoxRef.current;
+      if (scrollTop + clientHeight === scrollHeight) {
+        chatBoxRef.current.scrollTop = scrollHeight;
+      }
     }
-  };
+  }, []);
 
-
-
-  // Mesajlar güncellenince de sayfayı aşağı kaydır
   useEffect(() => {
     scrollToBottom();
-  }, [messages]);
-
-
-  const adjustChatHeight = () => {
-    const chatContainer = document.querySelector(".chat-container");
-    if (chatContainer) {
-      chatContainer.style.height = `${window.visualViewport.height}px`;
-    }
-  };
-
-  useEffect(() => {
-    window.visualViewport.addEventListener("resize", adjustChatHeight);
-    adjustChatHeight(); // İlk yüklenmede çağır
-    
-    return () => {
-      window.visualViewport.removeEventListener("resize", adjustChatHeight);
-    };
-  }, []);
-  
-  if (loading) {
-    return <SplashScreen />
-  }
+  }, [messages, scrollToBottom]);
 
   return (
     <div className="chat-container">
       <div className="header">
         <ChatHeader selectedUser={selectedUser} handleProfileClick={handleProfileClick} clearSelectedUser={clearSelectedUser} />
       </div>
-      <div className="main-chat">
-      {Object.keys(groupedMessages).map((date, index) => (
+      <div className="main-chat" ref={chatBoxRef}>
+        {Object.keys(groupedMessages).map((date, index) => (
           <Fragment key={date}>
             <motion.div
               key={date + "date"}
@@ -150,12 +139,13 @@ const Chat = ({ selectedUser, handleProfileClick, setSelectedUser }) => {
             ))}
           </Fragment>
         ))}
-        </div>
+      </div>
       <div className="footer">
-      <ChatFooter selectedUser={selectedUser} />
+        <ChatFooter selectedUser={selectedUser} />
       </div>
     </div>
   );
 };
 
 export default memo(Chat);
+  

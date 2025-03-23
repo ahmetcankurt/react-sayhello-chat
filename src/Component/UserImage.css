@@ -5,7 +5,7 @@
   opacity: 0;
   transition: opacity 0.3s ease-in-out;
   height: 50px;
-  width: 50;
+  width: 50px;
 }
 
 .chat-img-me.loaded {
@@ -40,7 +40,4 @@
   background-color: red;
 }
 
-.chat-img-container {
-  position: relative;
-  display: inline-block;
-}
+

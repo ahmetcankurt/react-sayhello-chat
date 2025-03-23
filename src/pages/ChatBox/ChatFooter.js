@@ -7,34 +7,58 @@ import { API_URL } from "../../config";
 
 function ChatFooter({ selectedUser }) {
   const [message, setMessage] = useState('');
-  const [isMenuOpen, setIsMenuOpen] = useState(false); // Menü aç/kapa durumu
-  const [isSending, setIsSending] = useState(false); // Gönderim kilidi
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isSending, setIsSending] = useState(false);
+  const [viewportHeight, setViewportHeight] = useState(window.innerHeight);
+  const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
   const socketRef = useRef(null);
+  const initialHeightRef = useRef(null);
   const userId = Number(localStorage.getItem("userId"));
+  const maxMessageLength = 280; // Max character limit for the message
 
-  // Socket bağlantısını bileşen mount edildiğinde oluşturun
   useEffect(() => {
     socketRef.current = io(API_URL);
-    
-    // Bileşen unmount olduğunda socket bağlantısını kapatın
     return () => {
       socketRef.current.disconnect();
     };
   }, []);
 
-  const handleMessageSend = async () => {
-    if (!message.trim() || isSending) return; // Mesaj boşsa veya gönderim devam ediyorsa çık
+  useEffect(() => {
+    const handleResize = () => {
+      const newHeight = window.innerHeight;
+      setViewportHeight(newHeight);
+      if (newHeight < initialHeightRef.current - 100) {
+        setIsKeyboardOpen(true);
+      } else {
+        setIsKeyboardOpen(false);
+      }
+    };
 
-    setIsSending(true); // Gönderim başlarken kilit aç
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', handleResize);
+    } else {
+      window.addEventListener('resize', handleResize);
+    }
+
+    return () => {
+      if (window.visualViewport) {
+        window.visualViewport.removeEventListener('resize', handleResize);
+      } else {
+        window.removeEventListener('resize', handleResize);
+      }
+    };
+  }, []);
+
+  const handleMessageSend = async () => {
+    if (!message.trim() || message.length > maxMessageLength || isSending) return;
+    setIsSending(true);
     try {
-      // Mesajı sunucuya kaydet
       const response = await axios.post(`${API_URL}/messages`, {
         senderId: userId,
         receiverId: selectedUser,
         content: message,
       });
 
-      // Socket üzerinden yeni mesaj bildirimi gönder
       socketRef.current.emit('newMessage', {
         senderId: userId,
         receiverId: selectedUser,
@@ -47,23 +71,24 @@ function ChatFooter({ selectedUser }) {
     } catch (error) {
       console.error("Message send error", error);
     } finally {
-      setIsSending(false); // İşlem tamamlandığında kilidi kaldır
+      setIsSending(false);
     }
   };
 
   const handleKeyDown = (e) => {
-    if (e.key === "Enter" && !e.repeat) { // Tekrarlayan basımı engellemek için e.repeat kontrolü
+    if (e.key === "Enter" && !e.repeat) {
       e.preventDefault();
       handleMessageSend();
     }
   };
 
   const handleMessageChange = (e) => {
-    setMessage(e.target.value);
+    if (e.target.value.length <= maxMessageLength) {
+      setMessage(e.target.value);
+    }
   };
 
-  // Boyutun dinamik olarak değişmesini sağlamak için fonksiyon
-  const handleResize = (e) => {
+  const handleResizeTextarea = (e) => {
     e.target.style.height = "auto";
     const newHeight = e.target.scrollHeight;
     if (newHeight > 130) {
@@ -76,7 +101,7 @@ function ChatFooter({ selectedUser }) {
   };
 
   return (
-    <div className="chat-footer-container">
+    <div className="chat-footer-container" style={{ height: isKeyboardOpen ? viewportHeight : "auto" }}>
       <div className="chat-footer">
         <BsThreeDots className="chat-icon me-2" onClick={() => setIsMenuOpen(!isMenuOpen)} />
         <textarea
@@ -84,14 +109,15 @@ function ChatFooter({ selectedUser }) {
           value={message}
           onChange={handleMessageChange}
           onKeyDown={handleKeyDown}
-          onInput={handleResize}
+          onInput={handleResizeTextarea}
+          onFocus={() => window.scrollTo(0, document.body.scrollHeight)}
+          onBlur={() => window.scrollTo(0, 0)}
           autoComplete="off"
           autoCorrect="off"
           autoCapitalize="off"
           spellCheck="false"
-          rows="1" // Başlangıçta tek satır olacak
+          rows="1"
         />
-        {/* Mesaj içeriği varsa gönderme ikonu */}
         {message && (
           <BiSolidSend
             className="chat-icon ms-2"
@@ -106,6 +132,11 @@ function ChatFooter({ selectedUser }) {
           <p>🔔 Bildirimler</p>
         </div>
       </div>
+      {message.length > maxMessageLength && (
+        <div className="message-limit-warning">
+          <p>⚠️ Mesaj uzunluğu {maxMessageLength} karakteri geçti!</p>
+        </div>
+      )}
     </div>
   );
 }

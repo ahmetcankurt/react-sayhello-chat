@@ -11,7 +11,7 @@ const UserImage = ({ src, alt }) => {
   };
 
   return (
-    <div className="chat-img-container me-2">
+    <div className=" me-2">
         <img
           src={`${API_URL}/${src}`}
           className="chat-img-me loaded"

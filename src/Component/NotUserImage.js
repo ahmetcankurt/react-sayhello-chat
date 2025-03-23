@@ -1,7 +1,7 @@
 import { memo } from "react";
 
-const NotUserImage = ({ height, weight }) => (
-  <div className="chat-img-me loaded" style={{ height: `${height}px`, width: `${weight}px` }}>
+const NotUserImage = () => (
+  <div className="chat-img-me loaded" >
     <svg viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg" style={{ height: '100%', width: '100%' }}>
       <circle cx="64" cy="64" r="64" fill="#E0E0E0"></circle>
       <circle cx="64" cy="48" r="24" fill="#B0B0B0"></circle>

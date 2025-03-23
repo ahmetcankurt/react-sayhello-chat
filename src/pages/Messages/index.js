@@ -24,6 +24,7 @@ const Messages = memo(({ message, setSelectedUser, selectedUser }) => {
   const handleClick = useCallback(() => {
     setSelectedUser(userId);
   }, [setSelectedUser, userId]);
+  
 
   return (
     <div className={`messages-blog ${isActiveUser ? "active" : ""}`} onClick={handleClick}>
@@ -107,7 +108,7 @@ function Index({ selectedUser, setSelectedUser }) {
 
   let content;
   if (status === "loading") {
-    content = <div>Yükleniyor...</div>;
+    content = <div></div>;
   } else if (status === "failed") {
     content = <div>{error}</div>;
   } else {

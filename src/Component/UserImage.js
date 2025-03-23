@@ -2,23 +2,22 @@ import { memo, useState } from "react";
 import "./UserImage.css";
 import { API_URL } from "../config";
 import NotUserImage from "./NotUserImage";
+import ProfileBg from "../assets/image/image_header.jpg";
 
-const UserImage = ({ src, isActive, alt, height="50", width="50" }) => {
-  const [imageError, setImageError] = useState(false);
+const UserImage = ({ src, alt }) => {
+
+  const handleError = (e) => {
+    e.target.src = ProfileBg; // Default image when error occurs
+  };
 
   return (
     <div className="chat-img-container me-2">
-      {src && !imageError ? (
         <img
           src={`${API_URL}/${src}`}
           className="chat-img-me loaded"
-          alt={alt || "User image"} 
-          onError={() => setImageError(true)}
-          style={{ height: `${height}px!important`, width: `${width}px!important` }}  
-        />
-      ) : (
-        <NotUserImage height={height} width={width} />
-      )}
+          alt={alt || "User image"}
+          onError={handleError}
+          />
       {/* {isActive && <span className="status-light active" />} */}
     </div>
   );

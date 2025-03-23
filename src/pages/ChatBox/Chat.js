@@ -101,10 +101,26 @@ const Chat = ({ selectedUser, handleProfileClick, setSelectedUser }) => {
     scrollToBottom();
   }, [messages]);
 
+
+  const adjustChatHeight = () => {
+    const chatContainer = document.querySelector(".chat-container");
+    if (chatContainer) {
+      chatContainer.style.height = `${window.visualViewport.height}px`;
+    }
+  };
+
+  useEffect(() => {
+    window.visualViewport.addEventListener("resize", adjustChatHeight);
+    adjustChatHeight(); // İlk yüklenmede çağır
+    
+    return () => {
+      window.visualViewport.removeEventListener("resize", adjustChatHeight);
+    };
+  }, []);
+  
   if (loading) {
     return <SplashScreen />
   }
-
 
   return (
     <div className="chat-container">

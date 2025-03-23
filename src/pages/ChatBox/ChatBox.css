@@ -1,7 +1,7 @@
 .chat-container {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  height: 100svh;
   background-image: url("../../assets/image/chat-background/pattern-01.png");
   background-attachment: fixed; /* Keeps the background fixed */
   z-index: 1;
@@ -58,7 +58,7 @@
   width: 100%;
   position: sticky;
   bottom: 0;
-  box-shadow: 0 0 1px rgb(203, 203, 204);
+  /* box-shadow: 0 0 1px rgb(203, 203, 204); */
 }
 
 
@@ -145,7 +145,7 @@
   padding: 8px 10px;
   border-radius: 7px;
   font-size: 0.875rem;
-  /* box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   max-width: 100%;  /* Mesajın kapsayıcı genişliğini aşmasını engelle */
   word-break: break-word; /* Taşan kelimeleri bölerek alt satıra geçirir */
 }
@@ -222,7 +222,7 @@
 
 .chat-search-input {
   flex-grow: 1;
-  padding: 9px 12px ;
+  padding: 9px 12px ; 
   border: 1px solid #ccc;
   box-shadow: rgba(100, 100, 111, 0.2) 0px 2px 22px 0px;
   border-radius: 25px;
@@ -294,7 +294,5 @@
   .main-chat {
     padding: 0px 10px;
   }
-  .date-separator:first-child {
-    padding-top: 70px;
-  }
+ 
 }

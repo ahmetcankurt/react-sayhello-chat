@@ -8,6 +8,7 @@ import { API_URL } from "../../config";
 function ChatFooter({ selectedUser }) {
   const [message, setMessage] = useState('');
   const [isMenuOpen, setIsMenuOpen] = useState(false); // Menü aç/kapa durumu
+  const [isSending, setIsSending] = useState(false); // Gönderim kilidi
   const socketRef = useRef(null);
   const userId = Number(localStorage.getItem("userId"));
 
@@ -22,8 +23,9 @@ function ChatFooter({ selectedUser }) {
   }, []);
 
   const handleMessageSend = async () => {
-    if (!message.trim()) return;
+    if (!message.trim() || isSending) return; // Mesaj boşsa veya gönderim devam ediyorsa çık
 
+    setIsSending(true); // Gönderim başlarken kilit aç
     try {
       // Mesajı sunucuya kaydet
       const response = await axios.post(`${API_URL}/messages`, {
@@ -44,11 +46,13 @@ function ChatFooter({ selectedUser }) {
       setMessage('');
     } catch (error) {
       console.error("Message send error", error);
+    } finally {
+      setIsSending(false); // İşlem tamamlandığında kilidi kaldır
     }
   };
 
   const handleKeyDown = (e) => {
-    if (e.key === "Enter") {
+    if (e.key === "Enter" && !e.repeat) { // Tekrarlayan basımı engellemek için e.repeat kontrolü
       e.preventDefault();
       handleMessageSend();
     }
@@ -87,7 +91,7 @@ function ChatFooter({ selectedUser }) {
           spellCheck="false"
           rows="1" // Başlangıçta tek satır olacak
         />
-        {/* Tıklanabilir ikon, message içeriği varsa gösterilecek */}
+        {/* Mesaj içeriği varsa gönderme ikonu */}
         {message && (
           <BiSolidSend
             className="chat-icon ms-2"

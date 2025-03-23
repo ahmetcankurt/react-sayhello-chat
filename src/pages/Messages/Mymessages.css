@@ -36,22 +36,6 @@
   background-color: #55555518;
 }
 
-.search-icon {
-  position: absolute;
-  right: 10px; /* İkonu sağa yerleştirir */
-  font-size: 18px;
-  color: #aaa; /* İkonun rengi */
-  cursor: pointer;
-}
-
-.search-input:focus {
-  outline: none;
-  border-color: #007bff; /* Input focus olduğunda sınır rengi değişir */
-}
-
-.search-icon:hover {
-  color: #007bff; /* İkon üzerine gelindiğinde renk değişir */
-}
 
 .messages-blog {
   display: flex;

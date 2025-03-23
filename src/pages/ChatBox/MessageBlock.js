@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import ISReady from "../../Component/ISRead";
 import axios from "axios";
 import { API_URL } from "../../config";
+import { FaChevronUp, FaReply, FaTrash } from "react-icons/fa";
 
 function MessageBlock({ message, userId, handleUpdate, messages }) {
   const [dropdownVisible, setDropdownVisible] = useState(null);
@@ -49,19 +50,7 @@ function MessageBlock({ message, userId, handleUpdate, messages }) {
 
   return (
     <div className={`message ${message.senderId === userId ? 'senderId' : 'receiverId'}`}>
-      {message.senderId === userId && !message.isDeleted && (
-        <>
-          <Dropdown
-            visible={dropdownVisible === message.messageId}
-            onDelete={() => handleUpdate(message.messageId)}
-          />
-          <BsThreeDotsVertical
-            className="chat-dots-icon"
-            onClick={() => toggleDropdown(message.messageId)}
-          />
 
-        </>
-      )}
       <div>
         <motion.div
           ref={messageRef}
@@ -69,12 +58,34 @@ function MessageBlock({ message, userId, handleUpdate, messages }) {
           initial={{ opacity: 0, y: -50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, type: "spring", stiffness: 100 }}
+          className="d-flex"
         >
-          <p className={`message-content ${message.senderId === userId ? 'senderId' : 'receiverId'} ${message.isDeleted && "message-isDeleted"}`}>
-            {message.isDeleted ? "🚫 Bu mesaj silindi" : message.content}
-          </p>
-          {message.senderId === userId && <ISReady className="me-1" isRead={message.isRead} />}
-          <span className="message-clock">{formatTime(message.createdAt)}</span>
+          <div>
+
+            {message.senderId === userId && !message.isDeleted && (
+              <div className="dots-container">
+                <div className="dropdown">
+                  <BsThreeDotsVertical
+                    data-bs-toggle="dropdown"
+                    className="chat-dots-icon"
+                  />
+                  <div className="dropdown-menu">
+                      <FaTrash className="dropdown-chat-icon" onClick={() => handleUpdate(message.messageId)} />
+                      {/* <FaReply className="dropdown-chat-icon" /> */}
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+          <div>
+
+            <p className={`message-content ${message.senderId === userId ? 'senderId' : 'receiverId'} ${message.isDeleted && "message-isDeleted"}`}>
+
+              {message.isDeleted ? "🚫 Bu mesaj silindi" : message.content}
+            </p>
+            {message.senderId === userId && <ISReady className="me-1" isRead={message.isRead} />}
+            <span className="message-clock">{formatTime(message.createdAt)}</span>
+          </div>
         </motion.div>
 
 

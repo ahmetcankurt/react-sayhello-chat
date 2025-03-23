@@ -22,6 +22,11 @@
 }
 
 
+.message-box {
+  flex-grow: 1; /* Geriye kalan alanı al */
+}
+
+
 @keyframes wave {
   0%,
   100% {

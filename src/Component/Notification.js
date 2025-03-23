@@ -67,7 +67,7 @@ const Notifications = ({ selectedUser }) => {
     <div className="notification-container">
       {notifications.map((notification, index) => (
         <div key={index} className="notification-card">
-          <UserImage src={notification.sender.profileImage} />
+          <UserImage height={40} width={40} src={notification.sender.profileImage} />
           <div className="notification-content">
             <span>{notification.content}</span>
           </div>

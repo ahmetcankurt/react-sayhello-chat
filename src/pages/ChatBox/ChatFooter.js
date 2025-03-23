@@ -2,7 +2,7 @@ import { memo, useState } from "react";
 import { BsThreeDots } from "react-icons/bs";
 import { BiSolidSend } from "react-icons/bi";
 import axios from "axios";
-import { io } from "socket.io-client";  
+import { io } from "socket.io-client";
 import { API_URL } from "../../config";
 
 const socket = io(API_URL);
@@ -27,11 +27,12 @@ function ChatFooter({ selectedUser }) {
         receiverId: selectedUser,
         content: message,
         createdAt: new Date().toISOString(),
-        messageId: response.data.messageId 
+        messageId: response.data.messageId
       });
 
       setMessage('');
     } catch (error) {
+      console.error("Message send error", error);
     }
   };
 
@@ -42,17 +43,47 @@ function ChatFooter({ selectedUser }) {
     }
   };
 
+  const handleMessageChange = (e) => {
+    setMessage(e.target.value);
+  };
+
+  // Boyutun dinamik olarak değişmesini sağlamak için fonksiyon
+  const handleResize = (e) => {
+    e.target.style.height = "auto";
+    const newHeight = e.target.scrollHeight;
+    if (newHeight > 130) {
+      e.target.style.height = "130px";
+      e.target.style.overflowY = "scroll";
+    } else {
+      e.target.style.height = `${newHeight}px`;
+      e.target.style.overflowY = "hidden";
+    }
+  };
+  
+
   return (
     <div className="chat-footer-container">
       <div className="chat-footer">
-        <BsThreeDots className="chat-icon" onClick={() => setIsMenuOpen(!isMenuOpen)} />
-        <input
+        <BsThreeDots className="chat-icon me-2" onClick={() => setIsMenuOpen(!isMenuOpen)} />
+        <textarea
           className="chat-search-input"
           value={message}
-          onChange={(e) => setMessage(e.target.value)}
+          onChange={handleMessageChange}
           onKeyDown={handleKeyDown}
+          onInput={handleResize}
+          autoComplete="off"
+          autoCorrect="off"
+          autoCapitalize="off"
+          spellCheck="false"
+          rows="1" // Başlangıçta tek satır olacak
         />
-        <BiSolidSend className="chat-icon" onClick={handleMessageSend} />
+        {/* Tıklanabilir ikon, message içeriği varsa gösterilecek */}
+        {message && (
+          <BiSolidSend
+            className="chat-icon ms-2"
+            onClick={handleMessageSend}
+          />
+        )}
       </div>
       <div className={`chat-offcanvas ${isMenuOpen ? "open" : ""}`}>
         <div className="offcanvas-content">

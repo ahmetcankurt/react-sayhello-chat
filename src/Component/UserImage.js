@@ -14,7 +14,7 @@ const UserImage = ({ src, isActive, alt, height, width }) => {
           className="chat-img-me loaded"
           alt={alt || "User image"} 
           onError={() => setImageError(true)}
-          style={{ height: `${height}px`, width: `${width}px` }}  
+          style={{ height: `${height}px!important`, width: `${width}px!important` }}  
         />
       ) : (
         <NotUserImage height={height} width={width} />

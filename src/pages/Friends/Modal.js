@@ -19,7 +19,7 @@ const UserList = ({ users, onAddFriend, handleRemoveFriendRequest }) => {
             {users.map(user => (
                 <li key={user.userId} className="modal-user-item">
                     <div className='modal-user-item-div'>
-                        <UserImage src={user?.profileImage} isActive={user.isActive} alt={`${user.name} ${user.surname}`} />
+                        <UserImage height={40} width={40} src={user?.profileImage} isActive={user.isActive} alt={`${user.name} ${user.surname}`} />
                         <p>{user.name} {user.surname} (@{user.username})</p>
                     </div>
                     <span>

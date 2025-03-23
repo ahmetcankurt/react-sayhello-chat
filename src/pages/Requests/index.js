@@ -113,6 +113,7 @@ function Index() {
           <div className="d-flex">
             <div className="friends-list-img-container me-2">
               <UserImage
+              height={50} width={50}
                 src={request[isIncoming ? "sender" : "receiver"].profileImage}
                 isActive={request[isIncoming ? "sender" : "receiver"].isActive}
                 alt="Profile"

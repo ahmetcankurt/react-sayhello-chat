@@ -124,9 +124,3 @@
   border-color: #707070;     /* Koyu gri sınır kalacak */
 }
 
-
-
-@media screen and (max-width: 768px) {
-  .form-container {
-  }
-}

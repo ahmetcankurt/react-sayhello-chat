@@ -1,11 +1,10 @@
 import { Routes, Route, BrowserRouter } from "react-router-dom"; // BrowserRouter da kullanılabilir
-
 import { privateRoutes, publicRoutes } from "./allRoutes";
 import { AuthProtected } from "./AuthProtected";
 
 export default function Index() {
   return (
-    <BrowserRouter> 
+    <BrowserRouter basename="/react-sayhello-chat"> {/* Proje adı burada belirtilmeli */}
       <Routes>
         {privateRoutes.map((route, idx) => (
           <Route

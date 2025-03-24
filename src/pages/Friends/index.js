@@ -110,15 +110,28 @@ const Index = ({ setSelectedUser }) => {
   }, []);
 
   useEffect(() => {
-      Fancybox.bind("[data-fancybox]", {
-        Toolbar: false, // Üst menüyü kapatır
-        smallBtn: true, // Küçük kapatma butonu gösterir
-      });
-  
-      return () => {
-        Fancybox.unbind("[data-fancybox]");
-      };
-    }, []);
+    Fancybox.bind("[data-fancybox]", {
+      Toolbar: false, // Üst menüyü kapatır
+      smallBtn: true, // Küçük kapatma butonu gösterir
+    });
+
+    return () => {
+      Fancybox.unbind("[data-fancybox]");
+    };
+  }, []);
+
+
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoaded(true);
+    }, 400);
+
+    return () => clearTimeout(timer); // Bileşen kaldırıldığında zamanlayıcıyı temizler
+  }, []);
+
+
 
   return (
     <div>
@@ -129,8 +142,7 @@ const Index = ({ setSelectedUser }) => {
       <div className="mx-2">
         <SearchInput searchTerm={searchTerm} handleSearchChange={handleSearchChange} />
       </div>
-      <ScrollContainer paddingBottom="80px">
-        <div className="friends-scroll-container">
+      <ScrollContainer paddingBottom="80px" className={`friends-scroll-container ${loaded ? "loaded" : "loading"}`} >
           {Object.keys(groupedFriends)
             .sort()
             .map((letter) => (
@@ -163,7 +175,6 @@ const Index = ({ setSelectedUser }) => {
                 ))}
               </div>
             ))}
-        </div>
       </ScrollContainer>
       {isModalOpen && <Modal onClose={closeModal} />} {/* Modal açma/kapatma */}
     </div>

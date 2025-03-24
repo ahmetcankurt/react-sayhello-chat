@@ -89,8 +89,14 @@
   overflow: auto;
 }
 
-.friends-scroll-container{
+.friends-scroll-container {
   padding: 10px;
+  opacity: 0;
+  transition: opacity 2s ease-in-out;
+}
+
+.friends-scroll-container.loaded {
+  opacity: 1;
 }
 
 @media screen and (max-width: 768px) {

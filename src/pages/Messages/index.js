@@ -120,6 +120,16 @@ function Index({ selectedUser, setSelectedUser }) {
     friend.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoaded(true);
+    }, 400);
+
+    return () => clearTimeout(timer); // Bileşen kaldırıldığında zamanlayıcıyı temizler
+  }, []);
+
   let content;
   if (status === "loading") {
     content = <div></div>;
@@ -146,7 +156,7 @@ function Index({ selectedUser, setSelectedUser }) {
           <SearchInput searchTerm={searchTerm} handleSearchChange={handleSearchChange} />
         </div>
       </div>
-      <ScrollContainer paddingBottom="80px">{content}</ScrollContainer>
+      <ScrollContainer paddingBottom="80px" className={`messages-scroll-container ${loaded ? "loaded" : "loading"}`}>{content}</ScrollContainer>
     </div>
   );
 }

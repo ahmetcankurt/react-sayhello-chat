@@ -1,14 +1,11 @@
-import { Routes, Route } from "react-router-dom";
-import { AuthProtected } from "./AuthProtected";
+import { Routes, Route, BrowserRouter } from "react-router-dom"; // BrowserRouter da kullanılabilir
 
-// Layouts
 import { privateRoutes, publicRoutes } from "./allRoutes";
-
-import { HashRouter } from "react-router-dom";
+import { AuthProtected } from "./AuthProtected";
 
 export default function Index() {
   return (
-    <HashRouter>
+    <BrowserRouter> 
       <Routes>
         {privateRoutes.map((route, idx) => (
           <Route
@@ -17,11 +14,10 @@ export default function Index() {
             key={idx}
           />
         ))}
-
         {publicRoutes.map((route, idx) => (
           <Route path={route.path} element={<>{route.component}</>} key={idx} />
         ))}
       </Routes>
-    </HashRouter>
+    </BrowserRouter>
   );
 }

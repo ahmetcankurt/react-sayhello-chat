@@ -61,14 +61,14 @@ function Index({ selectedUser, handleProfileClick }) {
                 }
                 <span className='profile-friends-name'>
                     <span className='profile-f-name' >{capitalize(userInfo.name)} {capitalize(userInfo.surname)}</span>
-                    <span className='friend-status-box '>
+                    {/* <span className='friend-status-box '>
                         <span
                             className={`friend-status ${userInfo.isActive ? "isActive" : "inactive"}`}
                         />
                         <span className={`friends-status ${userInfo.isActive ? "Online" : "Offline"}`}>
                             {userInfo.isActive ? "Online" : "Offline"}
                         </span>
-                    </span>
+                    </span> */}
                 </span>
             </div>
             <hr className="p-0 my-3 box-shadow-global" />

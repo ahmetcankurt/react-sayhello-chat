@@ -225,7 +225,7 @@
   padding: 9px 12px ; 
   border: 1px solid #ccc;
   box-shadow: rgba(100, 100, 111, 0.2) 0px 2px 22px 0px;
-  border-radius: 25px;
+  border-radius: 4px;
   min-height: 40px; /* Başlangıç boyutunu belirle */
   overflow-y: auto; /* Yalnızca dikey scroll bar'ı aktif yap */
   resize: none; /* Kullanıcının boyutu değiştirmesini engelle */

@@ -58,7 +58,7 @@ function ChatFooter({ selectedUser }) {
         receiverId: selectedUser,
         content: message,
       });
-
+  
       socketRef.current.emit('newMessage', {
         senderId: userId,
         receiverId: selectedUser,
@@ -66,14 +66,21 @@ function ChatFooter({ selectedUser }) {
         createdAt: new Date().toISOString(),
         messageId: response.data.messageId
       });
-
+  
       setMessage('');
+      
+      // Textarea'yı eski boyutuna döndür
+      const textarea = document.querySelector(".chat-search-input");
+      if (textarea) {
+        textarea.style.height = "auto";
+      }
     } catch (error) {
       console.error("Message send error", error);
     } finally {
       setIsSending(false);
     }
   };
+  
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && !e.repeat) {

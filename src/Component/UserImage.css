@@ -1,19 +1,14 @@
 .chat-img-me {
   border-radius: 50%;
   object-fit: cover;
-  object-position: top; /* Resmin üst kısmını göstermek için */
+  object-position: top;
   opacity: 0;
-  transition: opacity 0.3s ease-in-out;
+  transition: opacity 1s ease-in-out;
   height: 50px;
   width: 50px;
   border: 3px solid #e2e2e2;
   background-color: #c8c8c865;
 }
-
-.chat-img-me.loaded {
-  opacity: 1;
-}
-
 
 .chat-img-me.loading {
   opacity: 0;
@@ -21,8 +16,9 @@
 
 .chat-img-me.loaded {
   opacity: 1;
-  transition: opacity 1s ease-in-out;
+  transition: opacity 2s ease-in-out;
 }
+
 
 .status-light {
   position: absolute;

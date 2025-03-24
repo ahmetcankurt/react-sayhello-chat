@@ -1,14 +1,9 @@
-import { memo, useState } from "react";
-import "./UserImage.css";
+import { memo } from "react";
 import { API_URL } from "../config";
-import NotUserImage from "./NotUserImage";
-import ProfileBg from "../assets/image/image_header.jpg";
+import ProfileBg from "../assets/image/not-user-image-3.png";
+import "./UserImage.css";
 
 const UserImage = ({ src, alt }) => {
-
-  const handleError = (e) => {
-    e.target.src = ProfileBg; // Default image when error occurs
-  };
 
   return (
     <div className=" me-2">
@@ -16,7 +11,7 @@ const UserImage = ({ src, alt }) => {
           src={`${API_URL}/${src}`}
           className="chat-img-me loaded"
           alt={alt || "User image"}
-          onError={handleError}
+          onError={(e) => {e.target.src = ProfileBg}}
           />
       {/* {isActive && <span className="status-light active" />} */}
     </div>

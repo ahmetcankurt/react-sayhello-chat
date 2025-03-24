@@ -12,6 +12,7 @@ import { API_URL } from "../../config";
 import ScrollContainer from "../../Component/ScrollContainer";
 import io from "socket.io-client";
 import { capitalize } from "../../utils/stringUtils";
+import { Fancybox } from "@fancyapps/ui";
 
 const socket = io(API_URL);
 
@@ -108,6 +109,17 @@ const Index = ({ setSelectedUser }) => {
     };
   }, []);
 
+  useEffect(() => {
+      Fancybox.bind("[data-fancybox]", {
+        Toolbar: false, // Üst menüyü kapatır
+        smallBtn: true, // Küçük kapatma butonu gösterir
+      });
+  
+      return () => {
+        Fancybox.unbind("[data-fancybox]");
+      };
+    }, []);
+
   return (
     <div>
       <div className="Mymessages-add">
@@ -130,9 +142,11 @@ const Index = ({ setSelectedUser }) => {
 
                 {groupedFriends[letter].map((friend) => (
                   <div key={friend.userId} className="friends-list-blog" >
-                    <div className="d-flex" onClick={() => setSelectedUser(friend.userId)}>
-                      <UserImage height={40} width={40} src={friend?.profileImage} isActive={friend.isActive} />
-                      <span>{capitalize(friend?.name)} {capitalize(friend?.surname)}</span>
+                    <div className="d-flex" >
+                      <a data-fancybox={`user-${friend.userId}`} href={`${API_URL}/${friend?.profileImage}`}>
+                        <UserImage src={friend?.profileImage} isActive={friend.isActive} />
+                      </a>
+                      <span onClick={() => setSelectedUser(friend.userId)}>{capitalize(friend?.name)} {capitalize(friend?.surname)}</span>
                     </div>
                     <div className="dropdown-wrapper">
                       <BsThreeDotsVertical

@@ -9,6 +9,7 @@ import { capitalize } from "../../utils/stringUtils";
 import io from "socket.io-client";
 import "./Mymessages.css";
 import { API_URL } from "../../config";
+import { Fancybox } from "@fancyapps/ui";
 
 // Kısa mesaj fonksiyonu
 const getShortenedMessage = (message, maxLength = 20) =>
@@ -25,12 +26,24 @@ const Messages = memo(({ message, setSelectedUser, selectedUser }) => {
   const handleClick = useCallback(() => {
     setSelectedUser(userId);
   }, [setSelectedUser, userId]);
-  
+
+  useEffect(() => {
+    Fancybox.bind("[data-fancybox]", {
+      Toolbar: false, // Üst menüyü kapatır
+      smallBtn: true, // Küçük kapatma butonu gösterir
+    });
+
+    return () => {
+      Fancybox.unbind("[data-fancybox]");
+    };
+  }, []);
 
   return (
-    <div className={`messages-blog ${isActiveUser ? "active" : ""}`} onClick={handleClick}>
-      <UserImage height="50" width="50" src={profileImage} isActive={isActive} />
-      <div>
+    <div className={`messages-blog ${isActiveUser ? "active" : ""}`} >
+      <a data-fancybox={`user-${userId}`} href={`${API_URL}/${profileImage}`}>
+        <UserImage height="50" width="50" src={profileImage} isActive={isActive} />
+      </a>
+      <div onClick={handleClick}>
         <span>{Name} {Surname}</span>
         <p className="messages-detail m-0">
           {
@@ -42,9 +55,9 @@ const Messages = memo(({ message, setSelectedUser, selectedUser }) => {
                 </span>
               </span>
             ) : (
-              <span 
-                className="ms-1" 
-                style={{ 
+              <span
+                className="ms-1"
+                style={{
                   color: isRead ? "#555" : "black",
                   fontWeight: isRead ? "normal" : "bold"
                 }}

@@ -9,7 +9,7 @@
 }
 
 .login-form {
-  padding: 35px;
+  padding: 15px;
   background-color: #fff;
   border-radius: 10px;
   position: relative;
@@ -51,10 +51,10 @@
 .login-icon-container {
   position: absolute;
   padding: 10px;
-  height: 85px;
-  width: 85px;
+  height: 55px;
+  width: 55px;
   top: -50px;
-  left: 50%;
+  left: 90%;
   transform: translateX(-50%);
   background-color: #4a77f7;
   z-index: 1;
@@ -148,3 +148,4 @@
     padding: 0;
   }
 }
+

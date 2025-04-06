@@ -18,7 +18,6 @@ function Index({ selectedUser, setSelectedUser }) {
       try {
         const response = await axios.get(`${API_URL}/messages/users/${userId}`);
         setMessages(response.data.contacts);
-        console.log(response.data.contacts);
       } catch (error) {
         console.error("Mesajlar alınamadı:", error);
       }

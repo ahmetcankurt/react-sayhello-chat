@@ -1,12 +1,11 @@
 .login-container {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
   width: 400px;
   border-radius: 10px;
   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.16);
   box-sizing: border-box;
+  margin: 50px auto; /* Ortalamak için margin: auto */
+  overflow-y: auto; /* Dikey scroll eklenmesini sağlar */
+  padding: 15px; /* İçeriyi rahatlatmak için padding */
 }
 
 .login-form {
@@ -27,18 +26,18 @@
 .login-button {
   background-color: #4a77f7;
   color: #fff;
-  border: 1px solid transparent; /* Başlangıçta border var ama görünmez */
+  border: 1px solid transparent;
   width: 100%;
   padding: 10px;
   border-radius: 5px;
   cursor: pointer;
-  transition: all 0.3s ease; /* Geçiş efekti */
+  transition: all 0.3s ease;
 }
 
 .login-button:hover {
   color: #4a77f7;
   background-color: #fff;
-  border: 1px solid #4a77f7; /* Hover olduğunda border görünür */
+  border: 1px solid #4a77f7;
 }
 
 .login-title {
@@ -63,7 +62,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1;
 }
 
 .login-icon {
@@ -96,9 +94,9 @@
   background-color: rgba(74, 119, 247, 0.5);
   border-radius: 50%;
   transform: translate(-50%, -50%);
-  opacity: 0; /* İlk başta görünmesin */
+  opacity: 0;
   animation: ripple 2s infinite ease-out;
-  animation-fill-mode: backwards; /* İlk kareyi düzgün başlat */
+  animation-fill-mode: backwards;
 }
 
 .login-icon-container::after {
@@ -124,31 +122,10 @@
   align-items: center;
 }
 
-/* Mobile responsive ayarları */
 @media (max-width: 768px) {
   .login-container {
-    padding: 5px;
     width: 370px;
-  }
-
-  .login-form {
-    padding: 20px;
-  }
-
-  .login-title {
-    font-size: 16px;
-  }
-
-  .form-control {
-    font-size: 14px;
-    padding: 12px;
-  }
-}
-
-@media (max-width: 768px) {
-  .login-container {
     padding: 5px;
-    width: 370px;
   }
 
   .login-form {

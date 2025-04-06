@@ -1,6 +1,6 @@
 import { memo, useEffect, useState } from "react";
 import { API_URL } from "../config";
-import ProfileBg from "../assets/image/not-user-image-3.png";
+import ProfileBg from "../assets/image/not-user-image-5.png";
 import "./UserImage.css";
 
 const UserImage = ({ src, alt }) => {

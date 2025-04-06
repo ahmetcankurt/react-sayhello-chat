@@ -3,18 +3,15 @@ import axios from "axios";
 import { io } from "socket.io-client";
 import ChatFooter from "./ChatFooter";
 import ChatHeader from "./ChatHeader";
-import MessageBlock from "./MessageBlock";
+import MessageItem from "./MessageItem";
 import { groupMessagesByDate } from "./groupMessagesByDate";
 import { API_URL } from "../../config";
 import { motion } from "framer-motion";
-import SplashScreen from "../../Component/SplashScreen";
 import "./ChatBox.css";
-import "./chatBox-scrool.css";
 
 
 const Chat = ({ selectedUser, handleProfileClick, setSelectedUser }) => {
   const [messages, setMessages] = useState([]);
-  const [loading, setLoading] = useState(true); // Yükleme durumu
   const chatBoxRef = useRef(null);
   const socketRef = useRef(null);
   const userId = Number(localStorage.getItem("userId"));
@@ -26,8 +23,6 @@ const Chat = ({ selectedUser, handleProfileClick, setSelectedUser }) => {
         setMessages(response.data.messages.reverse());
       } catch (error) {
         console.error("Error fetching messages", error);
-      } finally {
-        setLoading(false); // Veriler yüklendi, yükleme durumunu false yap
       }
     };
 
@@ -75,7 +70,7 @@ const Chat = ({ selectedUser, handleProfileClick, setSelectedUser }) => {
     socketRef.current.on("messageDeleted", (deletedMessage) => {
       setMessages((prev) =>
         prev.map((msg) =>
-          msg.messageId == deletedMessage.messageId ? { ...msg, isDeleted: true } : msg
+          Number(msg.messageId) === Number(deletedMessage.messageId) ? { ...msg, isDeleted: true } : msg
         )
       );
     });
@@ -83,7 +78,7 @@ const Chat = ({ selectedUser, handleProfileClick, setSelectedUser }) => {
     socketRef.current.on("messageRead", ({ messageId, isRead }) => {
       setMessages((prev) =>
         prev.map((msg) =>
-          msg.messageId == messageId ? { ...msg, isRead } : msg
+          Number(msg.messageId) === Number(messageId) ? { ...msg, isRead } : msg
         )
       );
     });
@@ -130,7 +125,7 @@ const Chat = ({ selectedUser, handleProfileClick, setSelectedUser }) => {
             </motion.div>
 
             {groupedMessages[date].map((message, idx) => (
-              <MessageBlock
+              <MessageItem
                 message={message}
                 key={`${date}-${index}-${idx}`}
                 userId={userId}
@@ -148,4 +143,3 @@ const Chat = ({ selectedUser, handleProfileClick, setSelectedUser }) => {
 };
 
 export default memo(Chat);
-  

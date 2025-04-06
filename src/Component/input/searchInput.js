@@ -7,7 +7,7 @@ function SearchInput({ searchTerm, handleSearchChange, handleSearch, handleKeyDo
         <div className="search-container">
             <input
                 type="text"
-                placeholder="Search..."
+                placeholder="Ara..."
                 className={`search-input ${className}`}
                 value={searchTerm}
                 onChange={handleSearchChange}

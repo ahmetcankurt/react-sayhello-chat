@@ -5,12 +5,11 @@ import { motion } from "framer-motion";
 import ISReady from "../../Component/ISRead";
 import axios from "axios";
 import { API_URL } from "../../config";
-import { FaChevronUp, FaReply, FaTrash } from "react-icons/fa";
+import { FaTrash } from "react-icons/fa";
 
 function MessageBlock({ message, userId, handleUpdate, messages }) {
   const messageRef = useRef(null);
   const messagesEndRef = useRef(null);
-
 
 
   useEffect(() => {

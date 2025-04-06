@@ -7,10 +7,9 @@ import Skeleton from "../../Component/Skeleton";
 import { capitalize } from "../../utils/stringUtils";
 import SocialLinks from "../../Component/SocialLinks";
 import IconsList from "../../constants/profileSocialIcon";
-import "./Profile.css";
-import "@fancyapps/ui/dist/fancybox/fancybox.css";
 import ProfileBg from "../../assets/image/image_header.jpg";
 import DefaultProfileImage from "../../assets/image/image_header.jpg";
+import "./Profile.css";
 
 const Index = () => {
   const userInfo = useSelector((state) => state.userInformation.user, shallowEqual);

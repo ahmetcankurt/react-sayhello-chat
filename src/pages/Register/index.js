@@ -1,8 +1,8 @@
-import { memo, useState } from "react";
+import { memo, useState, useEffect } from "react";
 import Swal from "sweetalert2";
 import axios from "axios";
 import { API_URL } from "../../config";
-import ImageLogoMsg from "../../assets/image/icon1.svg"
+import ImageLogoMsg from "../../assets/image/icon1.svg";
 import { Link, useNavigate } from "react-router-dom";
 
 const RegisterForm = () => {
@@ -13,30 +13,83 @@ const RegisterForm = () => {
     username: "",
     email: "",
     password: "",
+    confirmPassword: "",
   });
+  const [passwordRequirements, setPasswordRequirements] = useState({
+    hasUpperCase: false,
+    hasNumber: false,
+    isLongEnough: false,
+    passwordsMatch: false,
+  });
+
+  useEffect(() => {
+    // Şifre gereksinimlerini kontrol et
+    const hasUpperCase = /[A-Z]/.test(formData.password);
+    const hasNumber = /\d/.test(formData.password);
+    const isLongEnough = formData.password.length >= 8;
+    const passwordsMatch = formData.password === formData.confirmPassword && formData.password !== "";
+
+    setPasswordRequirements({
+      hasUpperCase,
+      hasNumber,
+      isLongEnough,
+      passwordsMatch,
+    });
+  }, [formData.password, formData.confirmPassword]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const isPasswordValid = (password) => {
+    return (
+      passwordRequirements.hasUpperCase &&
+      passwordRequirements.hasNumber &&
+      passwordRequirements.isLongEnough
+    );
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Form alanlarını kontrol et
-    const { name, surname, username, email, password } = formData;
-    if (!name || !surname || !username || !email || !password) {
+    const { name, surname, username, email, password, confirmPassword } = formData;
+
+    if (!name || !surname || !username || !email || !password || !confirmPassword) {
       Swal.fire({
         icon: "warning",
         title: "Eksik Alanlar",
         text: "Lütfen tüm alanları doldurduğunuzdan emin olun.",
       });
-      return; // Eksik alan varsa kayıt işlemini durdur
+      return;
+    }
+
+    if (!passwordRequirements.passwordsMatch) {
+      Swal.fire({
+        icon: "error",
+        title: "Şifreler Uyuşmuyor",
+        text: "Şifre ve şifre tekrarı aynı olmalıdır.",
+      });
+      return;
+    }
+
+    if (!isPasswordValid(password)) {
+      Swal.fire({
+        icon: "error",
+        title: "Geçersiz Şifre",
+        text: "Şifreniz en az 8 karakter uzunluğunda olmalı, en az 1 büyük harf ve 1 rakam içermelidir.",
+      });
+      return;
     }
 
     try {
-      const response = await axios.post(
-        `${API_URL}/users`, formData
-      );
+      const response = await axios.post(`${API_URL}/users`, {
+        name,
+        surname,
+        username,
+        email,
+        password,
+      });
+
       Swal.fire({
         icon: "success",
         title: "Kayıt başarılı!",
@@ -46,6 +99,7 @@ const RegisterForm = () => {
         position: "top-end",
         toast: true,
       });
+
       navigate("/login");
     } catch (error) {
       Swal.fire({
@@ -59,30 +113,27 @@ const RegisterForm = () => {
   return (
     <div className="login-container">
       <form onSubmit={handleSubmit} className="login-form">
-        <div className="login-icon-container">
-          <img src={ImageLogoMsg} alt="bg" className="login-icon" />
-        </div>
+        <div className="login-icon-container"/>
         <div className="text-center mt-4 mb-3">
-          <p className="login-title">SayHello Sign up to join us.</p>
+          <p className="login-title">SayHello Aramıza katılmak için kaydolun.</p>
         </div>
+
         <div className="d-flex gap-2 mb-2">
           <input
             type="text"
             name="name"
-            placeholder="First Name"
+            placeholder="Adınız"
             className="form-control"
             onChange={handleChange}
-            id="name"
             autoComplete="given-name"
           />
 
           <input
             type="text"
             name="surname"
-            placeholder="Last Name"
+            placeholder="Soyadınız"
             className="form-control"
             onChange={handleChange}
-            id="surname"
             autoComplete="family-name"
           />
         </div>
@@ -90,40 +141,73 @@ const RegisterForm = () => {
         <input
           type="text"
           name="username"
-          placeholder="Username"
+          placeholder="Kullanıcı Adı"
           className="form-control mb-2"
           onChange={handleChange}
-          id="username"
           autoComplete="username"
         />
 
         <input
           type="email"
           name="email"
-          placeholder="Email"
+          placeholder="E-posta"
           className="form-control mb-2"
           onChange={handleChange}
-          id="email"
           autoComplete="email"
         />
 
         <input
           type="password"
           name="password"
-          placeholder="Password"
+          placeholder="Şifre"
           className="form-control mb-2"
           onChange={handleChange}
-          id="password"
           autoComplete="new-password"
         />
 
+
+
+        <input
+          type="password"
+          name="confirmPassword"
+          placeholder="Şifre (Tekrar)"
+          className="form-control mb-2"
+          onChange={handleChange}
+          autoComplete="new-password"
+        />
+
+        <div className="password-requirements mb-2">
+          <small>Şifre gereksinimleri:</small>
+          <ul className="list-unstyled">
+            <li className={passwordRequirements.isLongEnough ? "text-success" : "text-danger"}>
+              {passwordRequirements.isLongEnough ? "✓" : "✗"} En az 8 karakter
+            </li>
+            <li className={passwordRequirements.hasUpperCase ? "text-success" : "text-danger"}>
+              {passwordRequirements.hasUpperCase ? "✓" : "✗"} En az 1 büyük harf
+            </li>
+            <li className={passwordRequirements.hasNumber ? "text-success" : "text-danger"}>
+              {passwordRequirements.hasNumber ? "✓" : "✗"} En az 1 rakam
+            </li>
+          </ul>
+        </div>
+
+        {formData.confirmPassword && (
+          <div className="mb-2">
+            <small className={passwordRequirements.passwordsMatch ? "text-success" : "text-danger"}>
+              {passwordRequirements.passwordsMatch ? "✓ Şifreler eşleşiyor" : "✗ Şifreler eşleşmiyor"}
+            </small>
+          </div>
+        )}
+
+        <hr className="mb-0" />
+
         <div className="login-register">
-          Already have an account?
-          <Link to="/login" className="login-route">Sign in</Link>
+          Zaten bir hesabınız var mı?
+          <Link to="/login" className="login-route"> Giriş Yap</Link>
         </div>
 
         <button type="submit" className="login-button">
-          Sign Up
+          Kayıt Ol
         </button>
       </form>
     </div>

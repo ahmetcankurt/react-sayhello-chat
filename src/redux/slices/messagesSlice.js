@@ -32,10 +32,18 @@ const messagesSlice = createSlice({
   name: "messages",
   initialState,
   reducers: {
-    resetMessages: (state) => {
-      state.messages = [];
-      state.status = "idle";
-      state.error = null;
+    setMessages(state, action) {
+      state.messages = action.payload;
+    },
+    addNewMessage(state, action) {
+      state.messages.push(action.payload);  // Add the new message
+    },
+    updateMessageReadStatus(state, action) {
+      const { messageId, isRead } = action.payload;
+      const message = state.messages.find(msg => msg.userId === messageId);
+      if (message) {
+        message.isRead = isRead;  // Update the message's read status
+      }
     },
   },
   extraReducers: (builder) => {

@@ -23,6 +23,7 @@ function ChatHeader({ selectedUser, handleProfileClick, clearSelectedUser }) {
         });
     }
   }, [selectedUser]);
+  
   if (!selectedUser) {
     return
   }

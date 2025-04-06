@@ -67,18 +67,16 @@ const LoginForm = () => {
   return (
     <div className="login-container">
       <form onSubmit={handleSubmit} className="login-form">
-        <div className="login-icon-container">
-          <img src={ImageLogoMsg} alt="bg" className="login-icon" />
-        </div>
+        <div className="login-icon-container"/>
 
         <div className="login-title mt-4 mb-3">
-          Sign up and get access to the full guide right now
+          Kaydolun ve hemen tam rehbere erişin
         </div>
 
         <input
           type="text"
           name="username"
-          placeholder="username"
+          placeholder="kullanıcı adı"
           className="form-control mb-3"
           onChange={handleChange}
           id="username"
@@ -88,7 +86,7 @@ const LoginForm = () => {
         <input
           type="password"
           name="password"
-          placeholder="Şifre"
+          placeholder="şifre"
           className="form-control"
           onChange={handleChange}
           id="password"
@@ -96,14 +94,14 @@ const LoginForm = () => {
         />
 
         <div className="login-register">
-          Don't have an account yet?
+          Henüz bir hesabınız yok mu?
           <Link to="/register" className="login-route">
-            Sign up
+            Kayıt Ol
           </Link>
         </div>
 
         <button type="submit" className="login-button">
-          Log in
+          Giriş Yap
         </button>
       </form>
 

@@ -4,7 +4,10 @@ import "./Notifications.css";
 import { io } from "socket.io-client";  // Socket.IO istemcisi
 import { API_URL } from "../config";
 import UserImage from "./UserImage";
+import {getShortenedNotification} from "../utils/getShortenedMessage"
 const socket = io(API_URL, { autoConnect: false }); // Socket.IO bağlantısı
+
+
 const Notifications = ({ selectedUser }) => {
   const [notifications, setNotifications] = useState([]);
   const userId = localStorage.getItem("userId");
@@ -69,7 +72,7 @@ const Notifications = ({ selectedUser }) => {
         <div key={index} className="notification-card">
           <UserImage src={notification.sender.profileImage} />
           <div className="notification-content">
-            <span>{notification.content}</span>
+            <span>{getShortenedNotification(notification.content)}</span>
           </div>
         </div>
       ))}

@@ -1,7 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { CgMenuLeft } from "react-icons/cg";
 import { RiLogoutCircleLine } from "react-icons/ri";
-import CustomTooltip from "./Tooltip";
 import ICON_DATA from "../constants/sidebarIcons";
 import ProfileBg from "../assets/image/image_header.jpg";
 import { memo, useState } from "react";
@@ -47,7 +46,7 @@ const Sidebar = ({ onLinkClick, activePage, toggleContentVisibility }) => {
             />
             <ul className="dropdown-menu mb-2 ms-1" style={{ zIndex: 1002 }}>
                 <button className="dropdown-item d-flex align-items-center" onClick={handleLogout}>
-                    <RiLogoutCircleLine className="me-2" /> Logout
+                    <RiLogoutCircleLine className="me-2" />  Çıkış Yap
                 </button>
             </ul>
         </div>

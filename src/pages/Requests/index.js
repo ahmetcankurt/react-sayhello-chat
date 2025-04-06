@@ -107,7 +107,7 @@ function Index() {
   };
 
   const renderRequestList = (requests, isIncoming) => {
-    return requests.length > 0 ? (
+    return requests.length > 0 && (
       requests.map((request) => (
         <div key={request[isIncoming ? "sender" : "receiver"].userId} className="friends-list-blog">
           <div className="d-flex">
@@ -155,9 +155,7 @@ function Index() {
           </div>
         </div>
       ))
-    ) : (
-      <div>No {isIncoming ? "incoming" : "sent"} requests.</div>
-    );
+    )
   };
 
   return (

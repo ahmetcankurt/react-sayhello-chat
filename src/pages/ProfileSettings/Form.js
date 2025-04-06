@@ -54,23 +54,23 @@ function Form() {
 
 
   const inputFields = [
-    { label: "Name", name: "name", type: "text" },
-    { label: "Surname", name: "surname", type: "text" },
-    { label: "Username", name: "username", type: "text" },
-    { label: "About Me", name: "aboutme", type: "textarea" },
-    { label: "Jobs", name: "jobs", type: "text" },
-    { label: "is Active", name: "isActive", type: "text" },
-    { label: "status", name: "status", type: "text" },
-    { label: "Email", name: "email", type: "email" },
+    { label: "İsim", name: "name", type: "text" },
+    { label: "Soyisim", name: "surname", type: "text" },
+    { label: "Kullanıcı Adı", name: "username", type: "text" },
+    { label: "Hakkımda", name: "aboutme", type: "textarea" },
+    { label: "Meslek", name: "jobs", type: "text" },
+    // { label: "Durum", name: "status", type: "text" },
+    { label: "E-posta", name: "email", type: "email" },
     { label: "Instagram", name: "instagram", type: "text" },
-    { label: "Phone", name: "phone", type: "text" },
-    { label: "Linkedin", name: "linkedin", type: "text" },
-    { label: "Github", name: "github", type: "text" },
+    { label: "Telefon", name: "phone", type: "text" },
+    { label: "LinkedIn", name: "linkedin", type: "text" },
+    { label: "GitHub", name: "github", type: "text" },
     { label: "Twitter", name: "twitter", type: "text" },
-    { label: "Youtube", name: "youtube", type: "text" },
-    { label: "Birthday", name: "birthday", type: "text" },
+    { label: "YouTube", name: "youtube", type: "text" },
+    { label: "Doğum Günü", name: "birthday", type: "text" },
     { label: "Facebook", name: "facebook", type: "text" },
   ];
+  
 
   return (
     <ScrollContainer paddingBottom="80px">

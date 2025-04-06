@@ -20,7 +20,7 @@ import "./Home.css";
 const App = () => {
   const isMobile = useMobileMode();
   const [state, setState] = useState({
-    activePage: "friends",
+    activePage: "messages",
     isContentVisible: true,
     isProfileVisible: false,
     selectedUser: null,

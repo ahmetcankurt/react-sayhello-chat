@@ -59,6 +59,7 @@ function ChatFooter({ selectedUser }) {
         content: message,
       });
   
+      // Emit the message to both sender and receiver
       socketRef.current.emit('newMessage', {
         senderId: userId,
         receiverId: selectedUser,
@@ -67,9 +68,8 @@ function ChatFooter({ selectedUser }) {
         messageId: response.data.messageId
       });
   
+      // Reset message input
       setMessage('');
-      
-      // Textarea'yı eski boyutuna döndür
       const textarea = document.querySelector(".chat-search-input");
       if (textarea) {
         textarea.style.height = "auto";
@@ -80,6 +80,7 @@ function ChatFooter({ selectedUser }) {
       setIsSending(false);
     }
   };
+  
   
 
   const handleKeyDown = (e) => {

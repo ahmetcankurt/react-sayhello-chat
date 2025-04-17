@@ -110,23 +110,12 @@ const RegisterForm = () => {
     }
   };
 
-  useEffect(() => {
-    // Sayfa scroll'unu aç
-    document.body.style.overflow = 'auto';
-
-    return () => {
-      // Component unmount olduğunda scroll'u tekrar gizle
-      document.body.style.overflow = 'hidden';
-    };
-  }, []);
 
   return (
     <div className="login-container">
       <form onSubmit={handleSubmit} className="login-form">
-        <div className="login-icon-container"/>
-        <div className="text-center mt-4 mb-3">
-          <p className="login-title">SayHello Aramıza katılmak için kaydolun.</p>
-        </div>
+        <div className="login-icon-container" />
+        <h2 className="login-title mb-3">SayHello Aramıza katılmak için kaydolun.</h2>
 
         <div className="d-flex gap-2 mb-2">
           <input

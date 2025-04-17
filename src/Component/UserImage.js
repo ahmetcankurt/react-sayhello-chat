@@ -26,7 +26,7 @@ const UserImage = ({ src, alt }) => {
         }}
       />
     </div>
-  );
-};
+  )
+}
 
-export default memo(UserImage);
+export default memo(UserImage)

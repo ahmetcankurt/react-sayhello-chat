@@ -3,7 +3,6 @@ import { useNavigate, Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import axios from "axios";
 import { API_URL } from "../../config";
-import ImageLogoMsg from "../../assets/image/icon1.svg";
 import "./style.css";
 
 const LoginForm = () => {
@@ -78,16 +77,13 @@ const LoginForm = () => {
     <div className="login-container">
       <form onSubmit={handleSubmit} className="login-form">
         <div className="login-icon-container"/>
-
-        <div className="login-title mt-4 mb-3">
-          Kaydolun ve hemen tam rehbere erişin
-        </div>
+        <h2 className="login-title mb-3">Kaydolun ve hemen tam rehbere erişin</h2>
 
         <input
           type="text"
           name="username"
           placeholder="kullanıcı adı"
-          className="form-control mb-3"
+          className="form-control mb-2"
           onChange={handleChange}
           id="username"
           autoComplete="username" // ✅ Tarayıcıya kullanıcı adı alanı olduğunu bildirir
@@ -114,7 +110,6 @@ const LoginForm = () => {
           Giriş Yap
         </button>
       </form>
-
     </div>
   );
 };

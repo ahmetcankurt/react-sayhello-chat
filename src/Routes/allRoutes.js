@@ -1,17 +1,31 @@
-// Layouts
-import Home from "../pages/Home";
-import Login from "../pages/Login";
-import Register from "../pages/Register";
-import Page404 from "../pages/Page404";
+/*
+pages
+*/
+//root
+import Root from "../pages/Root/index";
+import Login from "../pages/Authentication/Login";
+import Logout from "../pages/Authentication/Logout";
+import Register from "../pages/Authentication/Register";
+// import RecoverPassword from "../pages/Authentication/RecoverPassword";
+// import ChangePassword from "../pages/Authentication/ChangePassword";
+// import LockScreen from "../pages/Authentication/LockScreen";
 
-const privateRoutes = [
-  { path: "/", component: <Home /> },
-];
+// dashboard
+import Dashboard from "../pages/Dashboard/index";
 
 const publicRoutes = [
-  { path: "/login", component: <Login /> },
-  { path: "/register", component: <Register /> },
-  { path: "*", component: <Page404 /> }, // 404 sayfası burada
+  { path: "/auth-login", component: <Login /> },
+  { path: "/auth-register", component: <Register /> },
+  // { path: "/auth-recoverpw", component: <RecoverPassword /> },
+  // { path: "/auth-changepassword", component: <ChangePassword /> },
+  // { path: "/auth-lock-screen", component: <LockScreen /> },
+  { path: "/logout", component: <Logout /> },
 ];
 
-export { privateRoutes, publicRoutes };
+const privateRoutes = [
+  { path: "/dashboard", component: <Dashboard /> },
+  { path: "/",  component: <Root /> },
+  { path: "*",  component: <Root/> },
+];
+
+export { publicRoutes, privateRoutes };

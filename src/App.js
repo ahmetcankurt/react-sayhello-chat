@@ -1,13 +1,9 @@
-import Route from "./Routes/index";
+import Routes from "./routes";
 import "@fancyapps/ui/dist/fancybox/fancybox.css";
-import "./assets/css/index.css"
-import "./assets/css/scrool.css"
+import "./assets/scss/theme.scss";
 
+const App = () => {
+  return <Routes />
+};
 
-function App() {
-  return (
-      <Route />
-  );
-}
-
-export default App;
+export default App

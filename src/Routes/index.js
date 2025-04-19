@@ -1,22 +1,49 @@
-import { Routes, Route, BrowserRouter } from "react-router-dom"; // BrowserRouter da kullanılabilir
-import { privateRoutes, publicRoutes } from "./allRoutes";
+import React from "react";
+import { Routes, Route, BrowserRouter } from "react-router-dom";
+import DefaultLayout from "../layouts/Default/index";
+
+// layouts
+import NonAuthLayout from "../layouts/NonAuth/index";
 import { AuthProtected } from "./AuthProtected";
 
-export default function Index() {
+import { publicRoutes, privateRoutes } from "./allRoutes";
+
+const Index = () => {
+
   return (
-    <BrowserRouter basename="/react-sayhello-chat"> {/* Proje adı burada belirtilmeli */}
-      <Routes>
-        {privateRoutes.map((route, idx) => (
+    <Routes>
+      <Route>
+        {publicRoutes.map((route, idx) => (
           <Route
             path={route.path}
-            element={<AuthProtected>{route.component}</AuthProtected>}
+            element={
+              <NonAuthLayout>
+                {route.component}
+              </NonAuthLayout>
+            }
             key={idx}
           />
         ))}
-        {publicRoutes.map((route, idx) => (
-          <Route path={route.path} element={<>{route.component}</>} key={idx} />
+      </Route>
+
+      <Route>
+        {privateRoutes.map((route, idx) => (
+          <Route
+            path={route.path}
+            element={
+              <AuthProtected>
+                <DefaultLayout>
+                  {route.component}
+                </DefaultLayout>
+              </AuthProtected>
+            }
+            key={idx}
+          exact={true}
+          />
         ))}
-      </Routes>
-    </BrowserRouter>
+      </Route>
+    </Routes>
   );
-}
+};
+
+export default Index;

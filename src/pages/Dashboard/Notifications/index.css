@@ -1,0 +1,28 @@
+.friend-request-page {
+  height: calc(100vh - 150px); /* header yüksekliğini çık (isteğe bağlı) */
+  display: flex;
+  flex-direction: column;
+}
+
+.request-section {
+  flex: 1;
+  padding: 1rem;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  border-bottom: 1px solid #ddd;
+}
+
+.request-section:last-child {
+  border-bottom: none;
+}
+
+.section-title {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.request-list {
+  flex: 1;
+  overflow-y: auto;
+}

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import axios from 'axios';
-import { API_URL } from '../config';
+import {API_URL} from "../config";
 
 function AuthProtected({ children }) {
   const [isTokenValid, setIsTokenValid] = useState(null);
@@ -31,7 +31,7 @@ function AuthProtected({ children }) {
   }
 
   if (!isTokenValid) {
-    return <Navigate to="/login" />;
+    return <Navigate to="/auth-login" />;
   }
 
   return <>{children}</>;

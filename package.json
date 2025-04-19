@@ -1,7 +1,8 @@
 {
-  "name": "chat-app",
   "version": "1.0.0",
   "private": true,
+  "name": "react-sayhello-chat",
+  "homepage": "https://ahmetcankurt.github.io/react-sayhello-chat",
   "dependencies": {
     "@fancyapps/ui": "^5.0.36",
     "@hookform/resolvers": "^3.3.2",
@@ -48,9 +49,10 @@
   "scripts": {
     "start": "react-scripts start --host 0.0.0.0",
     "build": "react-scripts build",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "format": "prettier --write \"**/*.{ts,tsx,json,md,html,css,less,scss}\""
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": [

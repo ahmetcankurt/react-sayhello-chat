@@ -258,7 +258,7 @@ const ForwardModal = ({
             <div className="d-flex align-items-center px-1">
               <div className="flex-grow-1">
                 <h4 className="mb-0 font-size-11 text-muted text-uppercase">
-                  Contacts
+                Kişiler
                 </h4>
               </div>
               <div className="flex-shrink-0">

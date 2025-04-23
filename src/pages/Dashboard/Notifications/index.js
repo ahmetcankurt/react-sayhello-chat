@@ -6,6 +6,7 @@ import { io } from "socket.io-client";
 import "./index.css";
 import ListHeader from './ListHeader';
 import { Dropdown, DropdownItem, DropdownMenu, DropdownToggle } from 'reactstrap';
+import classnames from "classnames";
 import {API_URL} from "../../../config";
 const socket = io(API_URL);
 
@@ -15,6 +16,7 @@ function Index() {
   const [incomingRequests, setIncomingRequests] = useState([]);
   const [sentRequests, setSentRequests] = useState([]);
   const [dropdownVisible, setDropdownVisible] = useState(null);
+  const [imageErrors, setImageErrors] = useState({});
 
   // Request'leri almak için genel bir fonksiyon
   const fetchRequests = async (type) => {
@@ -36,6 +38,10 @@ function Index() {
 
   const toggleDropdown = (userId) => {
     setDropdownVisible(dropdownVisible === userId ? null : userId);
+  };
+
+  const handleImageError = (userId) => {
+    setImageErrors(prev => ({ ...prev, [userId]: true }));
   };
 
   useEffect(() => {
@@ -105,61 +111,96 @@ function Index() {
     }
   };
 
+  const colors = [
+    "bg-primary",
+    "bg-danger",
+    "bg-info",
+    "bg-warning",
+    "bg-secondary",
+    "bg-pink",
+    "bg-purple",
+  ];
+
+  const getRandomColor = (userId) => {
+    const hash = userId.toString().split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    return colors[hash % colors.length];
+  };
+
   const renderRequestList = (requests, isIncoming) => {
     return requests.length > 0 && (
-      requests.map((request) => (
-        <div key={request[isIncoming ? "sender" : "receiver"].userId} className="d-flex">
-          <div className="d-flex">
-            <div className="friends-list-img-container me-2">
-              <div className="avatar-sm">
-                <img
-                  src={`${API_URL}/${request[isIncoming ? "sender" : "receiver"].profileImage}`}
-                  alt="Profile"
-                  className="img-fluid rounded-circle"
-                />
+      requests.map((request) => {
+        const user = request[isIncoming ? "sender" : "receiver"];
+        const fullName = `${capitalize(user.name)} ${capitalize(user.surname)}`;
+        const shortName = `${user.name.charAt(0)}${user.surname.charAt(0)}`.toUpperCase();
+        const hasImageError = imageErrors[user.userId];
+        const color = getRandomColor(user.userId);
+
+        return (
+          <div key={user.userId} className="d-flex align-items-center mb-3">
+            <div className="d-flex align-items-center flex-grow-1">
+              <div className="friends-list-img-container me-2">
+                <div className="avatar-sm">
+                  {user.profileImage && !hasImageError ? (
+                    <img
+                      src={`${API_URL}/${user.profileImage}`}
+                      alt={fullName}
+                      className="img-fluid rounded-circle"
+                      onError={() => handleImageError(user.userId)}
+                    />
+                  ) : (
+                    <span
+                      className={classnames(
+                        "avatar-title",
+                        "rounded-circle",
+                        "text-uppercase",
+                        "text-white",
+                        color
+                      )}
+                    >
+                      {shortName}
+                    </span>
+                  )}
+                </div>
+              </div>
+              <div>
+                <span>{fullName}</span>
               </div>
             </div>
-            <div>
-              <span>
-                {capitalize(request[isIncoming ? "sender" : "receiver"].name)}{" "}
-                {capitalize(request[isIncoming ? "sender" : "receiver"].surname)}
-              </span>
-            </div>
+            <Dropdown isOpen={dropdownVisible === user.userId} toggle={() => toggleDropdown(user.userId)}>
+              <DropdownToggle tag="a" className="text-mute">
+                <i className="bx bx-dots-vertical-rounded align-middle"></i>
+              </DropdownToggle>
+              <DropdownMenu className="dropdown-menu-end">
+                {isIncoming ? (
+                  <>
+                    <DropdownItem
+                      className="d-flex align-items-center justify-content-between"
+                      onClick={() => handleRequest(user.userId, "accept")}
+                    >
+                      Kabul et 
+                      <i className="bx bx-check ms-2 text-muted"></i>
+                    </DropdownItem>
+                    <DropdownItem
+                      className="d-flex align-items-center justify-content-between"
+                      onClick={() => handleRequest(user.userId, "reject")}
+                    >
+                      Reddet
+                      <i className="bx bx-x ms-2 text-muted"></i>
+                    </DropdownItem>
+                  </>
+                ) : (
+                  <DropdownItem
+                    className="d-flex align-items-center justify-content-between"
+                    onClick={() => handleRemoveFriendRequest(user.userId)}
+                  >
+                    Remove <i className="bx bx-trash ms-2 text-muted"></i>
+                  </DropdownItem>
+                )}
+              </DropdownMenu>
+            </Dropdown>
           </div>
-          <Dropdown isOpen={dropdownVisible === request[isIncoming ? "sender" : "receiver"].userId} toggle={() => toggleDropdown(request[isIncoming ? "sender" : "receiver"].userId)} className="ms-auto">
-            <DropdownToggle tag="a" className="text-mute">
-              <i className="bx bx-dots-vertical-rounded align-middle"></i>
-            </DropdownToggle>
-            <DropdownMenu className="dropdown-menu-end">
-              {isIncoming ? (
-                <>
-                  <DropdownItem
-                    className="d-flex align-items-center justify-content-between"
-                    onClick={() => handleRequest(request.sender.userId, "accept")}
-                  >
-                     Kabul et 
-                    <i className="bx bx-check ms-2 text-muted"></i>
-                  </DropdownItem>
-                  <DropdownItem
-                    className="d-flex align-items-center justify-content-between"
-                    onClick={() => handleRequest(request.sender.userId, "reject")}
-                  >
-                     Reddet
-                    <i className="bx bx-x ms-2 text-muted"></i>
-                  </DropdownItem>
-                </>
-              ) : (
-                <DropdownItem
-                  className="d-flex align-items-center justify-content-between"
-                  onClick={() => handleRemoveFriendRequest(request.receiver.userId)}
-                >
-                  Remove <i className="bx bx-trash ms-2 text-muted"></i>
-                </DropdownItem>
-              )}
-            </DropdownMenu>
-          </Dropdown>
-        </div>
-      ))
+        );
+      })
     );
   };
 
@@ -181,8 +222,6 @@ function Index() {
       </div>
     </>
   );
-  
 }
 
 export default memo(Index);
-

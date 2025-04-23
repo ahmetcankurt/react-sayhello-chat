@@ -1,0 +1,82 @@
+.modal-search-container {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.search-input {
+  flex: 1;
+  padding: 8px 36px 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.search-icon {
+  position: absolute;
+  right: 10px;
+  cursor: pointer;
+  color: #666;
+  transition: color 0.2s;
+}
+
+.search-icon:hover {
+  color: #000;
+}
+
+.modal-error {
+  color: red;
+  font-size: 14px;
+  margin-top: 10px;
+  text-align: center;
+}
+
+.modal-user-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.modal-user-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+}
+
+.modal-user-item-div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.modal-user-item img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid transparent;
+}
+
+.modal-user-item img.active-user {
+  border-color: #28a745; /* yeşil çerçeve */
+}
+
+.modal-user-item p {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.modal-friends-add-button {
+  font-size: 20px;
+  color: #007bff;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.modal-friends-add-button:hover {
+  color: #0056b3;
+}

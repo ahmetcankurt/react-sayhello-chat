@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 
 
 // components
@@ -15,4 +15,4 @@ const ThemeSettings = ({ theme, onChangeData }) => {
   );
 };
 
-export default ThemeSettings;
+export default memo(ThemeSettings)

@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from "react";
-import { Button } from "reactstrap";
+import React, { memo, useEffect, useState } from "react";
 import { updateUserInfo } from "../../../redux/slices/userInformation";
 import Swal from "sweetalert2";
 import { useDispatch, useSelector } from "react-redux";
 
 
-const PersonalInfo = ({ basicDetails }) => {
+const PersonalInfo = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.userInformation.user);
   const [userInfo, setUserInfo] = useState({});
@@ -65,7 +64,7 @@ const PersonalInfo = ({ basicDetails }) => {
     { label: "GitHub", name: "github", type: "text" },
     { label: "Twitter", name: "twitter", type: "text" },
     { label: "YouTube", name: "youtube", type: "text" },
-    { label: "Doğum Günü", name: "birthday", type: "date" }, // 🔥 burası güncellendi
+    { label: "Doğum Günü", name: "birthday", type: "date" },
     { label: "Facebook", name: "facebook", type: "text" },
   ];
 
@@ -116,4 +115,4 @@ const PersonalInfo = ({ basicDetails }) => {
   );
 };
 
-export default PersonalInfo;
+export default memo(PersonalInfo)

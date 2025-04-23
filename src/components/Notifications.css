@@ -1,0 +1,74 @@
+.notification-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  max-width: 300px;
+  min-width: 250px;
+}
+
+.notification-card {
+  display: flex;
+  align-items: center;
+  background: white;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 12px;
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 12px 28px 0px, 
+              rgba(0, 0, 0, 0.1) 0px 2px 4px 0px, 
+              rgba(255, 255, 255, 0.05) 0px 0px 0px 1px inset;
+  transform: translateX(100%);
+  opacity: 0;
+}
+
+.notification-card.entering {
+  animation: slideIn 0.3s forwards;
+}
+
+.notification-card.exiting {
+  animation: slideOut 0.3s forwards;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOut {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+.notification-avatar,
+.short-name-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 10px;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.short-name-avatar {
+  padding: 10px;
+  font-weight: bold;
+}
+
+.notification-content span {
+  font-size: 14px;
+  color: #333;
+}

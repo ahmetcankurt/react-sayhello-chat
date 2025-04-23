@@ -1,12 +1,10 @@
-import React from "react";
+import React, { memo } from "react";
 import { Navigate } from "react-router-dom";
 
-const Index = (props) => {
+const Index = () => {
   return (
-    <div>
-      <Navigate to="/dashboard" />
-    </div>
+    <Navigate to="/dashboard" />
   );
 };
 
-export default Index;
+export default memo(Index)

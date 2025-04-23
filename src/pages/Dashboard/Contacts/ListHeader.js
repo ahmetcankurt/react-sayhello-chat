@@ -6,7 +6,7 @@ const ListHeader = ({ openModal, search, onChangeSearch }) => {
     <div className="px-3 pt-4">
       <div className="d-flex align-items-start">
         <div className="flex-grow-1">
-          <h4 className="mb-4">Contacts</h4>
+          <h4 className="mb-4"> Kişiler</h4>
         </div>
         <div className="flex-shrink-0">
           <div id="add-contact-button">
@@ -21,7 +21,7 @@ const ListHeader = ({ openModal, search, onChangeSearch }) => {
             </Button>
           </div>
           <UncontrolledTooltip target="add-contact-button" placement="bottom">
-            Add Contact
+            Kişi Ekle
           </UncontrolledTooltip>
         </div>
       </div>
@@ -31,7 +31,7 @@ const ListHeader = ({ openModal, search, onChangeSearch }) => {
           <Input
             type="text"
             className="form-control bg-light border-0 pe-0"
-            placeholder="Search Contacts.."
+            placeholder="Arama yap..."
             value={search || ""}
             onChange={(e) => onChangeSearch(e.target.value)}
           />

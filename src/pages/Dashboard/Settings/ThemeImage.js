@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import classnames from "classnames";
 
 const changeImage = (id) => {
@@ -110,7 +110,7 @@ const ThemeImage = ({ theme, onChangeData }) => {
   return (
     <div className="mt-4 pt-2">
       <h5 className="mb-3 font-size-11 text-muted text-uppercase">
-        Choose Theme Image :
+        Arka Plan Resmi
       </h5>
       <div className="d-flex align-items-center flex-wrap gap-2 theme-btn-list theme-btn-list-img">
         {(themeImages || []).map((image, key) => (
@@ -126,4 +126,4 @@ const ThemeImage = ({ theme, onChangeData }) => {
   );
 };
 
-export default ThemeImage;
+export default memo(ThemeImage)

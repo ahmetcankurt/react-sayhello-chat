@@ -1,48 +1,23 @@
-import React, { useEffect, useState } from "react";
-import {
-  Row,
-  Col,
-  Dropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-  Input,
-  Button,
-  Alert,
-  UncontrolledTooltip,
-} from "reactstrap";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import classnames from "classnames";
-
-// components
-import AudioCallModal from "../../../components/AudioCallModal";
-import VideoCallModal from "../../../components/VideoCallModal";
-import AddPinnedTabModal from "../../../components/AddPinnedTabModal";
-
-
-// constants
+import { useSelector } from "react-redux";
 import { STATUS_TYPES } from "../../../constants";
-import { useDispatch, useSelector } from "react-redux";
-
-
-import { Search } from "./Search";
-import { setUserId } from "../../../redux/slices/selectedUser";
-
-import {API_URL} from "../../../config";
+import { API_URL } from "../../../config";
 
 export const ProfileImage = ({
   selectedUser,
   toggleContentVisibility,
   handleProfileClick
-
 }) => {
+  const [imageError, setImageError] = useState(false);
   const chatUserDetails = {};
   const userData = useSelector((state) => state.selectedUser.userInfo);
 
   const shortName = selectedUser
     ? userData?.name
-      ? `${userData?.name.charAt(0)} ${userData?.surname.charAt(0)}`
-      : "-"
+      ? `${userData?.name.charAt(0)}${userData?.surname.charAt(0)}`
+      : ""
     : "#";
 
   const colors = [
@@ -56,8 +31,11 @@ export const ProfileImage = ({
   ];
   const [color] = useState(Math.floor(Math.random() * colors.length));
 
-  const isOnline =
-    userData?.status && userData?.status === STATUS_TYPES.ACTIVE;
+  const isOnline = userData?.status && userData?.status === STATUS_TYPES.ACTIVE;
+
+  const handleImageError = () => {
+    setImageError(true);
+  };
 
   return (
     <div className="d-flex align-items-center">
@@ -82,12 +60,13 @@ export const ProfileImage = ({
               { online: isOnline }
             )}
           >
-            {userData?.profileImage ? (
+            {userData?.profileImage && !imageError ? (
               <>
                 <img
                   src={`${API_URL}/${userData?.profileImage}`}
                   className="rounded-circle avatar-sm"
-                  alt="profileImage"
+                  alt={`${userData?.name} ${userData?.surname}`}
+                  onError={handleImageError}
                 />
                 <span
                   className={classnames(
@@ -118,8 +97,21 @@ export const ProfileImage = ({
                     colors[color]
                   )}
                 >
-                  <span className="username"> {shortName}</span>
-                  <span className="user-status"></span>
+                  <span className="username">{shortName}</span>
+                  {isOnline && (
+                    <span className={classnames(
+                      "user-status",
+                      {
+                        "bg-success": userData?.status === STATUS_TYPES.ACTIVE,
+                      },
+                      {
+                        "bg-warning": userData?.status === STATUS_TYPES.AWAY,
+                      },
+                      {
+                        "bg-danger": userData?.status === STATUS_TYPES.DO_NOT_DISTURB,
+                      }
+                    )}></span>
+                  )}
                 </span>
               </div>
             )}
@@ -128,7 +120,6 @@ export const ProfileImage = ({
             <h6 className="text-truncate mb-0 font-size-18">
               <Link
                 to="#"
-                // onClick={onOpenUserDetails}
                 className="user-profile-show text-reset"
                 onClick={handleProfileClick}
               >

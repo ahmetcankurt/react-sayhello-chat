@@ -1,6 +1,7 @@
 
 import { Button, Collapse } from "reactstrap";
 import classnames from "classnames";
+import { memo } from "react";
 
 const AccordianItem = ({
     item,
@@ -45,4 +46,4 @@ const AccordianItem = ({
     );
   };
 
-export default AccordianItem;
+export default memo(AccordianItem)

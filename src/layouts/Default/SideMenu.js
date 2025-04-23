@@ -1,4 +1,5 @@
 import React, { memo, useEffect, useState } from "react";
+import classnames from "classnames";
 
 import {
   Nav,
@@ -21,7 +22,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setSelectedTab } from "../../redux/slices/tabSlice";
 
 import { Logo } from "./Logo";
-import {API_URL} from "../../config";
+import { API_URL } from "../../config";
 
 const MenuNavItem = ({ item, selectedTab, onChangeTab }) => {
   const onClick = () => {
@@ -54,59 +55,88 @@ const MenuNavItem = ({ item, selectedTab, onChangeTab }) => {
 
 const ProfileDropdownMenu = ({ onChangeTab }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [imageError, setImageError] = useState(false);
   const toggle = () => setDropdownOpen(!dropdownOpen);
 
   const userInfo = useSelector((state) => state.userInformation.user);
+  const shortName = userInfo
+  ? `${userInfo?.name?.charAt(0).toUpperCase() || ''}${userInfo?.surname?.charAt(0).toUpperCase() || ''}`
+  : '';
 
-  // Logout fonksiyonu
+
+  const colors = [
+    "bg-primary",
+    "bg-danger",
+    "bg-info",
+    "bg-warning",
+    "bg-secondary",
+    "bg-pink",
+    "bg-purple",
+  ];
+  const [color] = useState(Math.floor(Math.random() * colors.length));
+
+  const handleImageError = () => {
+    setImageError(true);
+  };
+
   const handleLogout = () => {
-    // localStorage'dan token ve kullanıcı bilgilerini sil
     localStorage.removeItem("token");
     localStorage.removeItem("userId");
     localStorage.removeItem("username");
-
-    // Gerekirse kullanıcıyı bir login sayfasına yönlendirebilirsiniz
-    window.location.href = "/logout";  // Örnek yönlendirme
+    window.location.href = "/logout";
   };
 
   return (
     <Dropdown
       nav
       isOpen={dropdownOpen}
-      className="profile-user-dropdown"
+      className="profile-user-dropdown "
+      onMouseEnter={() => setDropdownOpen(true)}
+      onMouseLeave={() => setDropdownOpen(false)}
       toggle={toggle}
     >
       <DropdownToggle nav className="bg-transparent">
-        <img src={`${API_URL}/${userInfo?.profileImage}`}
-          alt="Profile"
-          className="profile-user rounded-circle" />
+        {userInfo?.profileImage && !imageError ? (
+          <img
+            src={`${API_URL}/${userInfo.profileImage}`}
+            alt={userInfo.name ? `${userInfo.name} ${userInfo.surname}` : 'Profile'}
+            className="profile-user rounded-circle"
+            onError={handleImageError}
+          />
+        ) : (
+          <span className={`p-2 rounded-circle ${colors[color]} text-white font-size-22`}>
+            {shortName}
+          </span>
+        )}
       </DropdownToggle>
       <DropdownMenu>
         <DropdownItem
           className="d-flex align-items-center justify-content-between"
           onClick={() => onChangeTab(TABS.USERS)}
         >
-          Profile <i className="bx bx-user-circle text-muted ms-1"></i>
+          Profil
+          <i className="bx bx-user-circle text-muted ms-1"></i>
         </DropdownItem>
         <DropdownItem
           className="d-flex align-items-center justify-content-between"
           onClick={() => onChangeTab(TABS.SETTINGS)}
         >
-          Setting <i className="bx bx-cog text-muted ms-1"></i>
+          Ayarlar
+          <i className="bx bx-cog text-muted ms-1"></i>
         </DropdownItem>
-        {/* <DropdownItem
+        <DropdownItem
           className="d-flex align-items-center justify-content-between"
           href="/auth-changepassword"
         >
-          Change Password <i className="bx bx-lock-open text-muted ms-1"></i>
-        </DropdownItem> */}
-
-        {/* <DropdownItem /> */}
+          Şifre Değiştir
+          <i className="bx bx-lock-open text-muted ms-1"></i>
+        </DropdownItem>
         <DropdownItem
           className="d-flex align-items-center justify-content-between"
-          onClick={handleLogout} // Logout işlemine bağla
+          onClick={handleLogout}
         >
-          Log out <i className="bx bx-log-out-circle text-muted ms-1"></i>
+          Çıkış Yap
+          <i className="bx bx-log-out-circle text-muted ms-1"></i>
         </DropdownItem>
       </DropdownMenu>
     </Dropdown>
@@ -132,28 +162,22 @@ const SideMenu = () => {
     if (document.body) {
       document.body.setAttribute("data-bs-theme", layoutMode);
     }
-  }, [layoutMode]); // layoutMode değiştiğinde çalışacak
+  }, [layoutMode]);
 
   return (
     <div className="side-menu flex-lg-column">
-      {/* LOGO */}
       <Logo />
-      {/* end navbar-brand-box */}
 
-      {/* Start side-menu nav */}
       <div className="flex-lg-column my-0 sidemenu-navigation">
         <Nav pills className="side-menu-nav" role="tablist">
           {(menuItems || []).map((item, key) => (
             <MenuNavItem item={item} key={key} selectedTab={selectedTab} onChangeTab={onChangeTab} />
           ))}
 
-          {/* Theme toggle */}
           <LightDarkMode layoutMode={layoutMode} onChangeLayoutMode={onChangeLayoutMode} />
-          {/* Profile dropdown */}
           <ProfileDropdownMenu onChangeTab={onChangeTab} />
         </Nav>
       </div>
-      {/* end side-menu nav */}
     </div>
   );
 };

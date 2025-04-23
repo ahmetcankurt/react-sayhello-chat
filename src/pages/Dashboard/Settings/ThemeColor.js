@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import classnames from "classnames";
 
 
@@ -104,7 +104,7 @@ const ThemeColor = ({ theme, onChangeData }) => {
   return (
     <div>
       <h5 className="mb-3 font-size-11 text-muted text-uppercase">
-        Choose Theme Color :
+        Tema Rengi
       </h5>
       <div className="d-flex align-items-center flex-wrap gap-2 theme-btn-list theme-color-list">
         {(themeColors || []).map((color, key) => (
@@ -120,4 +120,4 @@ const ThemeColor = ({ theme, onChangeData }) => {
   );
 };
 
-export default ThemeColor;
+export default memo(ThemeColor)

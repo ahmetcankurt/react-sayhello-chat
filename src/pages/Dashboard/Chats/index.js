@@ -35,7 +35,7 @@ const Index = ({setSelectedUser}) => {
         <div className="px-3 pt-4">
           <div className="d-flex align-items-start">
             <div className="flex-grow-1">
-              <h4 className="mb-4">Chats</h4>
+              <h4 className="mb-4">Sohbetler</h4>
             </div>
           </div>
           <Form>
@@ -45,7 +45,7 @@ const Index = ({setSelectedUser}) => {
                 id="serachChatUser"
                 type="text"
                 className="form-control bg-light border-0 pe-0"
-                placeholder="Search here.."
+                placeholder="Arama yap..."
               />
               <Button color="light" type="button" id="searchbtn-addon">
                 <i className="bx bx-search align-middle"></i>

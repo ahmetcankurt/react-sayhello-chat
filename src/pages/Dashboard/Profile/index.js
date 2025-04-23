@@ -2,11 +2,6 @@
 import AppSimpleBar from "../../../components/AppSimpleBar";
 import MyProfile from "./MyProfile";
 import UserDescription from "./UserDescription";
-import Media from "../../../components/Media";
-import AttachedFiles from "../../../components/AttachedFiles";
-
-import image4 from "../../../assets/images/small/img-4.jpg";
-import avatar1 from "../../../assets/images/users/avatar-1.jpg";
 import { useDispatch, useSelector } from "react-redux";
 import { memo, useEffect } from "react";
 import { getUsers } from "../../../redux/slices/userInformation";

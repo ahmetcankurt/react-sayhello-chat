@@ -7,7 +7,6 @@ import Profile from "./Profile/index";
 import Chats from "./Chats/index";
 import Contacts from "./Contacts/index";
 import Calls from "./Calls/index";
-import Bookmark from "./Bookmark/index";
 import Settings from "./Settings/index";
 import Notification from "./Notifications/index";
 import { useSelector } from "react-redux";

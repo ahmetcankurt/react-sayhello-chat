@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import { Button, Col, Row } from "reactstrap";
 
 const Welcome = () => {
@@ -14,7 +14,7 @@ const Welcome = () => {
             </div>
             <h4 className="text-primary my-3">Hoş geldiniz!</h4>
             <p className="text-muted ">
-              Hoş geldiniz! Burada anlık mesajlaşmalar yapabilir, sevdiklerinizle hızlı ve kolay iletişim kurabilirsiniz.
+              Burada anlık mesajlaşmalar yapabilir, sevdiklerinizle hızlı ve kolay iletişim kurabilirsiniz.
             </p>
           </div>
         </Col>
@@ -23,4 +23,4 @@ const Welcome = () => {
   );
 };
 
-export default Welcome;
+export default memo(Welcome)

@@ -1,18 +1,15 @@
 import React, { memo, useState } from "react";
 import { Link } from "react-router-dom";
 import classnames from "classnames";
-
 import { STATUS_TYPES } from "../../../constants";
 import { getShortenedMessage } from "../../../utils/getShortenedMessage";
 import { formatMessageDate } from "../../../utils/formatMessageDate";
-
 import { API_URL } from "../../../config";
-
-
 
 const ChatUser = ({ user, setSelectedUser }) => {
   const fullName = `${user.name} ${user.surname}`;
   const shortName = `${user.name.charAt(0)}${user.surname.charAt(0)}`;
+  const [imageError, setImageError] = useState(false);
 
   const colors = [
     "bg-primary",
@@ -27,14 +24,17 @@ const ChatUser = ({ user, setSelectedUser }) => {
   const isOnline = user.status && user.status === STATUS_TYPES.ACTIVE;
   const unRead = user.meta && user.meta.unRead;
 
-  const isSelectedChat =
-    setSelectedUser && setSelectedUser === user.userId ? true : false;
+  const isSelectedChat = setSelectedUser && setSelectedUser === user.userId;
   const shortenedMessage = getShortenedMessage(user.lastMessage);
+
+  const handleImageError = () => {
+    setImageError(true);
+  };
 
   return (
     <li className={classnames({ active: isSelectedChat })} onClick={() => setSelectedUser(user.userId)}>
       <Link to="#" className={classnames({ "unread-msg-user": unRead })}>
-        <div className="d-flex ">
+        <div className="d-flex">
           <div
             className={classnames(
               "chat-user-img",
@@ -44,12 +44,13 @@ const ChatUser = ({ user, setSelectedUser }) => {
               { online: isOnline }
             )}
           >
-            {user.profileImage ? (
+            {user.profileImage && !imageError ? (
               <>
                 <img
                   src={`${API_URL}/${user.profileImage}`}
                   className="rounded-circle avatar-sm"
-                  alt=""
+                  alt={fullName}
+                  onError={handleImageError}
                 />
                 {isOnline && <span className="user-status"></span>}
               </>
@@ -65,14 +66,14 @@ const ChatUser = ({ user, setSelectedUser }) => {
                   )}
                 >
                   <span className="username">{shortName}</span>
-                  <span className="user-status"></span>
+                  {isOnline && <span className="user-status"></span>}
                 </span>
-
               </div>
             )}
           </div>
           <div className="overflow-hidden">
-            <div className="text-truncate mb-0">{fullName}
+            <div className="text-truncate mb-0">
+              {fullName}
               <div>
                 {user.lastMessage && !user.isDeleted ? (
                   <p className="text-truncate mb-0 font-size-12">
@@ -86,27 +87,25 @@ const ChatUser = ({ user, setSelectedUser }) => {
                     {shortenedMessage}
                   </p>
                 )}
-
               </div>
             </div>
           </div>
           <div className="ms-auto text-end">
-            {user.lastMessage && user.lastMessage ? (
+            {user.lastMessage && user.lastMessage && (
               <p className="mb-0 font-size-11 text-muted">
                 {formatMessageDate(user.lastMessageCreatedAt)}
               </p>
-            ) : null}
+            )}
           </div>
 
-          {unRead && unRead !== 0 ? (
+          {unRead && unRead !== 0 && (
             <div className="ms-auto">
               <span className="badge badge-soft-dark rounded p-1">
                 {unRead}
               </span>
             </div>
-          ) : null}
+          )}
         </div>
-
       </Link>
     </li>
   );

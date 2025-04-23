@@ -1,7 +1,5 @@
-import React, { useState } from "react";
+import React, { memo, useRef, useState } from "react";
 import { SETTINGS_COLLAPSES } from "../../../constants";
-
-// components
 import Loader from "../../../components/Loader";
 import AppSimpleBar from "../../../components/AppSimpleBar";
 import UserCoverImage from "./UserCoverImage";
@@ -9,69 +7,109 @@ import UserProfile from "./UserProfile";
 import PersonalInfo from "./PersonalInfo";
 import ThemeSettings from "./ThemeSettings";
 import AccordianItem from "./AccordianItem";
-
+import { useDispatch, useSelector } from "react-redux";
+import Swal from "sweetalert2";
+import { updateUserImage } from "../../../redux/slices/userInformation";
 
 const Index = () => {
-  const [settings, setSettings] = useState({})
-  const [selectedMenu, setSelectedMenu] = useState (null);
-  const onChangeData = (field, value) => {}
+  const [settings, setSettings] = useState({});
+  const [selectedMenu, setSelectedMenu] = useState(null);
+  const [tempProfileImage, setTempProfileImage] = useState(null);
+  const [tempBackgroundImage, setTempBackgroundImage] = useState(null);
+  const onChangeData = (field, value) => { };
 
   const collapseItems = [
     {
       value: SETTINGS_COLLAPSES.PROFILE,
-      label: "Personal Info",
+      label: "Profil Ayarları",
       icon: "bx bxs-user",
       component: <PersonalInfo basicDetails={settings.basicDetails} />,
     },
     {
       value: SETTINGS_COLLAPSES.THEME,
-      label: "Themes",
+      label: "Tema Ayarları",
       icon: "bx bxs-adjust-alt",
       component: (
         <ThemeSettings theme={settings.theme} onChangeData={onChangeData} />
       ),
     },
-    // {
-    //   value: SETTINGS_COLLAPSES.PRIVACY,
-    //   label: "Privacy",
-    //   icon: "bx bxs-lock",
-    //   component: (
-    //     <Privacy privacy={settings.privacy} onChangeSettings={onChangeData} />
-    //   ),
-    // },
-    // {
-    //   value: SETTINGS_COLLAPSES.SECURITY,
-    //   label: "Security",
-    //   icon: "bx bxs-check-shield",
-    //   component: (
-    //     <Security
-    //       security={settings.security}
-    //       onChangeSettings={onChangeData}
-    //     />
-    //   ),
-    // },
-    // {
-    //   value: SETTINGS_COLLAPSES.HELP,
-    //   label: "Help",
-    //   icon: "bx bxs-help-circle",
-    //   component: <Help />,
-    // },
   ];
+
+  const userId = localStorage.getItem("userId");
+  const token = localStorage.getItem("token");
+  const dispatch = useDispatch();
 
   const onChangeCollapse = (id) => {
     setSelectedMenu(id);
   };
 
+  const handleFileChange = (e, type) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    if (file.size > 50 * 1024 * 1024) {
+      Swal.fire({
+        icon: "error",
+        title: "Dosya Boyutu Hatası",
+        text: "Dosya boyutu 50 MB'den büyük olamaz.",
+      });
+      return;
+    }
+
+    // Create temporary URL for instant preview
+    const tempUrl = URL.createObjectURL(file);
+    if (type === "profileImage") {
+      setTempProfileImage(tempUrl);
+    } else {
+      setTempBackgroundImage(tempUrl);
+    }
+
+    const formData = new FormData();
+    formData.append(type, file);
+
+    dispatch(updateUserImage({ userId, formData, token }))
+      .then(() => {
+        Swal.fire({
+          icon: "success",
+          title: `${type === "profileImage" ? "Profil" : "Arka plan"} resmi başarıyla güncellendi.`,
+          timer: 3000,
+          showConfirmButton: false,
+          position: "top-end",
+          toast: true,
+        });
+        
+        // Clear temp URLs after successful upload
+        setTempProfileImage(null);
+        setTempBackgroundImage(null);
+      })
+      .catch((error) => {
+        Swal.fire({
+          icon: "error",
+          title: "Hata",
+          text: `${type} güncellenirken bir hata oluştu.`,
+        });
+        
+        // Clear temp URLs on error
+        if (type === "profileImage") {
+          setTempProfileImage(null);
+        } else {
+          setTempBackgroundImage(null);
+        }
+      });
+  };
+
   return (
     <div className="position-relative">
-      {/* {getSettingsLoading && <Loader />} */}
-      <UserCoverImage basicDetails={settings.basicDetails} />
+      <UserCoverImage
+        handleFileChange={handleFileChange}
+        tempBackgroundImage={tempBackgroundImage}
+      />
 
       <UserProfile
-        basicDetails={settings.basicDetails}
-        status={settings.status}
+        handleFileChange={handleFileChange}
+        tempProfileImage={tempProfileImage}
       />
-      {/* Start User profile description */}
+      
       <AppSimpleBar className="user-setting">
         <div id="settingprofile" className="accordion accordion-flush">
           {(collapseItems || []).map((item, key) => (
@@ -83,10 +121,9 @@ const Index = () => {
             />
           ))}
         </div>
-        {/* end profile-setting-accordion */}
       </AppSimpleBar>
     </div>
   );
 };
 
-export default Index;
+export default memo(Index);

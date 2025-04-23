@@ -143,7 +143,7 @@ const ContactModal = ({ isOpen, onClose, onAddContact }) => {
     >
       <ModalHeader toggle={onClose} className="bg-primary">
         <div className="modal-title modal-title-custom text-white font-size-16 bg-primary ">
-          Contacts
+        Kişiler
         </div>
       </ModalHeader>
       <ModalBody className="p-4">
@@ -171,7 +171,7 @@ const ContactModal = ({ isOpen, onClose, onAddContact }) => {
             <div className="d-flex align-items-center px-1">
               <div className="flex-grow-1">
                 <h4 className=" font-size-11 text-muted text-uppercase">
-                  Contacts
+                Kişiler
                 </h4>
               </div>
             </div>

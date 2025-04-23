@@ -33,4 +33,4 @@ const UserDescription = ({ basicDetails }) => {
   );
 };
 
-export default  memo(UserDescription);
+export default memo(UserDescription);

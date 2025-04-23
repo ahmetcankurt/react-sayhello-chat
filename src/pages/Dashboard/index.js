@@ -8,6 +8,7 @@ import UserProfileDetails from "./UserProfileDetails/index";
 import Welcome from "./ConversationUser/Welcome";
 import { TABS } from "../../constants";
 import { fetchUserData } from "../../redux/slices/selectedUser";
+import Notifications from "../../components/Notification";
 
 const Index = () => {
   const [selectedTab, setSelectedTab] = useState(TABS.CHAT);
@@ -29,6 +30,8 @@ const Index = () => {
 
   return (
     <>
+      <Notifications selectedUser={selectedUser} />
+
       <Leftbar
         activeTab={selectedTab}
         setSelectedTab={setSelectedTab}

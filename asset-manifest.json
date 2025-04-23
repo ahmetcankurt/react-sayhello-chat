@@ -1,10 +1,10 @@
 {
   "files": {
-    "main.css": "/react-sayhello-chat/static/css/main.a3f18aba.css",
-    "main.js": "/react-sayhello-chat/static/js/main.485d7097.js",
+    "main.css": "/react-sayhello-chat/static/css/main.09eb0f7b.css",
+    "main.js": "/react-sayhello-chat/static/js/main.cb255f22.js",
     "static/js/685.e0aa0b9d.chunk.js": "/react-sayhello-chat/static/js/685.e0aa0b9d.chunk.js",
-    "static/media/remixicon.svg?t=1580819880586": "/react-sayhello-chat/static/media/remixicon.b1b2a94825a3e4b52765.svg",
-    "static/media/boxicons.svg": "/react-sayhello-chat/static/media/boxicons.045b05bf2dc119267a90.svg",
+    "static/media/remixicon.svg?t=1580819880586": "/react-sayhello-chat/static/media/remixicon.886e4b6136ca6cd843fc.svg",
+    "static/media/boxicons.svg": "/react-sayhello-chat/static/media/boxicons.c17adb11d64fadd1cd5a.svg",
     "static/media/materialdesignicons-webfont.eot": "/react-sayhello-chat/static/media/materialdesignicons-webfont.21d6dd0b5b32336e7cff.eot",
     "static/media/materialdesignicons-webfont.ttf?v=5.0.45": "/react-sayhello-chat/static/media/materialdesignicons-webfont.f60b16c8d4cd35506d0b.ttf",
     "static/media/materialdesignicons-webfont.woff?v=5.0.45": "/react-sayhello-chat/static/media/materialdesignicons-webfont.bd5c85afa91031c7cdca.woff",
@@ -42,7 +42,7 @@
     "static/media/close.svg": "/react-sayhello-chat/static/media/close.b2d521a00df4986ed4cb.svg"
   },
   "entrypoints": [
-    "static/css/main.a3f18aba.css",
-    "static/js/main.485d7097.js"
+    "static/css/main.09eb0f7b.css",
+    "static/js/main.cb255f22.js"
   ]
 }

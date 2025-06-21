@@ -1,4 +1,4 @@
-import React, { memo, useRef, useState } from "react";
+import { memo,useState } from "react";
 import { SETTINGS_COLLAPSES } from "../../../constants";
 import Loader from "../../../components/Loader";
 import AppSimpleBar from "../../../components/AppSimpleBar";
@@ -7,15 +7,17 @@ import UserProfile from "./UserProfile";
 import PersonalInfo from "./PersonalInfo";
 import ThemeSettings from "./ThemeSettings";
 import AccordianItem from "./AccordianItem";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch} from "react-redux";
 import Swal from "sweetalert2";
 import { updateUserImage } from "../../../redux/slices/userInformation";
 
 const Index = () => {
-  const [settings, setSettings] = useState({});
   const [selectedMenu, setSelectedMenu] = useState(null);
   const [tempProfileImage, setTempProfileImage] = useState(null);
   const [tempBackgroundImage, setTempBackgroundImage] = useState(null);
+  const userId = localStorage.getItem("userId");
+  const token = localStorage.getItem("token");
+  const dispatch = useDispatch();
   const onChangeData = (field, value) => { };
 
   const collapseItems = [
@@ -23,21 +25,19 @@ const Index = () => {
       value: SETTINGS_COLLAPSES.PROFILE,
       label: "Profil Ayarları",
       icon: "bx bxs-user",
-      component: <PersonalInfo basicDetails={settings.basicDetails} />,
+      component: <PersonalInfo  />,
     },
     {
       value: SETTINGS_COLLAPSES.THEME,
       label: "Tema Ayarları",
       icon: "bx bxs-adjust-alt",
       component: (
-        <ThemeSettings theme={settings.theme} onChangeData={onChangeData} />
+        <ThemeSettings  onChangeData={onChangeData} />
       ),
     },
   ];
 
-  const userId = localStorage.getItem("userId");
-  const token = localStorage.getItem("token");
-  const dispatch = useDispatch();
+  
 
   const onChangeCollapse = (id) => {
     setSelectedMenu(id);
@@ -77,7 +77,7 @@ const Index = () => {
           position: "top-end",
           toast: true,
         });
-        
+
         // Clear temp URLs after successful upload
         setTempProfileImage(null);
         setTempBackgroundImage(null);
@@ -88,7 +88,7 @@ const Index = () => {
           title: "Hata",
           text: `${type} güncellenirken bir hata oluştu.`,
         });
-        
+
         // Clear temp URLs on error
         if (type === "profileImage") {
           setTempProfileImage(null);
@@ -97,6 +97,7 @@ const Index = () => {
         }
       });
   };
+
 
   return (
     <div className="position-relative">
@@ -109,7 +110,7 @@ const Index = () => {
         handleFileChange={handleFileChange}
         tempProfileImage={tempProfileImage}
       />
-      
+
       <AppSimpleBar className="user-setting">
         <div id="settingprofile" className="accordion accordion-flush">
           {(collapseItems || []).map((item, key) => (

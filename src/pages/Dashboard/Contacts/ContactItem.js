@@ -1,5 +1,5 @@
 import React, { memo, useState } from "react";
-import classnames from "classnames";    
+import classnames from "classnames";
 import {
   Dropdown,
   DropdownToggle,
@@ -7,6 +7,12 @@ import {
   DropdownItem,
 } from "reactstrap";
 import { API_URL } from "../../../config";
+import { deleteFriend } from "../../../redux/slices/friendRequestsSlice";
+import { useDispatch } from "react-redux";
+import Swal from "sweetalert2"; // Swal'ı import ediyoruz
+import { getShortName } from "../../../utils/userHelpers";
+import { COLORS } from "../../../constants/bgShortColor";
+import axios from "axios"; // Axios import ettik
 
 const ContactItem = ({ contact, setSelectedUser }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -14,26 +20,72 @@ const ContactItem = ({ contact, setSelectedUser }) => {
 
   const toggle = () => setDropdownOpen(!dropdownOpen);
   const handleImageError = () => setImageError(true);
+  const fullName = [contact?.name, contact?.surname].filter(Boolean).join(' ');
+  const shortName = getShortName(contact);
+  const [color] = useState(Math.floor(Math.random() * COLORS.length));
 
-  const fullName = `${contact.firstName} ${contact.lastName}`;
-  const shortName = `${contact.firstName.charAt(0)}${contact.lastName.charAt(0)}`;
-  
-  const colors = [
-    "bg-primary",
-    "bg-danger",
-    "bg-info",
-    "bg-warning",
-    "bg-secondary",
-    "bg-pink",
-    "bg-purple",
-  ];
-  const [color] = useState(Math.floor(Math.random() * colors.length));
+  const dispatch = useDispatch();
+
+  // Kullanıcıyı engelleme fonksiyonu
+  const handleBlockUser = async (event, blockerId, blockedId) => {
+    event.stopPropagation(); // Menü kapanmasını engellemek için
+
+    Swal.fire({
+      title: "Emin misiniz?",
+      text: "Bu kişiyi engellemek istiyor musunuz?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Evet, engelle!",
+      cancelButtonText: "İptal",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const response = await axios.post(
+            `${API_URL}/user-blocked/${blockerId}/block/${blockedId}`
+          );
+          console.log("Kullanıcı engellendi:", response.data);
+          Swal.fire("Engellendi!", "Kullanıcı başarıyla engellendi.", "success");
+        } catch (error) {
+          console.error("Error blocking user", error);
+          Swal.fire("Hata!", "Kullanıcı engellenirken bir hata oluştu.", "error");
+        }
+      }
+    });
+  };
+
+  const handleDeleteFriend = async (event, friendId) => {
+    event.stopPropagation(); // Menü kapanmasını engellemek için
+    Swal.fire({
+      title: "Emin misiniz?",
+      text: "Bu kişiyi arkadaş listenizden silmek istiyor musunuz?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Evet, sil!",
+      cancelButtonText: "İptal",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const userId = localStorage.getItem("userId"); // Kullanıcının ID'sini alıyoruz
+        try {
+          await dispatch(deleteFriend({ userId, friendId }));
+          console.log("Dispatch finished");
+          Swal.fire("Silindi!", "Arkadaşınız başarıyla silindi.", "success"); // Onay mesajı
+        } catch (error) {
+          console.error("Error removing friend", error);
+          Swal.fire("Hata!", "Arkadaş silinirken bir hata oluştu.", "error"); // Hata mesajı
+        }
+      }
+    });
+  };
 
   return (
-    <li className="contact-list-item" onClick={() => setSelectedUser(contact.id)}>
+    <li className="contact-list-item">
       <div className="d-flex align-items-center">
         <div className="flex-shrink-0 me-2">
-          <div className="avatar-sm">
+          <div className="avatar-sm" onClick={() => setSelectedUser({ id: contact.userId, userType: contact.type})} >
             {contact.profileImage && !imageError ? (
               <img
                 src={`${API_URL}/${contact.profileImage}`}
@@ -48,7 +100,7 @@ const ContactItem = ({ contact, setSelectedUser }) => {
                   "rounded-circle",
                   "text-uppercase",
                   "text-white",
-                  colors[color]
+                  COLORS[color]
                 )}
               >
                 {shortName}
@@ -56,7 +108,7 @@ const ContactItem = ({ contact, setSelectedUser }) => {
             )}
           </div>
         </div>
-        <div className="flex-grow-1">
+        <div className="flex-grow-1"  onClick={() => setSelectedUser({ id: contact.userId, userType: contact.type})}>
           <h5 className="font-size-14 m-0">{fullName}</h5>
         </div>
         <div className="flex-shrink-0">
@@ -67,21 +119,19 @@ const ContactItem = ({ contact, setSelectedUser }) => {
             <DropdownMenu className="dropdown-menu-end">
               <DropdownItem
                 className="d-flex align-items-center justify-content-between"
-                href="#"
+                onClick={(event) =>
+                  handleBlockUser(event, localStorage.getItem("userId"), contact.userId)
+                }
               >
-                Edit <i className="bx bx-pencil ms-2 text-muted"></i>
+                Engelle
+                <i className="bx bx-block ms-2 text-muted"></i>
               </DropdownItem>
               <DropdownItem
                 className="d-flex align-items-center justify-content-between"
-                href="#"
+                onClick={(event) => handleDeleteFriend(event, contact.userId)}
               >
-                Block <i className="bx bx-block ms-2 text-muted"></i>
-              </DropdownItem>
-              <DropdownItem
-                className="d-flex align-items-center justify-content-between"
-                href="#"
-              >
-                Remove <i className="bx bx-trash ms-2 text-muted"></i>
+                Arkadaşlıktan Çıkar
+                <i className="bx bx-trash ms-2 text-muted"></i>
               </DropdownItem>
             </DropdownMenu>
           </Dropdown>

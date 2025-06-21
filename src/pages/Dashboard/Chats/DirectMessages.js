@@ -52,5 +52,4 @@ const DirectMessages = ({
     </>
   );
 };
-
 export default memo(DirectMessages);

@@ -7,10 +7,15 @@ import "./index.css";
 import ListHeader from './ListHeader';
 import { Dropdown, DropdownItem, DropdownMenu, DropdownToggle } from 'reactstrap';
 import classnames from "classnames";
-import {API_URL} from "../../../config";
+import { API_URL } from "../../../config";
+import { useDispatch } from "react-redux";
+import { acceptFriendRequest, fetchFriends } from "../../../redux/slices/friendRequestsSlice";
+import { getShortName } from "../../../utils/userHelpers";
+import { COLORS } from "../../../constants/bgShortColor";
 const socket = io(API_URL);
 
 function Index() {
+  const dispatch = useDispatch();
   const userId = localStorage.getItem("userId");
   const token = localStorage.getItem("token");
   const [incomingRequests, setIncomingRequests] = useState([]);
@@ -67,17 +72,31 @@ function Index() {
     };
   }, [userId]);
 
+
   const handleRequest = async (senderId, action) => {
-    try {
-      await axios.put(
-        `${API_URL}/friend-requests/${userId}/friend-request/${senderId}`,
-        { action }
-      );
-      setIncomingRequests((prevRequests) =>
-        prevRequests.filter((request) => request.sender.userId !== senderId)
-      );
-    } catch (err) {
-      alert("Could not process the request. Please try again.");
+    if (action === "accept") {
+      try {
+        await dispatch(acceptFriendRequest({ userId, senderId })).unwrap();
+        // İsteği kabul ettikten sonra arkadaş listesini yenile
+        dispatch(fetchFriends(userId));
+        setIncomingRequests((prevRequests) =>
+          prevRequests.filter((request) => request.sender.userId !== senderId)
+        );
+      } catch (error) {
+        console.error("Arkadaşlık isteği kabul edilirken hata:", error);
+      }
+    } else {
+      try {
+        await axios.put(
+          `${API_URL}/friend-requests/${userId}/friend-request/${senderId}`,
+          { action }
+        );
+        setIncomingRequests((prevRequests) =>
+          prevRequests.filter((request) => request.sender.userId !== senderId)
+        );
+      } catch (err) {
+        alert("Could not process the request. Please try again.");
+      }
     }
   };
 
@@ -111,19 +130,9 @@ function Index() {
     }
   };
 
-  const colors = [
-    "bg-primary",
-    "bg-danger",
-    "bg-info",
-    "bg-warning",
-    "bg-secondary",
-    "bg-pink",
-    "bg-purple",
-  ];
-
   const getRandomColor = (userId) => {
     const hash = userId.toString().split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
-    return colors[hash % colors.length];
+    return COLORS[hash % COLORS.length];
   };
 
   const renderRequestList = (requests, isIncoming) => {
@@ -131,7 +140,8 @@ function Index() {
       requests.map((request) => {
         const user = request[isIncoming ? "sender" : "receiver"];
         const fullName = `${capitalize(user.name)} ${capitalize(user.surname)}`;
-        const shortName = `${user.name.charAt(0)}${user.surname.charAt(0)}`.toUpperCase();
+        const shortName = getShortName(user);
+
         const hasImageError = imageErrors[user.userId];
         const color = getRandomColor(user.userId);
 
@@ -177,7 +187,7 @@ function Index() {
                       className="d-flex align-items-center justify-content-between"
                       onClick={() => handleRequest(user.userId, "accept")}
                     >
-                      Kabul et 
+                      Kabul et
                       <i className="bx bx-check ms-2 text-muted"></i>
                     </DropdownItem>
                     <DropdownItem
@@ -210,13 +220,17 @@ function Index() {
       <div className="friend-request-page">
         {/* Gelen arkadaşlık istekleri */}
         <div className="request-section">
-          <span className="section-title">Gelen İstekler</span>
+          <h5 className="mb-3 font-size-11 text-muted text-uppercase">
+            Gelen İstekler
+          </h5>
           <div className="request-list">{renderRequestList(incomingRequests, true)}</div>
         </div>
-  
+
         {/* Gönderilen arkadaşlık istekleri */}
         <div className="request-section">
-          <span className="section-title">Gönderdiğiniz İstekler</span>
+          <h5 className="mb-3 font-size-11 text-muted text-uppercase">
+          Gönderdiğiniz İstekler
+          </h5>
           <div className="request-list">{renderRequestList(sentRequests, false)}</div>
         </div>
       </div>

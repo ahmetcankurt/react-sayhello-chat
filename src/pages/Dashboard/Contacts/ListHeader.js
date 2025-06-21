@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import { Button, UncontrolledTooltip, Form, Input } from "reactstrap";
 
 const ListHeader = ({ openModal, search, onChangeSearch }) => {
@@ -10,7 +10,6 @@ const ListHeader = ({ openModal, search, onChangeSearch }) => {
         </div>
         <div className="flex-shrink-0">
           <div id="add-contact-button">
-            {/* Button trigger modal */}
             <Button
               color="primary"
               type="button"
@@ -20,9 +19,9 @@ const ListHeader = ({ openModal, search, onChangeSearch }) => {
               <i className="bx bx-plus"></i>
             </Button>
           </div>
-          <UncontrolledTooltip target="add-contact-button" placement="bottom">
+          {/* <UncontrolledTooltip target="add-contact-button" placement="bottom">
             Kişi Ekle
-          </UncontrolledTooltip>
+          </UncontrolledTooltip> */}
         </div>
       </div>
 
@@ -48,4 +47,4 @@ const ListHeader = ({ openModal, search, onChangeSearch }) => {
   );
 };
 
-export default ListHeader;
+export default  memo(ListHeader)

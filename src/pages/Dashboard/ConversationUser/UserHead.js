@@ -19,7 +19,6 @@ import AddPinnedTabModal from "../../../components/AddPinnedTabModal";
 import { STATUS_TYPES } from "../../../constants";
 import { useSelector } from "react-redux";
 
-
 import config from "../../../config";
 import { Search } from "./Search";
 import { ProfileImage } from "./ProfileImage";

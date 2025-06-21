@@ -1,7 +1,7 @@
 
 
 .user-chat {
-    background: url("../../../images/bg-pattern/pattern-05.png");
+    // background: url("../../../images/bg-pattern/pattern-05.png");
     transition: all 0.4s;
     position: relative;
     background-color: var(--#{$prefix}body-bg);
@@ -76,10 +76,11 @@
     z-index: 1;
     background-color: var(--#{$prefix}footer-bg);
     border-bottom: 1px solid var(--#{$prefix}border-color);
+    box-shadow: $box-shadow;
     backdrop-filter: blur(7px);
     @media (max-width: 991.98px) {
         position: fixed;
-        background-color: rgba($white,0.8);
+        // background-color: rgba($white,0.8);
     }
 
     .topbar-bookmark{
@@ -288,10 +289,10 @@
         }
 
         .ctext-wrap-content {
-            padding: 7px 15px;
+            padding: 7px ;
             background-color: $chat-primary-bg;
             position: relative;
-            border-radius: 3px;
+            border-radius: 5px;
             box-shadow: $box-shadow;
 
             .attached-file{
@@ -313,7 +314,7 @@
             display: flex;
             flex-wrap: wrap;
             align-items: center;
-            gap: 8px;
+            gap: 2px;
         }
 
         .dropdown {

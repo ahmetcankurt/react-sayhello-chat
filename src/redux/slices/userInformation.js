@@ -2,11 +2,8 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { fetchUserData, updateUser, updateUserImages } from "../api/userAPI";
 
-const token = localStorage.getItem("token");
-
-// Kullanıcı bilgilerini getir
 export const getUsers = createAsyncThunk("user/getUsers", async (_, { rejectWithValue }) => {
-  const token = localStorage.getItem("token"); // Token'i burada al
+  const token = localStorage.getItem("token");
   if (!token) {
     return rejectWithValue("Kullanıcı oturumu yok");
   }
@@ -19,18 +16,22 @@ export const getUsers = createAsyncThunk("user/getUsers", async (_, { rejectWith
   }
 });
 
-
-// Kullanıcı bilgilerini güncelle
 export const updateUserInfo = createAsyncThunk("user/updateUser", async ({ userId, updatedData }, { rejectWithValue }) => {
+  const token = localStorage.getItem("token");
   try {
-    return await updateUser({ userId, updatedData, token });
+    const response = await updateUser({ userId, updatedData, token });
+    return {
+      ...response,
+      // Sosyal medya bilgilerini doğru şekilde güncelle
+      socials: updatedData.socials || []
+    };
   } catch (error) {
     return rejectWithValue(error.response?.data || "Güncelleme hatası");
   }
 });
 
-// Kullanıcı resimlerini güncelle
 export const updateUserImage = createAsyncThunk("user/updateUserImage", async ({ userId, formData }, { rejectWithValue }) => {
+  const token = localStorage.getItem("token");
   try {
     return await updateUserImages({ userId, formData, token });
   } catch (error) {
@@ -39,8 +40,8 @@ export const updateUserImage = createAsyncThunk("user/updateUserImage", async ({
 });
 
 const initialState = {
-  user: {}, // Tek bir kullanıcı objesi
-  status: "idle", // 'idle' | 'loading' | 'succeeded' | 'failed'
+  user: {},
+  status: "idle",
   error: null,
 };
 
@@ -49,7 +50,7 @@ const userInformationSlice = createSlice({
   initialState,
   reducers: {
     resetUserState: (state) => {
-      state.user = {}; // Kullanıcıyı sıfırlama
+      state.user = {};
       state.status = "idle";
       state.error = null;
     },
@@ -61,22 +62,21 @@ const userInformationSlice = createSlice({
       })
       .addCase(getUsers.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.user = action.payload; // Tek bir kullanıcı objesi
+        state.user = action.payload;
       })
       .addCase(getUsers.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload;
       })
       .addCase(updateUserInfo.fulfilled, (state, action) => {
-        state.user = action.payload; // Güncellenmiş kullanıcı objesi
+        state.user = action.payload;
       })
       .addCase(updateUserImage.fulfilled, (state, action) => {
         if (state.user && action.payload) {
-            state.user.profileImage = action.payload.profileImage ?? state.user.profileImage;
-            state.user.backgroundImage = action.payload.backgroundImage ?? state.user.backgroundImage;
+          state.user.profileImage = action.payload.profileImage ?? state.user.profileImage;
+          state.user.backgroundImage = action.payload.backgroundImage ?? state.user.backgroundImage;
         }
-    })
-    
+      })
       .addCase(updateUserImage.rejected, (state, action) => {
         state.error = action.payload;
       });

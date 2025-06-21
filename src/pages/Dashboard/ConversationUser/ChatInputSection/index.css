@@ -1,0 +1,22 @@
+.selected-file-preview {
+  position: absolute;
+  bottom: 100%;
+  margin: 8px;
+  width: 250px;
+  left: 0;
+  z-index: 100;
+  overflow: hidden; /* taşmayı engelle */
+  background: white;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  border-radius: 8px;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.preview-image img {
+  max-width: 100%;   /* kutu genişliğini geçme */
+  max-height: 100%;  /* kutu yüksekliğini geçme */
+  object-fit: contain; /* orantıyı koru, taşırma */
+  border-radius: 8px;
+  display: block;
+}

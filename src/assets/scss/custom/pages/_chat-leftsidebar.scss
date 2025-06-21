@@ -4,15 +4,17 @@
 
 
 .chat-leftsidebar {
-    height: calc(100vh - 60px);;
+    height: calc(100vh - 60px);
     position: relative;
     background-color: var(--#{$prefix}sidebar-sub-bg);
     box-shadow: $box-shadow;
+    z-index: 1; // Mobil için z-index 1
 
     @media (min-width: 992px) {
         min-width: 300px;
         max-width: 300px;
         height: 100vh;
+        z-index: 10; // Sadece masaüstünde z-index 10
     }
 
     .user-status-box {
@@ -31,6 +33,7 @@
         }
     }
 }
+
 
 .chat-search-box {
     .form-control {

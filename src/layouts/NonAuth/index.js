@@ -1,7 +1,7 @@
-import React from "react";
+import { memo } from "react";
 
 const Index = ({children}) => {
-  return <div>{children}</div>;
+  return <div>{children}</div>
 };
 
-export default Index;
+export default memo(Index)

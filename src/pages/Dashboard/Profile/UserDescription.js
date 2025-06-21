@@ -1,15 +1,25 @@
 import React, { memo } from "react";
 import InfoItem from "./InfoItem";
-import { socialMediaLinks } from "./socialMediaLinks";
+import SocialLinks from "./SocialLinks";
 
-const UserDescription = ({ basicDetails }) => {
-  const { aboutme, email, phone } = basicDetails || {};
+const UserDescription = ({ userInfo }) => {
+  const { aboutme, email, phone, socials, birthday } = userInfo || {};
 
   return (
     <div>
-      <div className="text-muted mb-4">
-        <p>{aboutme || "-"}</p>
-      </div>
+      {aboutme && (
+        <div className="text-muted ">
+          <p className="mb-1">{aboutme || ""}</p>
+        </div>
+      )}
+
+      {birthday && (
+        <div className="py-2  d-flex align-items-center">
+          <i className="bx bx-cake me-3 fs-4 text-muted"></i>
+          <span>{birthday}</span>
+        </div>
+      )}
+
 
       {email && (
         <InfoItem iconClass="bx bx-message-rounded-dots" href={`mailto:${email}`}>
@@ -21,14 +31,7 @@ const UserDescription = ({ basicDetails }) => {
           {phone}
         </InfoItem>
       )}
-
-      {socialMediaLinks.map(({ name, icon, key }) =>
-        basicDetails?.[key] ? (
-          <InfoItem key={key} iconClass={icon} href={basicDetails[key]}>
-            {name}
-          </InfoItem>
-        ) : null
-      )}
+      <SocialLinks socials={socials} />
     </div>
   );
 };

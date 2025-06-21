@@ -7,13 +7,34 @@ export const fetchFriends = createAsyncThunk(
   "friendRequests/fetchFriends",
   async (userId, thunkAPI) => {
     const response = await axios.get(`${API_URL}/friend-requests/${userId}/friends-status`);
-    return response.data.map(friend => ({
-      id: friend.userId,
-      firstName: friend.name,
-      lastName: friend.surname,
-      profileImage: friend.profileImage,
-      status: friend.status
-    }));
+    return response.data
+  }
+);
+
+export const deleteFriend = createAsyncThunk(
+  "friendRequests/deleteFriend",
+  async ({ userId, friendId }, thunkAPI) => {
+    try {
+      const response = await axios.delete(`${API_URL}/friend-requests/${userId}/friend/${friendId}`)
+      return { userId, friendId }; 
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const acceptFriendRequest = createAsyncThunk(
+  "friendRequests/acceptFriendRequest",
+  async ({ userId, senderId }, thunkAPI) => {
+    try {
+      const response = await axios.put(
+        `${API_URL}/friend-requests/${userId}/friend-request/${senderId}`,
+        { action: "accept" }
+      );
+      return { friend: response.data, senderId }; // Hem yeni arkadaş bilgisini hem de senderId'yi döndürüyoruz
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
   }
 );
 
@@ -37,7 +58,31 @@ const friendRequestsSlice = createSlice({
       .addCase(fetchFriends.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
-      });
+      })
+      .addCase(deleteFriend.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(deleteFriend.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.friends = state.friends.filter(
+          (friend) => friend.userId !== action.payload.friendId
+        );
+      })
+      .addCase(deleteFriend.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      })
+      .addCase(acceptFriendRequest.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(acceptFriendRequest.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.friends.push(action.payload.friend);
+      })
+      .addCase(acceptFriendRequest.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      })
   },
 });
 

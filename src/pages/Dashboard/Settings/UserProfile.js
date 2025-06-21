@@ -1,5 +1,5 @@
 import { memo, useRef, useState } from "react";
-import { Label, UncontrolledTooltip } from "reactstrap"; // Tooltip eklendi
+import { Label} from "reactstrap"; 
 import { useSelector } from "react-redux";
 import { API_URL } from "../../../config";
 
@@ -38,7 +38,7 @@ const UserProfile = ({ handleFileChange, tempProfileImage }) => {
 
         <div
           className="avatar-xs p-0 rounded-circle profile-photo-edit"
-          id="change-profile" // Tooltip hedefi için id eklendi
+          id="change-profile"
         >
           <input
             onChange={(e) => handleFileChange(e, "profileImage")}
@@ -54,13 +54,7 @@ const UserProfile = ({ handleFileChange, tempProfileImage }) => {
             </span>
           </Label>
         </div>
-
-        {/* Tooltip buraya eklendi */}
-        <UncontrolledTooltip target="change-profile" placement="bottom">
-          Profil Resmini Değiştir
-        </UncontrolledTooltip>
       </div>
-
       <h5 className="font-size-16 mb-1 text-truncate">{fullName}</h5>
     </div>
   );

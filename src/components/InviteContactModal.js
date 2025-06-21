@@ -17,26 +17,19 @@ import { API_URL } from '../config';
 
 import classnames from "classnames";
 import './InviteContactModal.css';
+import { getShortName } from '../utils/userHelpers';
+import { COLORS } from "../constants/bgShortColor";
 
 const UserList = ({ users, onAddFriend, handleRemoveFriendRequest }) => {
-  const colors = [
-    "bg-primary",
-    "bg-danger",
-    "bg-info",
-    "bg-warning",
-    "bg-secondary",
-    "bg-pink",
-    "bg-purple",
-  ];
+  
   const [imageError, setImageError] = useState(false);
-  const [color] = useState(Math.floor(Math.random() * colors.length));
+  const [color] = useState(Math.floor(Math.random() * COLORS.length));
 
   return (
     <ul className="modal-user-list">
       {users.map((user, index) => {
         const fullName = `${user.name} ${user.surname}`;
-        const shortName = `${user.name?.charAt(0) || ''}${user.surname?.charAt(0) || ''}`.toUpperCase();
-
+        const shortName = getShortName(user);
 
         return (
           <li key={index} className="modal-user-item">
@@ -56,7 +49,7 @@ const UserList = ({ users, onAddFriend, handleRemoveFriendRequest }) => {
                       "rounded-circle",
                       "text-uppercase",
                       "text-white",
-                      colors[color]
+                      COLORS[color]
                     )}
                     style={{ width: "40px", height: "40px", display: "flex", alignItems: "center", justifyContent: "center" }}
                   >
@@ -187,9 +180,15 @@ const InviteContactModal = ({ isOpen, onClose }) => {
     }
   }, [searchQuery, token]);
 
+  const handleClose = () => {
+    setUsers([]); // Clear user list
+    onClose(); // Call the original onClose callback
+    setSearchQuery(''); // Clear search query
+  };
+
   return (
-    <Modal isOpen={isOpen} toggle={onClose} centered scrollable>
-      <ModalHeader toggle={onClose} className="bg-primary">
+    <Modal isOpen={isOpen} toggle={handleClose} centered scrollable>
+      <ModalHeader toggle={handleClose} className="bg-primary">
         <div className="modal-title-custom text-white font-size-16">
           Kullanıcı Davet Et & Ara
         </div>

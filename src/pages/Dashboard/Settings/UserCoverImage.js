@@ -1,6 +1,6 @@
 import { memo, useState } from "react";
 import { useSelector } from "react-redux";
-import { Label, UncontrolledTooltip } from "reactstrap";
+import { Label } from "reactstrap";
 import { API_URL } from "../../../config";
 
 const UserCoverImage = ({ handleFileChange, tempBackgroundImage }) => {
@@ -58,9 +58,9 @@ const UserCoverImage = ({ handleFileChange, tempBackgroundImage }) => {
                     </span>
                   </Label>
                 </div>
-                <UncontrolledTooltip target="change-cover" placement="bottom">
+                {/* <UncontrolledTooltip target="change-cover" placement="bottom">
                   Kapak Resmini Değiştir
-                </UncontrolledTooltip>
+                </UncontrolledTooltip> */}
               </div>
             </div>
           </div>

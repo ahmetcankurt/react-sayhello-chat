@@ -1,106 +1,134 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { memo, useState } from "react";
 import { Alert, Form } from "reactstrap";
-
-// components
 import StartButtons from "./StartButtons";
 import InputSection from "./InputSection";
 import EndButtons from "./EndButtons";
-import MoreMenu from "./MoreMenu";
-import Reply from "./Reply";
 import axios from "axios";
+import { API_URL } from "../../../../config";
+import MoreMenu from "./MoreMenu";
+import "./index.css";
 
-import { io } from "socket.io-client";
-import {API_URL} from "../../../../config";
-
-const Index = ({
-  selectedUser,
-}) => {
-  /*
-  more menu collapse
-  */
+const Index = ({ selectedUser, selectedGroup }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const onToggle = () => {
-    setIsOpen(!isOpen);
-  };
-
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState("");
   const [isSending, setIsSending] = useState(false);
-  const socketRef = useRef(null);
-  const userId = Number(localStorage.getItem("userId"));
-  const maxMessageLength = 280; // Max character limit for the message
+  const maxMessageLength = 280;
 
+  const [file, setFile] = useState(null);
+  const [fileType, setFileType] = useState(null);
 
-  useEffect(() => {
-    socketRef.current = io(API_URL);
-    return () => {
-      socketRef.current.disconnect();
-    };
-  }, []);
-
-
-  const [images, setImages] = useState();
-  const onSelectImages = (images) => {
-    setImages(images);
+  const handleFileChange = (e) => {
+    const selectedFile = e.target.files[0];
+    if (selectedFile) {
+      setFile(selectedFile);
+      setFileType(selectedFile.type.split("/")[0]);
+    }
   };
 
-  const [files, setFiles] = useState();
   const onSelectFiles = (files) => {
-    setFiles(files);
-  };
-
-
-  // emoji picker 
-  const [emojiPicker, setemojiPicker] = useState(false);
-  const onEmojiClick = (event) => {
-    const emoji = event.emoji;
-    setMessage(prev => prev + emoji);
-  };
-
-
-  const onClearMedia = () => {
-    setImages(null);
-    setFiles(null);
+    if (files && files.length > 0) {
+      const firstFile = files[0];
+      setFile(firstFile);
+      setFileType(firstFile.type.split("/")[0]);
+    }
   };
 
   const handleMessageSend = async () => {
-    if (!message.trim() || message.length > maxMessageLength || isSending) return;
+    if ((!message.trim() && !file) || message.length > maxMessageLength || isSending) return;
+
     setIsSending(true);
+
     try {
-      const response = await axios.post(`${API_URL}/messages`, {
-        senderId: userId,
-        receiverId: selectedUser,
-        content: message,
-      });
-  
-      // Emit the message to both sender and receiver
-      socketRef.current.emit('newMessage', {
-        senderId: userId,
-        receiverId: selectedUser,
-        content: message,
-        createdAt: new Date().toISOString(),
-        messageId: response.data.messageId
-      });
-  
-      // Reset message input
-      setMessage('');
-      const textarea = document.querySelector(".chat-search-input");
-      if (textarea) {
-        textarea.style.height = "auto";
+      const token = localStorage.getItem("token");
+      const formData = new FormData();
+
+      if (selectedUser?.id && selectedUser?.userType === "user") {
+        formData.append("receiverId", selectedUser.id);
+      } else if (selectedUser?.id && selectedUser?.userType === "group") {
+        formData.append("groupId", selectedUser.id);
       }
+
+      formData.append("content", message);
+      formData.append("fileType", file ? fileType : "text");
+      if (file) {
+        formData.append("file", file);
+      }
+
+      await axios.post(`${API_URL}/messages/send`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      setMessage("");
+      setFile(null);
+      setFileType(null);
+      const fileInput = document.querySelector(".file-input");
+      if (fileInput) fileInput.value = "";
     } catch (error) {
       console.error("Message send error", error);
+      if (error.response?.status === 401) {
+        localStorage.removeItem("token");
+        // yönlendirme veya yenileme
+      }
     } finally {
       setIsSending(false);
     }
   };
 
   const handleMessageChange = (e) => {
-      setMessage(e.target.value);
+    setMessage(e.target.value);
   };
-  
+
+  const onToggle = () => {
+    setIsOpen(!isOpen);
+  };
+
+  // Emoji state, opsiyonel
+  const [emojiArray, setemojiArray] = useState([]);
+  const [emojiPicker, setemojiPicker] = useState(false);
+  const onEmojiClick = (event) => {
+    setemojiArray([...emojiArray, event.emoji]);
+    setMessage((prev) => prev + event.emoji);
+  };
+  const onAudioRecorded = (audioFile) => {
+  setFile(audioFile);
+  setFileType("audio");
+  setMessage("");  // istersen mesaj alanını temizle
+};
 
   return (
     <div className="chat-input-section p-3 p-lg-4">
+      {file && (
+        <div className="selected-file-preview mb-2">
+          {fileType === "image" && (
+            <div className="preview-image mb-2">
+              <img src={URL.createObjectURL(file)} alt="Seçilen görsel" />
+            </div>
+          )}
+          {fileType === "audio" && (
+            <div className="preview-audio mb-2">
+              <audio controls src={URL.createObjectURL(file)} style={{ width: "100%" }} />
+            </div>
+          )}
+          {fileType === "video" && (
+            <div className="preview-video mb-2">
+              <video controls style={{ width: "100%" }} src={URL.createObjectURL(file)} />
+            </div>
+          )}
+          <Alert
+            isOpen={true}
+            toggle={() => setFile(null)}
+            color="secondary"
+            className="alert-dismiss-custom font-size-12 m-0 selected-media"
+            closeClassName="selected-media-close"
+          >
+            ({fileType})
+          </Alert>
+        </div>
+      )}
+
       <Form
         id="chatinput-form"
         onSubmit={(e) => {
@@ -111,53 +139,36 @@ const Index = ({
         <div className="row g-0 align-items-center">
           <div className="col-auto">
             <StartButtons
+              onFileChange={handleFileChange}
               onToggle={onToggle}
               onEmojiClick={onEmojiClick}
-              setemojiPicker={setemojiPicker}
               emojiPicker={emojiPicker}
+              setemojiPicker={setemojiPicker}
+              emojiArray={emojiArray}
+              onChangeText={setMessage}
             />
           </div>
           <div className="col">
-            <InputSection value={message} onChange={handleMessageChange} />
+            <InputSection
+              value={message}
+              onChange={handleMessageChange}
+              disabled={!!file}
+              placeholder={file ? "Dosya seçildi, metin yazılamaz" : "Type your message..."}
+            />
           </div>
           <div className="col-auto">
-            <EndButtons onSubmit={handleMessageSend} />
+            <EndButtons
+              onSubmit={handleMessageSend}
+              isSending={isSending}
+              onAudioRecorded={onAudioRecorded} 
+            />
           </div>
         </div>
       </Form>
-      {(images && images.length) || (files && files.length) ? (
-        <Alert
-          isOpen={true}
-          toggle={onClearMedia}
-          color="secondary"
-          className="alert-dismiss-custom 
-        rounded-pill font-size-12 mb-1 selected-media"
-          closeClassName="selected-media-close"
-        >
-          <p className="me-2 mb-0">
-            {images && !files && ` You have selected ${images.length} images`}
-            {files && !images && ` You have selected ${files.length} files`}
-            {files &&
-              images &&
-              ` You have selected ${files.length} files & ${images.length} images.`}
-          </p>
-        </Alert>
-      ) : null}
 
-      {/* <MoreMenu
-        isOpen={isOpen}
-        onSelectImages={onSelectImages}
-        onSelectFiles={onSelectFiles}
-        onToggle={onToggle}
-      /> */}
-
-      {/* <Reply
-        reply={replyData}
-        onSetReplyData={onSetReplyData}
-        chatUserDetails={chatUserDetails}
-      /> */}
+      <MoreMenu isOpen={isOpen} onSelectImages={onSelectFiles} onSelectFiles={onSelectFiles} onToggle={onToggle} />
     </div>
   );
 };
 
-export default Index;
+export default memo(Index);

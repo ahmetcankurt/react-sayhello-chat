@@ -9,7 +9,6 @@ const CharacterItem = ({
   return (
     <div>
       <div className="contact-list-title">{letterContacts.letter}</div>
-
       <ul className="list-unstyled contact-list mb-0">
         {(letterContacts.data || []).map((contact, key) => (
           <ContactItem

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import {
   Alert,
   Row,
@@ -112,7 +112,7 @@ const Login = () => {
                   label="Şifre"
                   type="password"
                   name="password"
-                  onChange={handleChange}   // onChange işlevini doğru şekilde bağlayın
+                  onChange={handleChange}
                   labelClassName="form-label"
                   className="form-control pe-5"
                   placeholder="Password"
@@ -120,32 +120,17 @@ const Login = () => {
 
               </div>
 
-              <div className="form-check form-check-info font-size-16">
-                <input
-                  className="form-check-input"
-                  type="checkbox"
-                  id="remember-check"
-                />
-                <Label
-                  className="form-check-label font-size-14"
-                  htmlFor="remember-check"
-                >
-                  Beni Hatırla
-                </Label>
-              </div>
-
-              <div className="text-center mt-4">
+              <div className="text-center my-4">
                 <Button color="primary" className="w-100" type="submit">
                   Giriş Yap
                 </Button>
               </div>
 
-              <div className="mt-4 text-center">
+              {/* <div className="mt-4 text-center">
                 <div className="signin-other-title">
                   <h5 className="font-size-14 mb-4 title">Şununla Oturum Açın</h5>
                 </div>
-
-              </div>
+              </div> */}
             </Form>
 
             <div className="text-center text-muted">
@@ -166,6 +151,6 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default memo(Login)
 
 

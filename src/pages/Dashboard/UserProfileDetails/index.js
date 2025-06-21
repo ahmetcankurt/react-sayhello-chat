@@ -44,18 +44,28 @@ const Index = ({ isChannel, isProfileVisible, handleProfileClick, selectedUser }
 
   const [userInfo, setUserInfo] = useState(null);
 
+
   useEffect(() => {
-    if (selectedUser) {
-      // Backend'e token ile istek gönderiyoruz
-      axios
-        .get(`${API_URL}/users/my-friends-profile/${selectedUser}`)
-        .then((response) => {
-          setUserInfo(response.data); // Gelen kullanıcı bilgilerini state'e kaydet
-        })
-        .catch((error) => {
-          console.error("Kullanıcı bilgileri alınırken hata:", error);
-        });
-    }
+    const fetchUserData = async () => {
+      if (selectedUser?.id && selectedUser?.userType === "user") {
+        try {
+          const response = await axios.get(`${API_URL}/users/my-friends-profile/${selectedUser.id}`);
+          setUserInfo(response.data);
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+        }
+      }
+      if (selectedUser?.id && selectedUser?.userType === "group") {
+        try {
+          const response = await axios.get(`${API_URL}/groups/${selectedUser.id}`);
+          setUserInfo(response.data);
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+        }
+      }
+    };
+  
+    fetchUserData();
   }, [selectedUser]);
 
 

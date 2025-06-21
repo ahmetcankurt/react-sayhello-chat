@@ -1,21 +1,53 @@
-import { memo, useEffect } from "react";
-import { Button, Form, Input } from "reactstrap";
+import { memo, useEffect, useRef, useState } from "react";
+import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Form, Input } from "reactstrap";
 import AppSimpleBar from "../../../components/AppSimpleBar";
 import Favourites from "./Favourites";
 
 import { useDispatch, useSelector } from "react-redux";
-import { fetchMessages } from "../../../redux/slices/messagesSlice";
+import { fetchMessages, updateContactList } from "../../../redux/slices/messagesSlice";
+import { io } from "socket.io-client";
+import { API_URL } from "../../../config";
 
-const Index = ({setSelectedUser}) => {
+
+const Index = ({ setSelectedUser }) => {
   const dispatch = useDispatch();
   const { contacts, status } = useSelector((state) => state.messages);
+  const socketRef = useRef(null);
+
   useEffect(() => {
     if (status === "idle") {
       dispatch(fetchMessages());
     }
   }, [dispatch, status]);
 
-  // Arama fonksiyonu
+
+  useEffect(() => {
+    const userId = localStorage.getItem("userId");
+    if (!userId) return;
+  
+    if (!socketRef.current) {
+      socketRef.current = io(API_URL, {
+        transports: ["websocket"],
+        auth: {
+          token: localStorage.getItem("token"),
+        },
+      });
+    }
+  
+    socketRef.current.emit("joinRoom", String(userId));
+  
+    socketRef.current.on("newMessage", (newMessage) => {
+      const isOwnMessage = newMessage.senderId === parseInt(userId);
+      dispatch(updateContactList({ message: newMessage, isOwnMessage }));
+    });
+  
+    return () => {
+      socketRef.current?.off("newMessage");
+      socketRef.current?.disconnect();
+      socketRef.current = null;
+    };
+  }, [dispatch]);
+
   const searchUsers = () => {
     const inputValue = document.getElementById("serachChatUser");
     const filter = inputValue.value.toUpperCase();
@@ -29,6 +61,9 @@ const Index = ({setSelectedUser}) => {
     }
   };
 
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const toggle = () => setDropdownOpen(!dropdownOpen);
+
   return (
     <>
       <div>
@@ -36,6 +71,26 @@ const Index = ({setSelectedUser}) => {
           <div className="d-flex align-items-start">
             <div className="flex-grow-1">
               <h4 className="mb-4">Sohbetler</h4>
+            </div>
+            <div className="flex-shrink-0" style={{ position: "relative" }}>
+              
+              <Dropdown isOpen={dropdownOpen} toggle={toggle} style={{ zIndex : 10 }}>
+                <DropdownToggle
+                  color="none"
+                  className="btn nav-btn text-black "
+                  type="button"
+                >
+                  <i className="bx bx-dots-vertical-rounded"></i>
+                </DropdownToggle>
+                <DropdownMenu >
+                  <DropdownItem
+                    className="d-flex justify-content-between align-items-center  user-profile-show"
+                    to="#"
+                  >
+                    Grup Oluştur <i className="bx bx-group text-muted"></i>
+                  </DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
             </div>
           </div>
           <Form>
@@ -62,4 +117,4 @@ const Index = ({setSelectedUser}) => {
   );
 };
 
-export default memo(Index)
+export default memo(Index);

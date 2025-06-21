@@ -2,9 +2,7 @@
 import { memo } from "react";
 import ChatUser from "./ChatUser";
 
-
-
-const Favourites = ({ users, selectedChat,setSelectedUser }) => {
+const Favourites = ({ users, selectedChat, setSelectedUser }) => {
   return (
     <>
       {/* <h5 className="mb-3 px-4 mt-4 font-size-11 text-muted text-uppercase">
@@ -27,4 +25,4 @@ const Favourites = ({ users, selectedChat,setSelectedUser }) => {
   );
 };
 
-export default  memo(Favourites);
+export default memo(Favourites);

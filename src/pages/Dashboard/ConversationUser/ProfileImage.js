@@ -1,10 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import classnames from "classnames";
 import { useSelector } from "react-redux";
 import { STATUS_TYPES } from "../../../constants";
 import { API_URL } from "../../../config";
+import { getShortName } from "../../../utils/userHelpers";
 
+import { COLORS } from "../../../constants/bgShortColor";
+import axios from "axios";
 export const ProfileImage = ({
   selectedUser,
   toggleContentVisibility,
@@ -12,24 +15,36 @@ export const ProfileImage = ({
 }) => {
   const [imageError, setImageError] = useState(false);
   const chatUserDetails = {};
-  const userData = useSelector((state) => state.selectedUser.userInfo);
+  const [userData, setUserData] = useState(null);
 
-  const shortName = selectedUser
-    ? userData?.name
-      ? `${userData?.name.charAt(0)}${userData?.surname.charAt(0)}`
-      : ""
-    : "#";
+  useEffect(() => {
+    const fetchUserData = async () => {
+      if (selectedUser?.id && selectedUser?.userType === "user") {
+        try {
+          const response = await axios.get(`${API_URL}/users/my-friends-profile/${selectedUser.id}`);
+          setUserData(response.data);
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+        }
+      }
+      else{
+        try {
+          const response = await axios.get(`${API_URL}/groups/${selectedUser.id}`);
+          setUserData(response.data);
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+        }
+      }
+    };
+  
+    fetchUserData();
+  }, [selectedUser]);
+  
 
-  const colors = [
-    "bg-primary",
-    "bg-danger",
-    "bg-info",
-    "bg-warning",
-    "bg-secondary",
-    "bg-pink",
-    "bg-purple",
-  ];
-  const [color] = useState(Math.floor(Math.random() * colors.length));
+
+  const shortName = getShortName(userData);
+
+  const [color] = useState(Math.floor(Math.random() * COLORS.length));
 
   const isOnline = userData?.status && userData?.status === STATUS_TYPES.ACTIVE;
 
@@ -94,7 +109,7 @@ export const ProfileImage = ({
                     "rounded-circle",
                     "text-uppercase",
                     "text-white",
-                    colors[color]
+                    COLORS[color]
                   )}
                 >
                   <span className="username">{shortName}</span>

@@ -17,10 +17,10 @@ const LightDarkMode = ({ layoutMode, onChangeLayoutMode }) => {
       >
         <i className="bx bx-moon" id="moon"></i>
       </NavLink>
-      <UncontrolledTooltip placement="right" target="color-mode">
+      {/* <UncontrolledTooltip placement="right" target="color-mode">
         <span className="light-mode">Aydınlık</span>
         <span className="dark-mode">Karanlık</span> mod
-      </UncontrolledTooltip>
+      </UncontrolledTooltip> */}
     </NavItem>
   );
 };

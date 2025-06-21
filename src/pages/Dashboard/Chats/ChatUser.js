@@ -5,26 +5,18 @@ import { STATUS_TYPES } from "../../../constants";
 import { getShortenedMessage } from "../../../utils/getShortenedMessage";
 import { formatMessageDate } from "../../../utils/formatMessageDate";
 import { API_URL } from "../../../config";
+import { getShortName } from '../../../utils/userHelpers';
+import { COLORS } from "../../../constants/bgShortColor";
 
 const ChatUser = ({ user, setSelectedUser }) => {
-  const fullName = `${user.name} ${user.surname}`;
-  const shortName = `${user.name.charAt(0)}${user.surname.charAt(0)}`;
+  const fullName = [user?.name, user?.surname].filter(Boolean).join(' ');
   const [imageError, setImageError] = useState(false);
-
-  const colors = [
-    "bg-primary",
-    "bg-danger",
-    "bg-info",
-    "bg-warning",
-    "bg-secondary",
-    "bg-pink",
-    "bg-purple",
-  ];
-  const [color] = useState(Math.floor(Math.random() * colors.length));
+  const shortName = getShortName(user);
+  const [color] = useState(Math.floor(Math.random() * COLORS.length));
   const isOnline = user.status && user.status === STATUS_TYPES.ACTIVE;
   const unRead = user.meta && user.meta.unRead;
 
-  const isSelectedChat = setSelectedUser && setSelectedUser === user.userId;
+  const isSelectedChat = setSelectedUser && setSelectedUser === user.contactId;
   const shortenedMessage = getShortenedMessage(user.lastMessage);
 
   const handleImageError = () => {
@@ -32,7 +24,7 @@ const ChatUser = ({ user, setSelectedUser }) => {
   };
 
   return (
-    <li className={classnames({ active: isSelectedChat })} onClick={() => setSelectedUser(user.userId)}>
+    <li className={classnames({ active: isSelectedChat })} onClick={() => setSelectedUser({ id: user.contactId, userType: user.type})}>
       <Link to="#" className={classnames({ "unread-msg-user": unRead })}>
         <div className="d-flex">
           <div
@@ -62,7 +54,7 @@ const ChatUser = ({ user, setSelectedUser }) => {
                     "rounded-circle",
                     "text-uppercase",
                     "text-white",
-                    colors[color]
+                    COLORS[color]
                   )}
                 >
                   <span className="username">{shortName}</span>
@@ -73,7 +65,7 @@ const ChatUser = ({ user, setSelectedUser }) => {
           </div>
           <div className="overflow-hidden">
             <div className="text-truncate mb-0">
-              {fullName}
+              {fullName} 
               <div>
                 {user.lastMessage && !user.isDeleted ? (
                   <p className="text-truncate mb-0 font-size-12">
@@ -93,6 +85,7 @@ const ChatUser = ({ user, setSelectedUser }) => {
           <div className="ms-auto text-end">
             {user.lastMessage && user.lastMessage && (
               <p className="mb-0 font-size-11 text-muted">
+                {user.type === "group" && <span className="me-1 text-muted font-size-10"> (Grup)</span>}
                 {formatMessageDate(user.lastMessageCreatedAt)}
               </p>
             )}

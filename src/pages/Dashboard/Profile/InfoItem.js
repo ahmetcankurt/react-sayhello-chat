@@ -4,7 +4,7 @@ const InfoItem = ({ iconClass, children, href }) => (
     <div className="d-flex py-2">
         <div className="flex-shrink-0 me-3">
             <i className={`${iconClass} align-middle text-muted`}></i>
-        </div>
+        </div>  
         <div className="flex-grow-1">
             {href ? (
                 <a

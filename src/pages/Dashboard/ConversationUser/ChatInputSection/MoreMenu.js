@@ -46,36 +46,9 @@ const MoreMenu = ({
           <Swiper
             spaceBetween={20}
             slidesPerView={6}
-            onSlideChange={() => ('slide change')}
+            onSlideChange={() => ("slide change")}
             onSwiper={(swiper) => (swiper)}
           >
-            {/* Attached */}
-            <SwiperSlide>
-              <div className="text-center px-2 position-relative">
-                <div>
-                  <Input
-                    id="attachedfile-input"
-                    type="file"
-                    className="d-none"
-                    onChange={(e) => onSelectF(e)}
-                    multiple
-                  />
-                  <Label
-                    htmlFor="attachedfile-input"
-                    className="avatar-sm mx-auto stretched-link"
-                  >
-                    <span className="avatar-title font-size-18 bg-soft-primary text-primary rounded-circle">
-                      <i className="bx bx-paperclip"></i>
-                    </span>
-                  </Label>
-                </div>
-                <h5 className="font-size-11 text-uppercase mt-2  mb-0 text-body text-truncate">
-                  Attached
-                </h5>
-              </div>
-
-            </SwiperSlide>
-
             {/* Camera */}
             <SwiperSlide>
               <div className="text-center px-2">
@@ -90,10 +63,9 @@ const MoreMenu = ({
                   </Link>
                 </h5>
               </div>
-
             </SwiperSlide>
 
-            {/* Gallery */}
+            {/* Gallery (Image) */}
             <SwiperSlide>
               <div className="text-center px-2 position-relative">
                 <div>
@@ -102,7 +74,7 @@ const MoreMenu = ({
                     type="file"
                     className="d-none"
                     accept="image/png, image/jpeg"
-                    onChange={(e) => onSelect(e)}
+                    onChange={onSelect}
                     multiple
                   />
                   <Label
@@ -119,23 +91,73 @@ const MoreMenu = ({
                 </h5>
               </div>
             </SwiperSlide>
+
             {/* Audio */}
-
             <SwiperSlide>
-              <div className="text-center px-2">
-                <div className="avatar-sm mx-auto">
-                  <div className="avatar-title font-size-18 bg-soft-primary text-primary rounded-circle">
-                    <i className="bx bx-headphone"></i>
-                  </div>
+              <div className="text-center px-2 position-relative">
+                <div>
+                  <Input
+                    id="attached-audio-input"
+                    type="file"
+                    className="d-none"
+                    accept="audio/*"
+                    onChange={(e) => {
+                      const files = [...e.target.files];
+                      if (files.length) {
+                        onSelectFiles(files);
+                        onToggle();
+                      }
+                    }}
+                    multiple={false}
+                  />
+                  <Label
+                    htmlFor="attached-audio-input"
+                    className="avatar-sm mx-auto stretched-link cursor-pointer"
+                  >
+                    <span className="avatar-title font-size-18 bg-soft-primary text-primary rounded-circle">
+                      <i className="bx bx-headphone"></i>
+                    </span>
+                  </Label>
                 </div>
-
-                <h5 className="font-size-11 text-uppercase mt-3 mb-0 text-body text-truncate">
-                  <Link to="#" className="text-body stretched-link">
-                    Audio
-                  </Link>
+                <h5 className="font-size-11 text-uppercase mt-2 mb-0 text-body text-truncate">
+                  Audio
                 </h5>
               </div>
             </SwiperSlide>
+
+            {/* Video */}
+            <SwiperSlide>
+              <div className="text-center px-2 position-relative">
+                <div>
+                  <Input
+                    id="attached-video-input"
+                    type="file"
+                    className="d-none"
+                    accept="video/*"
+                    onChange={(e) => {
+                      const files = [...e.target.files];
+                      if (files.length) {
+                        onSelectFiles(files);
+                        onToggle();
+                      }
+                    }}
+                    multiple={false}
+                  />
+                  <Label
+                    htmlFor="attached-video-input"
+                    className="avatar-sm mx-auto stretched-link cursor-pointer"
+                  >
+                    <span className="avatar-title font-size-18 bg-soft-primary text-primary rounded-circle">
+                      <i className="bx bx-video"></i>
+                    </span>
+                  </Label>
+                </div>
+                <h5 className="font-size-11 text-uppercase mt-2 mb-0 text-body text-truncate">
+                  Video
+                </h5>
+              </div>
+            </SwiperSlide>
+
             {/* Location */}
             <SwiperSlide>
               <div className="text-center px-2">
@@ -150,12 +172,10 @@ const MoreMenu = ({
                   </Link>
                 </h5>
               </div>
-
             </SwiperSlide>
 
             {/* Contacts */}
             <SwiperSlide>
-
               <div className="text-center px-2">
                 <div className="avatar-sm mx-auto">
                   <div className="avatar-title font-size-18 bg-soft-primary text-primary rounded-circle">
@@ -173,12 +193,9 @@ const MoreMenu = ({
                   </Link>
                 </h5>
               </div>
-
             </SwiperSlide>
 
           </Swiper>
-
-
 
         </CardBody>
       </Card>

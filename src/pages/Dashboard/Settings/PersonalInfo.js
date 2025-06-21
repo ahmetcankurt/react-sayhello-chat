@@ -1,37 +1,83 @@
-import React, { memo, useEffect, useState } from "react";
-import { updateUserInfo } from "../../../redux/slices/userInformation";
-import Swal from "sweetalert2";
+import React, { useEffect, useState, memo } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
+import Swal from "sweetalert2";
+import { updateUserInfo } from "../../../redux/slices/userInformation";
+import { socialMediaFields, inputFields } from "../../../utils/socialMediaLinks"; // Sosyal medya bağlantılarını içe aktar
+import FormField from "./FormField";
+import SocialMediaField from "./SocialMediaField";
 
 const PersonalInfo = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.userInformation.user);
-  const [userInfo, setUserInfo] = useState({});
 
-  const Change = JSON.stringify(user) === JSON.stringify(userInfo);
+  const [userInfo, setUserInfo] = useState({});
+  const [socials, setSocials] = useState({});
 
   useEffect(() => {
-    if (user) {
-      setUserInfo(user);
-    }
+    if (!user) return;
+
+    const initialUserInfo = {
+      name: user.name || "",
+      surname: user.surname || "",
+      username: user.username || "",
+      aboutme: user.aboutme || "",
+      jobs: user.jobs || "",
+      email: user.email || "",
+      phone: user.phone || "",
+      birthday: user.birthday || "",
+    };
+
+    const initialSocials = {};
+
+    socialMediaFields.forEach(({ name }) => {
+      const social = user.socials?.find(s => s.name.toLowerCase() === name);
+      initialUserInfo[name] = social?.url || "";
+      initialSocials[name] = social?.isPublic || false;
+    });
+
+    setUserInfo(initialUserInfo);
+    setSocials(initialSocials);
   }, [user]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setUserInfo((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setUserInfo((prev) => ({ ...prev, [name]: value }));
   };
 
+  const handleSocialToggle = (name) => {
+    setSocials((prev) => ({ ...prev, [name]: !prev[name] }));
+  };
+
+  const getSocialMediaData = () =>
+    socialMediaFields
+      .filter(({ name }) => userInfo[name])
+      .map(({ label, name }) => ({
+        name: label,
+        url: userInfo[name],
+        isPublic: socials[name] || false,
+      }));
+
+  const isUnchanged = JSON.stringify(user) === JSON.stringify({
+    ...userInfo,
+    socials: getSocialMediaData(),
+  });
+
   const handleSubmit = (e) => {
-    e.preventDefault(); // Formun sayfayı yenilemesini engelle
+    e.preventDefault();
+    if (!user?.userId) return;
 
-    if (!user.userId) return;
+    const formattedData = {
+      ...userInfo,
+      name: userInfo.name?.charAt(0).toUpperCase() + userInfo.name?.slice(1).toLowerCase(),
+      surname: userInfo.surname?.toUpperCase(),
+      username: userInfo.username?.toLowerCase(),
+      email: userInfo.email?.toLowerCase(),
+      socials: getSocialMediaData(),
+    };
 
-    dispatch(updateUserInfo({ userId: user.userId, updatedData: userInfo }))
-      .then(() => {
+    dispatch(updateUserInfo({ userId: user.userId, updatedData: formattedData }))
+      .unwrap()
+      .then(() =>
         Swal.fire({
           icon: "success",
           title: "Başarılı",
@@ -40,74 +86,44 @@ const PersonalInfo = () => {
           showConfirmButton: false,
           position: "top-end",
           toast: true,
-        });
-      })
-      .catch((error) => {
+        })
+      )
+      .catch((error) =>
         Swal.fire({
           icon: "error",
           title: "Hata",
-          text: error.message || "Bilgiler güncellenirken hata oluştu.",
-        });
-      });
+          text: error?.error || "Bilgiler güncellenirken hata oluştu.",
+        })
+      );
   };
-
-  const inputFields = [
-    { label: "İsim", name: "name", type: "text" },
-    { label: "Soyisim", name: "surname", type: "text" },
-    { label: "Kullanıcı Adı", name: "username", type: "text" },
-    { label: "Hakkımda", name: "aboutme", type: "textarea" },
-    { label: "Meslek", name: "jobs", type: "text" },
-    { label: "E-posta", name: "email", type: "email" },
-    { label: "Instagram", name: "instagram", type: "text" },
-    { label: "Telefon", name: "phone", type: "text" },
-    { label: "LinkedIn", name: "linkedin", type: "text" },
-    { label: "GitHub", name: "github", type: "text" },
-    { label: "Twitter", name: "twitter", type: "text" },
-    { label: "YouTube", name: "youtube", type: "text" },
-    { label: "Doğum Günü", name: "birthday", type: "date" },
-    { label: "Facebook", name: "facebook", type: "text" },
-  ];
-
 
   return (
     <div className="accordion-body">
-      <form className="" onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit}>
         {inputFields.map((field) => (
-          <div className="mb-1" key={field.name}>
-            <label className="form-label" htmlFor={field.label}>
-              {field.label}
-            </label>
-            {field.type === "textarea" ? (
-              <textarea
-                className="form-control  form-container-textarea"
-                name={field.name}
-                value={userInfo[field.name] || ""}
-                onChange={handleInputChange}
-                style={{ height: "100px" }}
-              />
-            ) : (
-              <input
-                id={field.label}
-                type={field.type}
-                className="form-control"
-                autoComplete="current-password"
-                name={field.name}
-                value={
-                  field.name === "birthday" && userInfo[field.name]
-                    ? userInfo[field.name].split("T")[0]
-                    : userInfo[field.name] || ""
-                }
-
-                onChange={handleInputChange}
-              />
-            )}
-          </div>
+          <FormField
+            key={field.name}
+            field={field}
+            value={userInfo[field.name]}
+            onChange={handleInputChange}
+          />
         ))}
-        <button
-          type="submit"
-          className=" w-100 btn btn-primary mt-2"
-          disabled={Change}
-        >
+
+        <hr />
+        <h6 className="mt-3">Sosyal Medya Hesapları</h6>
+
+        {socialMediaFields.map((social) => (
+          <SocialMediaField
+            key={social.name}
+            social={social}
+            value={userInfo[social.name]}
+            isPublic={socials[social.name]}
+            onChange={handleInputChange}
+            onToggle={handleSocialToggle}
+          />
+        ))}
+
+        <button type="submit" className="w-100 btn btn-primary mt-3" disabled={isUnchanged}>
           Kaydet
         </button>
       </form>
@@ -115,4 +131,4 @@ const PersonalInfo = () => {
   );
 };
 
-export default memo(PersonalInfo)
+export default memo(PersonalInfo);

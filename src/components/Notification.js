@@ -2,34 +2,32 @@ import React, { useState, useEffect, useCallback, useRef, memo } from "react";
 import axios from "axios";
 import { io } from "socket.io-client";
 import { API_URL } from "../config";
+import { COLORS } from "../constants/bgShortColor";
 import "./Notifications.css";
-const socketRef = io(API_URL, { autoConnect: false });
+
+const socket = io(API_URL, { autoConnect: false });
 
 const Notifications = () => {
   const [notifications, setNotifications] = useState([]);
   const [imageErrors, setImageErrors] = useState({});
   const timeoutRefs = useRef({});
-  const animationRefs = useRef({});
   const userId = useRef(localStorage.getItem("userId"));
+  const sound = useRef(new Audio('../assets/sound/notification-sound.mp3'));
 
-  // MARK: - Fetch Notifications
   const fetchNotifications = useCallback(async () => {
     try {
       const { data } = await axios.get(`${API_URL}/notifications/${userId.current}`);
-      const newNotifications = data?.notifications || [];
+      const newNotifs = data?.notifications || [];
 
-      console.log("Yeni Bildirimler:", data);
-
-      if (newNotifications.length > 0) {
+      if (newNotifs.length) {
         setNotifications(prev => {
-          const existingIds = prev.map(n => n.notificationId);
-          const uniqueNew = newNotifications.filter(n => !existingIds.includes(n.notificationId));
-          return [...prev, ...uniqueNew];
-        });
-
-        newNotifications.forEach(n => {
-          markAsRead(n.notificationId);
-          scheduleClearTimeout(n.notificationId);
+          const existing = new Set(prev.map(n => n.notificationId));
+          const unique = newNotifs.filter(n => !existing.has(n.notificationId));
+          unique.forEach(n => {
+            markAsRead(n.notificationId);
+            scheduleRemoval(n.notificationId);
+          });
+          return [...prev, ...unique];
         });
       }
     } catch (err) {
@@ -37,119 +35,74 @@ const Notifications = () => {
     }
   }, []);
 
-  // MARK: - Read
-  const markAsRead = useCallback((notificationId) => {
-    axios.put(`${API_URL}/notifications/${notificationId}/read`).catch(console.error);
+  const markAsRead = useCallback(id => {
+    axios.put(`${API_URL}/notifications/${id}/read`).catch(console.error);
   }, []);
 
-  // MARK: - Socket Notification
-  const handleNewNotification = useCallback((notification) => {
+  const scheduleRemoval = useCallback(id => {
+    clearTimeout(timeoutRefs.current[id]);
+    timeoutRefs.current[id] = setTimeout(() => {
+      document.querySelector(`.notification-card[data-id="${id}"]`)?.classList.add('exiting');
+      setTimeout(() => {
+        setNotifications(prev => prev.filter(n => n.notificationId !== id));
+        delete timeoutRefs.current[id];
+      }, 300);
+    }, 7000);
+  }, []);
+
+  const handleNewNotification = useCallback(notification => {
     setNotifications(prev => [...prev, notification]);
     markAsRead(notification.notificationId);
-    scheduleClearTimeout(notification.notificationId);
-  }, [ markAsRead ]);
-
-  // MARK: - Timeout Helpers
-  const clearTimeoutForNotification = (notificationId) => {
-    if (timeoutRefs.current[notificationId]) {
-      clearTimeout(timeoutRefs.current[notificationId]);
-      delete timeoutRefs.current[notificationId];
+    scheduleRemoval(notification.notificationId);
+    
+    // Sesin çalınması için önce bir kullanıcı etkileşimi gerektirebilir
+    if (sound.current) {
+      sound.current.play().catch(err => {
+        console.error("Bildirim sesi çalınamadı:", err);
+      });
     }
-    if (animationRefs.current[notificationId]) {
-      cancelAnimationFrame(animationRefs.current[notificationId]);
-      delete animationRefs.current[notificationId];
-    }
-  };
+  }, [markAsRead, scheduleRemoval]);
 
-  const scheduleClearTimeout = (notificationId) => {
-    clearTimeoutForNotification(notificationId);
-
-    timeoutRefs.current[notificationId] = setTimeout(() => {
-      // Start exit animation
-      const notificationElement = document.querySelector(`.notification-card[data-id="${notificationId}"]`);
-      if (notificationElement) {
-        notificationElement.classList.add('exiting');
-
-        // Remove after animation completes
-        const animationDuration = 300; // Should match CSS animation duration
-        setTimeout(() => {
-          setNotifications(prev =>
-            prev.filter(n => n.notificationId !== notificationId)
-          );
-          delete timeoutRefs.current[notificationId];
-        }, animationDuration);
-      } else {
-        // Fallback if element not found
-        setNotifications(prev =>
-          prev.filter(n => n.notificationId !== notificationId)
-        );
-        delete timeoutRefs.current[notificationId];
-      }
-    }, 7000);
-  };
-
-  // MARK: - Image error
-  const handleImageError = useCallback((notificationId) => {
-    setImageErrors(prev => ({ ...prev, [notificationId]: true }));
+  const handleImageError = useCallback(id => {
+    setImageErrors(prev => ({ ...prev, [id]: true }));
   }, []);
 
-  // MARK: - Avatar Color
-  const colors = useRef([
-    "bg-primary", "bg-danger", "bg-info",
-    "bg-warning", "bg-secondary", "bg-pink", "bg-purple"
-  ]);
-
-  const getRandomColor = useCallback((str) => {
+  const getBgColor = useCallback(str => {
     let hash = 0;
     for (let i = 0; i < str.length; i++) {
       hash = str.charCodeAt(i) + ((hash << 5) - hash);
     }
-    return colors.current[Math.abs(hash) % colors.current.length];
+    return COLORS[Math.abs(hash) % COLORS.length];
   }, []);
 
-  // MARK: - Effects
   useEffect(() => {
     fetchNotifications();
     const interval = setInterval(fetchNotifications, 7000);
     return () => {
       clearInterval(interval);
       Object.values(timeoutRefs.current).forEach(clearTimeout);
-      Object.values(animationRefs.current).forEach(cancelAnimationFrame);
     };
   }, [fetchNotifications]);
 
   useEffect(() => {
-    socketRef.on("newNotificationMessage", handleNewNotification);
-    return () => {
-      socketRef.off("newNotificationMessage", handleNewNotification);
-    };
+    socket.on("newNotificationMessage", handleNewNotification);
+    return () => socket.off("newNotificationMessage", handleNewNotification);
   }, [handleNewNotification]);
-
-  const truncateText = (text, maxLength = 30) => {
-    if (text.length <= maxLength) return text;
-    return text.substring(0, maxLength) + '...';
-  };
 
   return (
     <div className="notification-container">
-      {notifications.map((n) => {
-        const shortName = `${n.sender.name?.[0] || ''}${n.sender.surname?.[0] || ''}`.toUpperCase();
-        const isValidImage = n.sender.profileImage && typeof n.sender.profileImage === "string" && !imageErrors[n.notificationId];
-        const bgColor = getRandomColor(n.sender.name + n.sender.surname);
-        const truncatedContent = truncateText(n.content);
-        const username = n.sender.username;
+      {notifications.map(({ notificationId, sender, content }) => {
+        const shortName = `${sender.name?.[0] || ''}${sender.surname?.[0] || ''}`.toUpperCase();
+        const hasImage = sender.profileImage && typeof sender.profileImage === "string" && !imageErrors[notificationId];
+        const bgColor = getBgColor(sender.name + sender.surname);
 
         return (
-          <div
-            key={n.notificationId}
-            className="notification-card entering"
-            data-id={n.notificationId}
-          >
-            {isValidImage ? (
+          <div key={notificationId} className="notification-card entering" data-id={notificationId}>
+            {hasImage ? (
               <img
-                src={`${API_URL}/${n.sender.profileImage}`}
+                src={`${API_URL}/${sender.profileImage}`}
                 alt="User"
-                onError={() => handleImageError(n.notificationId)}
+                onError={() => handleImageError(notificationId)}
                 className="notification-avatar"
               />
             ) : (
@@ -158,11 +111,11 @@ const Notifications = () => {
               </span>
             )}
             <div className="notification-content">
-              <p className="p-0 m-0">@{username}</p>
-              <span>{truncatedContent}</span>
+              <p className="p-0 m-0">@{sender.username}</p>
+              <span>{content}</span>
             </div>
           </div>
-        )
+        );
       })}
     </div>
   );

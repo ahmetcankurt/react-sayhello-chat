@@ -9,9 +9,11 @@ import Welcome from "./ConversationUser/Welcome";
 import { TABS } from "../../constants";
 import { fetchUserData } from "../../redux/slices/selectedUser";
 import Notifications from "../../components/Notification";
+import { motion } from "framer-motion";
+
 
 const Index = () => {
-  const [selectedTab, setSelectedTab] = useState(TABS.CHAT);
+  const [selectedTab, setSelectedTab] = useState(TABS.USERS);
   const [state, setState] = useState({
     isProfileVisible: false,
     selectedUser: null,
@@ -45,11 +47,20 @@ const Index = () => {
           "user-chat-show": selectedUser,
         })}
         id="user-chat"
+
       >
         <div className="user-chat-overlay" id="user-chat-overlay"></div>
         {selectedUser !== null ? (
           <div className="chat-content d-lg-flex">
-            <div className="w-100 overflow-hidden  position-relative">
+            <motion.div
+              className="w-100 overflow-hidden position-relative"
+              key={selectedUser?.id}
+              initial={{ y: -50, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.5, ease: "easeOut" }}
+            >
+
+
               <ConversationUser
                 selectedUser={selectedUser}
                 isProfileVisible={isProfileVisible}
@@ -61,7 +72,8 @@ const Index = () => {
                   setState((prev) => ({ ...prev, selectedUser: null }))
                 }
               />
-            </div>
+            </motion.div>
+
             <UserProfileDetails
               selectedUser={selectedUser}
               isProfileVisible={isProfileVisible}
@@ -71,6 +83,7 @@ const Index = () => {
         ) : (
           <Welcome />
         )}
+
       </div>
     </>
   );

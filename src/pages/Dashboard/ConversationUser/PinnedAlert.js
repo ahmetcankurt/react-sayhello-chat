@@ -30,9 +30,9 @@ const PinnedAlert = ({ onOpenPinnedTab }) => {
             <i className="ri-add-fill align-middle"></i>
           </Link>
         </div>
-        <UncontrolledTooltip target="add-bookmark" placement="bottom">
+        {/* <UncontrolledTooltip target="add-bookmark" placement="bottom">
           Add Bookmark
-        </UncontrolledTooltip>
+        </UncontrolledTooltip> */}
       </div>
     </Alert>
   );

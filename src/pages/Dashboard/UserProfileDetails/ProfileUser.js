@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import {
   Button,
   Dropdown,
@@ -6,14 +6,11 @@ import {
   DropdownToggle,
   DropdownItem,
 } from "reactstrap";
-import classnames from "classnames";
-
 //images
 import imagePlaceholder from "../../../assets/images/users/user-dummy-img.jpg";
 
-// constants
-import { STATUS_TYPES } from "../../../constants";
 import { API_URL } from "../../../config";
+import { Fancybox } from "@fancyapps/ui";
 
 const ProfileUser = ({
   userInfo,
@@ -27,14 +24,28 @@ const ProfileUser = ({
   const profile = userInfo?.profileImage
     ? `${API_URL}/${userInfo.profileImage}`
     : imagePlaceholder;
-  const fullName = `${userInfo?.name} ${userInfo?.surname}`
+  const fullName = [userInfo?.name, userInfo?.surname].filter(Boolean).join(' ');
+  useEffect(() => {
+    Fancybox.bind("[data-fancybox]", {
+      Toolbar: false,
+      smallBtn: true,
+    });
+
+    return () => {
+      Fancybox.unbind("[data-fancybox]");
+    };
+  }, []);
+
 
   return (
     <div className="p-3 border-bottom">
-      <div className="user-profile-img">
-        <img src={profile}
-          className="profile-img rounded" alt="" />
-        <div className="overlay-content rounded">
+      <div className="user-profile-img" >
+        <a data-fancybox={`profile-${userInfo?.id || "unique"}`} href={profile}>
+          <img src={profile} className="profile-img rounded" alt="Profile" />
+        </a>
+
+
+        <div className="overlay-content rounded" style={{ pointerEvents: "none" }}>
           <div className="user-chat-nav p-2">
             <div className="d-flex w-100">
               <div className="flex-grow-1">
@@ -143,4 +154,4 @@ const ProfileUser = ({
   );
 };
 
-export default ProfileUser;
+export default memo(ProfileUser);

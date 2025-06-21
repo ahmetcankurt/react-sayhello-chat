@@ -1,15 +1,10 @@
-import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Row, Col } from "reactstrap";
 
-// components
 import NonAuthLayoutWrapper from "../../components/NonAutnLayoutWrapper";
 import withRouter from "../../components/withRouter";
 
 const Logout = () => {
-  // if (isUserLogout) {
-  //   return <Redirect to="/auth-login" />;
-  // }
 
   return (
     <NonAuthLayoutWrapper>
@@ -22,17 +17,17 @@ const Logout = () => {
               </div>
             </div>
             <div className="mt-4 pt-2">
-              <h5>You are Logged Out</h5>
+              <h5>Oturumunuz kapatıldı</h5>
               <p className="text-muted font-size-15">
-                Thank you for using{" "}
-                <span className="fw-semibold text-dark">Doot</span>
+              Uygulamamızı kullandığınız için teşekkür ederiz
+                <span className="fw-semibold text-dark ms-2">Chat App</span>
               </p>
               <div className="mt-4">
                 <Link
                   to="/auth-login"
                   className="btn btn-primary w-100 waves-effect waves-light"
                 >
-                  Sign In
+                  Giriş Yap
                 </Link>
               </div>
             </div>

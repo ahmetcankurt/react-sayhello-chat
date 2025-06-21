@@ -1,22 +1,22 @@
-import React from "react";
+import React, { memo } from "react";
 
 import { Input } from "reactstrap";
 
 
-const InputSection = ({ value, onChange }) => {
-  // console.log("value",value)
+const InputSection = ({ value, onChange, disabled, placeholder }) => {
   return (
     <div className="position-relative">
       <Input
         type="text"
         className="form-control form-control-lg chat-input"
         id="chat-input"
-        placeholder="Type your message..."
+        placeholder={placeholder || "Type your message..."}
         value={value || ""}
         onChange={onChange}
         autoComplete="off"
+        disabled={disabled} // Buraya eklendi
       />
     </div>
   );
 };
-export default InputSection;
+export default memo(InputSection);

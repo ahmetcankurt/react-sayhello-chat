@@ -10,8 +10,9 @@ export const fetchUserData = createAsyncThunk(
       return rejectWithValue("Kullanıcı ID'si boş, istek yapılmadı.");
     }
 
+
     try {
-      const response = await axios.get(`${API_URL}/users/my-friends-profile/${userId}`);
+      const response = await axios.get(`${API_URL}/users/my-friends-profile/${userId.id}`);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || "Bilinmeyen bir hata oluştu.");

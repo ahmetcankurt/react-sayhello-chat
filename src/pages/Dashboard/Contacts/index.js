@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchFriends } from "../../../redux/slices/friendRequestsSlice";
 
@@ -17,33 +17,32 @@ const Index = ({setSelectedUser}) => {
   const userId = localStorage.getItem("userId");
   const dispatch = useDispatch();
 
-  // Redux verisi
   const { friends, status } = useSelector((state) => state.friendRequests);
-
   const [contactsData, setContactsData] = useState([]);
   const [search, setSearch] = useState("");
   const [isOpen, setIsOpen] = useState(false);
 
-  // Fetch friends
   useEffect(() => {
     if (status === "idle") {
       dispatch(fetchFriends(userId));
     }
   }, [dispatch, status, userId]);
-
-  // Kontakları harf harfine böl
+  
   useEffect(() => {
-    if (friends.length > 0) {
+    if (friends && friends.length > 0) {
       const filtered = search
         ? friends.filter((c) =>
-            c.firstName.toLowerCase().includes(search.toLowerCase())
+            c && c.name && c.name.toLowerCase().includes(search.toLowerCase())
           )
         : friends;
-
-      const formattedContacts = divideByKey("firstName", filtered);
-      setContactsData(formattedContacts);
+  
+      const formattedContacts = divideByKey("name", filtered);
+      setContactsData(formattedContacts || []);
+    } else {
+      setContactsData([]);
     }
-  }, [friends, search]);
+  }, [friends, search]); 
+  
 
   const onChangeSearch = (value) => {
     setSearch(value);
@@ -88,4 +87,4 @@ const Index = ({setSelectedUser}) => {
   );
 };
 
-export default Index;
+export default  memo(Index);

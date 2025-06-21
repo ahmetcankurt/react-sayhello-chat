@@ -14,6 +14,7 @@ export const TABS = {
   CONTACTS: "pills-contacts",
   CALLS: "pills-calls",
   BOOKMARK: "pills-bookmark",
+  FriendRequest: "pills-friend-request",
   SETTINGS: "pills-setting",
   Notification: "pills-notification",
 };

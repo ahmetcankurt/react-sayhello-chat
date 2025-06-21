@@ -1,14 +1,12 @@
-import React from "react";
-import { Alert, Row, Col, Form, Button, UncontrolledTooltip } from "reactstrap";
-
-// router
-import { Link, Navigate } from "react-router-dom";
-
-// validations
+import React, { useState } from "react";
+import { Alert, Row, Col, Form, Button } from "reactstrap";
+import { Link } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
-
+import axios from "axios";
+import Swal from "sweetalert2";
+import { API_URL } from "../../config";
 
 // components
 import NonAuthLayoutWrapper from "../../components/NonAutnLayoutWrapper";
@@ -17,94 +15,127 @@ import FormInput from "../../components/FormInput";
 import Loader from "../../components/Loader";
 
 const Register = () => {
-  // Inside your component
+  const [registrationError, setRegistrationError] = useState("");
+  const [regLoading, setRegLoading] = useState(false);
 
-  const user = ""
-  const registrationError = ""
-  const regLoading = ""
   const resolver = yupResolver(
     yup.object().shape({
+      name: yup.string().required("Ad girmeniz gerekiyor."),
+      surname: yup.string().required("Soyad girmeniz gerekiyor."),
+      username: yup.string().required("Kullanıcı adı girmeniz gerekiyor."),
       email: yup
         .string()
-        .email("This value should be a valid email.")
-        .required("Please Enter E-mail."),
-      username: yup.string().required("Please Enter E-mail."),
-      password: yup.string().required("Please Enter Password."),
+        .email("Geçerli bir e-posta adresi girin.")
+        .required("E-posta girmeniz gerekiyor."),
+      password: yup.string().required("Şifre girmeniz gerekiyor."),
     })
   );
 
   const defaultValues = {};
-
   const methods = useForm({ defaultValues, resolver });
-  const {
-    handleSubmit,
-    register,
-    control,
-    formState: { errors },
-  } = methods;
+  const { handleSubmit, register, control, formState: { errors } } = methods;
 
-  const onSubmitForm = (values) => {
+  const onSubmitForm = async (values) => {
+    setRegLoading(true);
+    try {
+      const response = await axios.post(`${API_URL}/users`, values);
+      Swal.fire({
+        icon: "success",
+        title: "Kayıt başarılı!",
+        text: "Hesabınız başarıyla oluşturuldu.",
+        timer: 3000,
+        showConfirmButton: false,
+        position: "top-end",
+        toast: true,
+      });
+      window.location.href = "/auth-login";
+    } catch (error) {
+      setRegistrationError("Kayıt sırasında bir hata oluştu.");
+      Swal.fire({
+        icon: "error",
+        title: "Kayıt Başarısız",
+        text: error.response?.data?.error || "Lütfen tekrar deneyin.",
+      });
+    } finally {
+      setRegLoading(false);
+    }
   };
-
-  const userProfile = "";
-  const loading = "";
-
-  if (userProfile && !loading) {
-    return <Navigate to={{ pathname: "/dashboard" }} />;
-  }
 
   return (
     <NonAuthLayoutWrapper>
-      <Row className=" justify-content-center my-auto">
-        <Col sm={8} lg={6} xl={5} className="col-xxl-4">
+      <Row className="justify-content-center my-auto">
+        <Col sm={8} lg={6} xl={5} className="col-xxl-5">
           <div className="py-md-5 py-4">
             <AuthHeader
               title="Kayıt Ol"
               subtitle="Ücretsiz Chat App hesabınızı hemen edinin."
             />
-
-            {user && user ? (
-              <Alert color="success">Kullanıcıyı Başarıyla Kaydedin</Alert>
-            ) : null}
-
-            {registrationError && registrationError ? (
+            {registrationError && (
               <Alert color="danger">{registrationError}</Alert>
-            ) : null}
+            )}
 
-            <Form
-              onSubmit={handleSubmit(onSubmitForm)}
-              className="position-relative"
-            >
+            <Form onSubmit={handleSubmit(onSubmitForm)} className="position-relative">
               {regLoading && <Loader />}
-              <div className="mb-3">
-                <FormInput
-                  label="Email"
-                  type="text"
-                  name="email"
-                  register={register}
-                  errors={errors}
-                  control={control}
-                  labelClassName="form-label"
-                  placeholder="Enter Email"
-                  className="form-control"
-                />
+
+              {/* Name and Surname Inputs */}
+              <div className="mb-2 d-flex gap-2 ">
+                <div className="w-100"> 
+
+                  <FormInput
+                    label="Ad"
+                    type="text"
+                    name="name"
+                    register={register}
+                    errors={errors}
+                    control={control}
+                    placeholder="Ad"
+                    className="form-control"
+                  />
+                </div>
+                <div className="w-100">
+                  <FormInput
+                    label="Soyad"
+                    type="text"
+                    name="surname"
+                    register={register}
+                    errors={errors}
+                    control={control}
+                    placeholder="Soyad"
+                    className="form-control"
+                  />
+                </div>
               </div>
 
-              <div className="mb-3">
+              {/* Username Input */}
+              <div className="mb-2">
                 <FormInput
-                  label="Username"
+                  label="Kullanıcı Adı"
                   type="text"
                   name="username"
                   register={register}
                   errors={errors}
                   control={control}
-                  labelClassName="form-label"
-                  placeholder="Enter username"
+                  placeholder="Kullanıcı adı"
                   className="form-control"
                 />
               </div>
 
-              <div className="mb-3">
+              {/* Email Input */}
+              <div className="mb-2">
+                <FormInput
+                  label="E-posta"
+                  type="text"
+                  name="email"
+                  register={register}
+                  errors={errors}
+                  control={control}
+                  placeholder="E-posta adresi"
+                  className="form-control"
+                />
+              </div>
+
+              {/* Password Input */}
+              <div className="mb-2">
                 <FormInput
                   label="Şifre"
                   type="password"
@@ -112,88 +143,34 @@ const Register = () => {
                   register={register}
                   errors={errors}
                   control={control}
-                  labelClassName="form-label"
+                  placeholder="Şifre"
                   className="form-control pe-5"
-                  placeholder="Enter Password"
                 />
               </div>
 
+              {/* Terms & Conditions */}
               <div className="mb-4">
                 <p className="mb-0">
-                  Kayıt olarak Chat App Kullanım Şartları'nı kabul etmiş olursunuz
+                  Kayıt olarak Chat App Kullanım Şartları'nı kabul etmiş olursunuz{" "}
                   <Link to="#" className="text-primary ms-2">
                     Kullanım Koşulları
                   </Link>
                 </p>
               </div>
 
-              <div className="text-center mb-3">
-                <Button
-                  color="primary"
-                  className="w-100  waves-effect waves-light"
-                  type="submit"
-                >
+              {/* Submit Button */}
+              <div className="text-center mb-2">
+                <Button color="primary" className="w-100  waves-effect waves-light" type="submit">
                   Kayıt Ol
                 </Button>
               </div>
-              <div className="mt-4 text-center">
-                <div className="signin-other-title">
-                  <h5 className="font-size-14 mb-4 title">Kullanarak kaydolun</h5>
-                </div>
-                <Row className="">
-                  <div className="col-4">
-                    <div>
-                      <button
-                        type="button"
-                        className="btn btn-light w-100"
-                        id="facebook"
-                      >
-                        <i className="mdi mdi-facebook text-indigo"></i>
-                      </button>
-                    </div>
-                    <UncontrolledTooltip placement="top" target="facebook">
-                      Facebook
-                    </UncontrolledTooltip>
-                  </div>
-                  <div className="col-4">
-                    <div>
-                      <button
-                        type="button"
-                        className="btn btn-light w-100"
-                        id="twitter"
-                      >
-                        <i className="mdi mdi-twitter text-info"></i>
-                      </button>
-                    </div>
-                    <UncontrolledTooltip placement="top" target="twitter">
-                      Twitter
-                    </UncontrolledTooltip>
-                  </div>
-                  <div className="col-4">
-                    <div>
-                      <button
-                        type="button"
-                        className="btn btn-light w-100"
-                        id="google"
-                      >
-                        <i className="mdi mdi-google text-danger"></i>
-                      </button>
-                    </div>
-                    <UncontrolledTooltip placement="top" target="google">
-                      Google
-                    </UncontrolledTooltip>
-                  </div>
-                </Row>
-              </div>
             </Form>
 
+            {/* Link to Login Page */}
             <div className="mt-5 text-center text-muted">
               <p>
                 Zaten hesabınız var mı?{" "}
-                <Link
-                  to="/auth-login"
-                  className="fw-medium text-decoration-underline"
-                >
+                <Link to="/auth-login" className="fw-medium text-decoration-underline">
                   Giriş Yap
                 </Link>
               </p>

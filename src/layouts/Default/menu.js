@@ -1,7 +1,6 @@
-// costants
 import { TABS } from "../../constants/index";
 
-const MENU_ITEMS= [
+const MENU_ITEMS = [
   {
     id: 1,
     key: "pills-user-tab",
@@ -26,26 +25,12 @@ const MENU_ITEMS= [
   },
   {
     id: 4,
-    key:  "pills-notification",
-    icon: "bx bx-bell",
-    tooltipTitle:  "Bildirimler",
-    tabId:  TABS.Notification,
+    key: "pills-friend-request",
+    icon: "bx bx-user-plus",
+    tooltipTitle:  "Arkadaşlık İstekleri",
+    tabId: TABS.FriendRequest,
   },
 
-  // {
-  //   id: 4,
-  //   key: "pills-calls-tab",
-  //   icon: "bx bx-phone-call",
-  //   tooltipTitle: "Calls",
-  //   tabId: TABS.CALLS,
-  // },
-  // {
-  //   id: 5,
-  //   key: "pills-bookmark-tab",
-  //   icon: "bx bx-bookmarks",
-  //   tooltipTitle: "Bookmark",
-  //   tabId: TABS.BOOKMARK,
-  // },
   {
     id: 6,
     key: "pills-setting-tab",

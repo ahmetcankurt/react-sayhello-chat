@@ -48,7 +48,11 @@ const groupByFields = (array, f) => {
 };
 
 const divideByKey = (field, array) => {
+  if (!array || array.length === 0) return [];
+
   let map = array.reduce((p, c) => {
+    if (!c || !c[field]) return p; // null/undefined kontrolü
+    
     let char = c[field].charAt(0).toUpperCase();
     p[char] = [].concat(p[char] || [], c);
     return p;

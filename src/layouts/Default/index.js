@@ -9,7 +9,6 @@ const Index = ({children}) => {
 
   return (
     <div className="layout-wrapper d-lg-flex">
-      {/* side menu */}
       <SideMenu  />
 
       {children}

@@ -1,7 +1,4 @@
-import React, { memo } from "react";
-
-
-// components
+import { memo } from "react";
 import ThemeColor from "./ThemeColor";
 import ThemeImage from "./ThemeImage";
 

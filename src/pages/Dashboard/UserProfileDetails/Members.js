@@ -4,6 +4,7 @@ import classnames from "classnames";
 import { Badge } from "reactstrap";
 
 import { useContacts } from "../../../hooks";
+import { COLORS } from "../../../constants/bgShortColor";
 
 
 const Member = ({ member }) => {
@@ -40,16 +41,7 @@ const Member = ({ member }) => {
     }
   }
 
-  const colors = [
-    "bg-primary",
-    "bg-danger",
-    "bg-info",
-    "bg-warning",
-    "bg-secondary",
-    "bg-pink",
-    "bg-purple",
-  ];
-  const [color] = useState(Math.floor(Math.random() * colors.length));
+  const [color] = useState(Math.floor(Math.random() * COLORS.length));
   const onSelectChat = (id, isChannel) => {
     if (isChannel) {
       // dispatch(getChannelDetails(id));
@@ -87,7 +79,7 @@ const Member = ({ member }) => {
                   "rounded-circle",
                   "text-uppercase",
                   "text-white",
-                  colors[color]
+                  COLORS[color]
                 )}
               >
                 {shortName}

@@ -7,31 +7,25 @@ import { formateDate } from "../../../utils/index";
 import AudioCallModal from "../../../components/AudioCallModal";
 import VideoCallModal from "../../../components/VideoCallModal";
 
-const ProfileImage = ({ call }) => {
-  const shortName = `${call.firstName.charAt(0)}${call.lastName.charAt(0)}`;
+import { COLORS } from "../../../constants/bgShortColor";
 
-  const colors = [
-    "bg-primary",
-    "bg-danger",
-    "bg-info",
-    "bg-warning",
-    "bg-secondary",
-    "bg-pink",
-    "bg-purple",
-  ];
-  const [color] = useState(Math.floor(Math.random() * colors.length));
+const ProfileImage = ({ call }) => {
+  const shortName = `${call.firstName?.charAt(0) || ''}${call.lastName?.charAt(0) || ''}`.toUpperCase();
+
+  const randomColor = COLORS[Math.floor(Math.random() * COLORS.length)]; // random color seçtik
+
   const displayNumbers =
     call.peoplesAvailableOnCall > 2 ? call.peoplesAvailableOnCall - 1 : 0;
+
   const displayProfile =
     call.peoplesAvailableOnCall > 2
       ? call.peoples && call.peoples.length > 0
         ? call.peoples[0]
         : null
       : null;
+
   const groupProfile = displayProfile
-    ? `${displayProfile.firstName.charAt(0)}${displayProfile.lastName.charAt(
-        0
-      )}`
+    ? `${displayProfile.firstName?.charAt(0) || ''}${displayProfile.lastName?.charAt(0) || ''}`.toUpperCase()
     : "";
 
   return (
@@ -54,7 +48,7 @@ const ProfileImage = ({ call }) => {
                       "rounded-circle",
                       "text-uppercase",
                       "text-white",
-                      colors[color]
+                      randomColor // buraya dikkat!
                     )}
                   >
                     {groupProfile}
@@ -87,7 +81,7 @@ const ProfileImage = ({ call }) => {
               "rounded-circle",
               "text-uppercase",
               "text-white",
-              colors[color]
+              randomColor // buraya dikkat!
             )}
           >
             {shortName}
@@ -97,6 +91,7 @@ const ProfileImage = ({ call }) => {
     </>
   );
 };
+
 
 const Call = ({ call }) => {
   /*

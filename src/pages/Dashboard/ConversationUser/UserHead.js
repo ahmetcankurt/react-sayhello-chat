@@ -69,7 +69,7 @@ const UserHead = ({
   };
 
   return (
-    <div className="p-3 p-lg-4 user-chat-topbar">
+    <div className="p-3 p-lg-3 user-chat-topbar">
       <Row className="align-items-center">
         <Col sm={4} className="col-8">
           <ProfileImage
@@ -118,7 +118,7 @@ const UserHead = ({
               </button>
             </li> */}
 
-            <li className="list-inline-item d-none d-lg-inline-block me-2 ms-0">
+            {/* <li className="list-inline-item d-none d-lg-inline-block me-2 ms-0">
               <More
                 onOpenAudio={onOpenAudio}
                 onOpenVideo={onOpenVideo}
@@ -126,7 +126,7 @@ const UserHead = ({
               // isArchive={chatUserDetails.isArchived}
               // onToggleArchive={onToggleArchive}
               />
-            </li>
+            </li> */}
           </ul>
         </Col>
       </Row>

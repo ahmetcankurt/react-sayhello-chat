@@ -5,15 +5,16 @@ import InputSection from "./InputSection";
 import EndButtons from "./EndButtons";
 import axios from "axios";
 import { API_URL } from "../../../../config";
-import MoreMenu from "./MoreMenu";
+import MoreMenu from "./MoreMenuDropdown";
 import "./index.css";
+import AudioMessage from "../AudioMessage";
 
-const Index = ({ selectedUser, selectedGroup }) => {
+const Index = ({ selectedUser }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [isSending, setIsSending] = useState(false);
   const maxMessageLength = 280;
-
+  const [dropdownOpen, setDropdownOpen] = useState(false);
   const [file, setFile] = useState(null);
   const [fileType, setFileType] = useState(null);
 
@@ -81,9 +82,10 @@ const Index = ({ selectedUser, selectedGroup }) => {
     setMessage(e.target.value);
   };
 
-  const onToggle = () => {
-    setIsOpen(!isOpen);
-  };
+ const onToggle = (open) => {
+  if (typeof open === "boolean") setIsOpen(open);
+  else setIsOpen(prev => !prev);
+};
 
   // Emoji state, opsiyonel
   const [emojiArray, setemojiArray] = useState([]);
@@ -93,10 +95,10 @@ const Index = ({ selectedUser, selectedGroup }) => {
     setMessage((prev) => prev + event.emoji);
   };
   const onAudioRecorded = (audioFile) => {
-  setFile(audioFile);
-  setFileType("audio");
-  setMessage("");  // istersen mesaj alanını temizle
-};
+    setFile(audioFile);
+    setFileType("audio");
+    setMessage("");  // istersen mesaj alanını temizle
+  };
 
   return (
     <div className="chat-input-section p-3 p-lg-4">
@@ -109,7 +111,7 @@ const Index = ({ selectedUser, selectedGroup }) => {
           )}
           {fileType === "audio" && (
             <div className="preview-audio mb-2">
-              <audio controls src={URL.createObjectURL(file)} style={{ width: "100%" }} />
+              <AudioMessage src={URL.createObjectURL(file)} />
             </div>
           )}
           {fileType === "video" && (
@@ -130,6 +132,7 @@ const Index = ({ selectedUser, selectedGroup }) => {
       )}
 
       <Form
+        className="chatinput-form"
         id="chatinput-form"
         onSubmit={(e) => {
           e.preventDefault();
@@ -140,13 +143,17 @@ const Index = ({ selectedUser, selectedGroup }) => {
           <div className="col-auto">
             <StartButtons
               onFileChange={handleFileChange}
-              onToggle={onToggle}
               onEmojiClick={onEmojiClick}
               emojiPicker={emojiPicker}
               setemojiPicker={setemojiPicker}
-              emojiArray={emojiArray}
-              onChangeText={setMessage}
+              onToggle={onToggle} // <--- bunu ekle
+              dropdownOpen={dropdownOpen}
+              setDropdownOpen={setDropdownOpen}
+              onSelectImages={onSelectFiles}
+              onSelectFiles={onSelectFiles}
             />
+
+
           </div>
           <div className="col">
             <InputSection
@@ -160,7 +167,7 @@ const Index = ({ selectedUser, selectedGroup }) => {
             <EndButtons
               onSubmit={handleMessageSend}
               isSending={isSending}
-              onAudioRecorded={onAudioRecorded} 
+              onAudioRecorded={onAudioRecorded}
             />
           </div>
         </div>

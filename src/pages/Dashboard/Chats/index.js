@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchMessages, updateContactList } from "../../../redux/slices/messagesSlice";
 import { io } from "socket.io-client";
 import { API_URL } from "../../../config";
+import { getUsers } from "../../../redux/slices/userInformation";
 
 
 const Index = ({ setSelectedUser }) => {
@@ -14,17 +15,23 @@ const Index = ({ setSelectedUser }) => {
   const { contacts, status } = useSelector((state) => state.messages);
   const socketRef = useRef(null);
 
+  console.log("Contacts:", contacts);
+
   useEffect(() => {
     if (status === "idle") {
       dispatch(fetchMessages());
     }
   }, [dispatch, status]);
 
+  useEffect(() => {
+    dispatch(getUsers());
+  }, [dispatch]);
+
 
   useEffect(() => {
     const userId = localStorage.getItem("userId");
     if (!userId) return;
-  
+
     if (!socketRef.current) {
       socketRef.current = io(API_URL, {
         transports: ["websocket"],
@@ -33,14 +40,14 @@ const Index = ({ setSelectedUser }) => {
         },
       });
     }
-  
+
     socketRef.current.emit("joinRoom", String(userId));
-  
+
     socketRef.current.on("newMessage", (newMessage) => {
       const isOwnMessage = newMessage.senderId === parseInt(userId);
       dispatch(updateContactList({ message: newMessage, isOwnMessage }));
     });
-  
+
     return () => {
       socketRef.current?.off("newMessage");
       socketRef.current?.disconnect();
@@ -73,8 +80,8 @@ const Index = ({ setSelectedUser }) => {
               <h4 className="mb-4">Sohbetler</h4>
             </div>
             <div className="flex-shrink-0" style={{ position: "relative" }}>
-              
-              <Dropdown isOpen={dropdownOpen} toggle={toggle} style={{ zIndex : 10 }}>
+
+              <Dropdown isOpen={dropdownOpen} toggle={toggle} style={{ zIndex: 10 }}>
                 <DropdownToggle
                   color="none"
                   className="btn nav-btn text-black "

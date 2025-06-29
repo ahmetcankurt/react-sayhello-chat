@@ -1,26 +1,24 @@
 import React, { memo, useEffect } from "react";
-
-import {
-  Nav,
-} from "reactstrap";
+import { Nav } from "reactstrap";
 import LightDarkMode from "../../components/LightDarkMode";
 import { toggleLayoutMode } from "../../redux/slices/layoutSlice";
 
-// menu
 import { MENU_ITEMS } from "./menu";
 import { useDispatch, useSelector } from "react-redux";
-
 import { setSelectedTab } from "../../redux/slices/tabSlice";
-
 import { Logo } from "./Logo";
 import MenuNavItem from "./MenuNavItem";
 import ProfileDropdownMenu from "./ProfileDropdownMenu";
+import { useViewport } from "../../hooks/WindowHooks"; // Yolunu kendine göre ayarla
 
 const SideMenu = () => {
   const menuItems = MENU_ITEMS;
   const layoutMode = useSelector((state) => state.layout.layoutMode);
   const selectedTab = useSelector((state) => state.tab.selectedTab);
   const dispatch = useDispatch();
+  const { width } = useViewport();
+
+  const isMobile = width <= 768;
 
   const onChangeTab = (id) => {
     dispatch(setSelectedTab(id));
@@ -46,8 +44,17 @@ const SideMenu = () => {
             <MenuNavItem item={item} key={key} selectedTab={selectedTab} onChangeTab={onChangeTab} />
           ))}
 
-          <LightDarkMode layoutMode={layoutMode} onChangeLayoutMode={onChangeLayoutMode} />
-          <ProfileDropdownMenu onChangeTab={onChangeTab} />
+          {/* Masaüstünde LightDarkMode burada */}
+          {!isMobile && (
+            <LightDarkMode layoutMode={layoutMode} onChangeLayoutMode={onChangeLayoutMode} />
+          )}
+
+          <ProfileDropdownMenu
+            onChangeTab={onChangeTab}
+            isMobile={isMobile} // mobil bilgisini ProfileDropdownMenu'ya gönderiyoruz
+            layoutMode={layoutMode}
+            onChangeLayoutMode={onChangeLayoutMode}
+          />
         </Nav>
       </div>
     </div>

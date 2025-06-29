@@ -11,8 +11,8 @@
     z-index: 1; // Mobil için z-index 1
 
     @media (min-width: 992px) {
-        min-width: 300px;
-        max-width: 300px;
+        min-width: 350px;
+        max-width: 350px;
         height: 100vh;
         z-index: 10; // Sadece masaüstünde z-index 10
     }

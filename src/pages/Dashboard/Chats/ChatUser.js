@@ -14,7 +14,7 @@ const ChatUser = ({ user, setSelectedUser }) => {
   const shortName = getShortName(user);
   const [color] = useState(Math.floor(Math.random() * COLORS.length));
   const isOnline = user.status && user.status === STATUS_TYPES.ACTIVE;
-  const unRead = user.meta && user.meta.unRead;
+  const unRead = user.isRead;
 
   const isSelectedChat = setSelectedUser && setSelectedUser === user.contactId;
   const shortenedMessage = getShortenedMessage(user.lastMessage);
@@ -23,9 +23,10 @@ const ChatUser = ({ user, setSelectedUser }) => {
     setImageError(true);
   };
 
+
   return (
     <li className={classnames({ active: isSelectedChat })} onClick={() => setSelectedUser({ id: user.contactId, userType: user.type})}>
-      <Link to="#" className={classnames({ "unread-msg-user": unRead })}>
+      <Link  >
         <div className="d-flex">
           <div
             className={classnames(
@@ -67,7 +68,7 @@ const ChatUser = ({ user, setSelectedUser }) => {
             <div className="text-truncate mb-0">
               {fullName} 
               <div>
-                {user.lastMessage && !user.isDeleted ? (
+                {user.lastMessage && user.lastMessageSender === "ben" ? (
                   <p className="text-truncate mb-0 font-size-12">
                     <span className={classnames("me-1", { "text-success": user?.isRead }, { "text-muted": !user?.isRead })}>
                       <i className={classnames("bx", { "bx-check-double": user?.isRead, "bx-check": !user?.isRead })}></i>
@@ -75,7 +76,7 @@ const ChatUser = ({ user, setSelectedUser }) => {
                     {shortenedMessage}
                   </p>
                 ) : (
-                  <p className="text-truncate mb-0 font-size-12 text-muted">
+                  <p className="text-truncate mb-0 font-size-12 text-muted" style={{fontWeight: user?.isRead ? "bold" : "normal"}}>
                     {shortenedMessage}
                   </p>
                 )}
@@ -90,14 +91,6 @@ const ChatUser = ({ user, setSelectedUser }) => {
               </p>
             )}
           </div>
-
-          {unRead && unRead !== 0 && (
-            <div className="ms-auto">
-              <span className="badge badge-soft-dark rounded p-1">
-                {unRead}
-              </span>
-            </div>
-          )}
         </div>
       </Link>
     </li>

@@ -2,10 +2,9 @@
   position: absolute;
   bottom: 100%;
   margin: 8px;
-  width: 250px;
+  width: 350px;
   left: 0;
   z-index: 100;
-  overflow: hidden; /* taşmayı engelle */
   background: white;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   border-radius: 8px;
@@ -14,9 +13,29 @@
 }
 
 .preview-image img {
-  max-width: 100%;   /* kutu genişliğini geçme */
-  max-height: 100%;  /* kutu yüksekliğini geçme */
-  object-fit: contain; /* orantıyı koru, taşırma */
+  width: 100%;         /* genişlik kutuya tam oturur */
+  height: auto;        /* yüksekliği orantılı ayarla */
+  object-fit: contain; /* orantıyı korur, taşmayı önler */
   border-radius: 8px;
+  max-height: 350px;
   display: block;
+}
+
+@media screen and (max-width: 768px) {
+  .selected-file-preview {
+    width: calc(100% - 50px); /* buradaki boşlukları unutma */
+  }
+
+  .preview-image img {
+    width: 100%;
+    height: auto;
+    max-height: 250px;
+    object-fit: contain;
+  }
+
+  .message-media {
+    width: 100%;
+    height: auto;
+    max-height: 250px;
+  }
 }

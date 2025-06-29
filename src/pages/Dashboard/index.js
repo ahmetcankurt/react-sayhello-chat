@@ -1,5 +1,5 @@
 import { memo, useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux"; // useSelector eklendi
 import classnames from "classnames";
 
 import Leftbar from "./Leftbar";
@@ -10,7 +10,7 @@ import { TABS } from "../../constants";
 import { fetchUserData } from "../../redux/slices/selectedUser";
 import Notifications from "../../components/Notification";
 import { motion } from "framer-motion";
-
+import { themeImages } from "../../constants/themeImages"
 
 const Index = () => {
   const [selectedTab, setSelectedTab] = useState(TABS.USERS);
@@ -21,6 +21,7 @@ const Index = () => {
   const { isProfileVisible, selectedUser } = state;
 
   const dispatch = useDispatch();
+  const activeTab = useSelector((state) => state.tab.selectedTab); // Aktif tab bilgisini al
 
   useEffect(() => {
     dispatch(fetchUserData(selectedUser));
@@ -29,6 +30,16 @@ const Index = () => {
   const toggleVisibility = (key) => {
     setState((prev) => ({ ...prev, [key]: !prev[key] }));
   };
+
+  useEffect(() => {
+    const savedId = localStorage.getItem("selectedThemeImage") || themeImages[0].id;
+    const found = themeImages.find(img => img.id === savedId);
+    const userChat = document.getElementById("user-chat");
+    if (userChat && found) {
+      themeImages.forEach(i => userChat.classList.remove(i.pattern));
+      userChat.classList.add(found.pattern);
+    }
+  }, []);
 
   return (
     <>
@@ -47,7 +58,6 @@ const Index = () => {
           "user-chat-show": selectedUser,
         })}
         id="user-chat"
-
       >
         <div className="user-chat-overlay" id="user-chat-overlay"></div>
         {selectedUser !== null ? (
@@ -55,12 +65,11 @@ const Index = () => {
             <motion.div
               className="w-100 overflow-hidden position-relative"
               key={selectedUser?.id}
-              initial={{ y: -50, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ duration: 0.5, ease: "easeOut" }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.7, ease: "easeInOut" }}
             >
-
-
               <ConversationUser
                 selectedUser={selectedUser}
                 isProfileVisible={isProfileVisible}
@@ -81,9 +90,8 @@ const Index = () => {
             />
           </div>
         ) : (
-          <Welcome />
+          <Welcome activeTab={activeTab} /> 
         )}
-
       </div>
     </>
   );

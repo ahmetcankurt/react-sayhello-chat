@@ -9,7 +9,6 @@
     min-height: 570px;
     background-color: $sidebar-bg;
     display: flex;
-    z-index: 9;
     border-right: 1px solid $sidebar-bg;
     padding: 0 8px;
 
@@ -20,6 +19,7 @@
         min-width: 100%;
         min-height: auto;
         border-top: 1px solid $sidebar-bg;
+        z-index: 10;
     }
 
     .navbar-brand-box {
@@ -66,7 +66,7 @@
         flex-direction: row;
     }
     .nav-item {
-        margin: 7px 0;
+        // margin: 7px 0;
         display: block;
         width: 100%;
 
@@ -119,9 +119,9 @@
                 background-color: transparent;
                 color: rgba(var(--bs-primary-rgb), 1);
 
-                &::before {
-                    background-color: rgba(var(--bs-primary-rgb), 1);
-                }
+                // &::before {
+                //     background-color: rgba(var(--bs-primary-rgb), 1);
+                // }
             }
         }
 

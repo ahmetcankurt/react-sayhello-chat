@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { TABS } from "../../constants";
 
 const initialState = {
-  selectedTab: TABS.USERS,
+  selectedTab: TABS.CHAT,
 };
 
 const tabSlice = createSlice({

@@ -13,6 +13,7 @@ import Swal from "sweetalert2"; // Swal'ı import ediyoruz
 import { getShortName } from "../../../utils/userHelpers";
 import { COLORS } from "../../../constants/bgShortColor";
 import axios from "axios"; // Axios import ettik
+import { getColorById } from "../../../utils/colorHelper";
 
 const ContactItem = ({ contact, setSelectedUser }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -22,8 +23,7 @@ const ContactItem = ({ contact, setSelectedUser }) => {
   const handleImageError = () => setImageError(true);
   const fullName = [contact?.name, contact?.surname].filter(Boolean).join(' ');
   const shortName = getShortName(contact);
-  const [color] = useState(Math.floor(Math.random() * COLORS.length));
-
+  const color = getColorById(contact);
   const dispatch = useDispatch();
 
   // Kullanıcıyı engelleme fonksiyonu
@@ -85,7 +85,7 @@ const ContactItem = ({ contact, setSelectedUser }) => {
     <li className="contact-list-item">
       <div className="d-flex align-items-center">
         <div className="flex-shrink-0 me-2">
-          <div className="avatar-sm" onClick={() => setSelectedUser({ id: contact.userId, userType: contact.type})} >
+          <div className="avatar-sm" onClick={() => setSelectedUser({ id: contact.userId, userType: contact.type })} >
             {contact.profileImage && !imageError ? (
               <img
                 src={`${API_URL}/${contact.profileImage}`}
@@ -108,7 +108,7 @@ const ContactItem = ({ contact, setSelectedUser }) => {
             )}
           </div>
         </div>
-        <div className="flex-grow-1"  onClick={() => setSelectedUser({ id: contact.userId, userType: contact.type})}>
+        <div className="flex-grow-1" onClick={() => setSelectedUser({ id: contact.userId, userType: contact.type })}>
           <h5 className="font-size-14 m-0">{fullName}</h5>
         </div>
         <div className="flex-shrink-0">

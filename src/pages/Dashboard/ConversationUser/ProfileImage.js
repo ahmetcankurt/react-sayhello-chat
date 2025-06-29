@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import classnames from "classnames";
-import { useSelector } from "react-redux";
 import { STATUS_TYPES } from "../../../constants";
 import { API_URL } from "../../../config";
 import { getShortName } from "../../../utils/userHelpers";
+import { getColorById } from "../../../utils/colorHelper";
 
 import { COLORS } from "../../../constants/bgShortColor";
 import axios from "axios";
@@ -44,7 +44,7 @@ export const ProfileImage = ({
 
   const shortName = getShortName(userData);
 
-  const [color] = useState(Math.floor(Math.random() * COLORS.length));
+  const color = getColorById(userData);
 
   const isOnline = userData?.status && userData?.status === STATUS_TYPES.ACTIVE;
 

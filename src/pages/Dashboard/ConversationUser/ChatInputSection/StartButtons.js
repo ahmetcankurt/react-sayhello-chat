@@ -20,9 +20,6 @@ const StartButtons = ({ onToggle, onEmojiClick, emojiPicker, setemojiPicker }) =
           <i className="bx bx-dots-horizontal-rounded align-middle"></i>
         </Button>
       </div> 
-       <UncontrolledTooltip target="more-menu" placement="top">
-        More
-      </UncontrolledTooltip>
       {emojiPicker && <Picker onEmojiClick={onEmojiClick} width={350} height={382} />}
       <div className="links-list-item" id="emoji">
         <Button

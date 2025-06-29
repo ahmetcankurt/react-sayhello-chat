@@ -22,66 +22,64 @@ export const fetchMessages = createAsyncThunk(
   }
 );
 
+// messagesSlice.js
 const messagesSlice = createSlice({
   name: "messages",
   initialState: {
     contacts: [],
-    status: "idle", // 'idle' | 'loading' | 'succeeded' | 'failed'
+    status: "idle",
     error: null,
   },
+  // messagesSlice.js
   reducers: {
     updateContactList: (state, action) => {
       const { message, isOwnMessage } = action.payload;
-      
-      // Grup mesajı mı yoksa birebir mesaj mı kontrolü
-      const isGroupMessage = message.groupId !== null;
-      
-      // İlgili contact'ı bul
-      const contactIndex = state.contacts.findIndex(contact => 
-        isGroupMessage 
-          ? contact.type === "group" && contact.contactId === message.groupId
-          : contact.type === "user" && contact.contactId === (isOwnMessage ? message.receiverId : message.senderId)
-      );
-      
-      if (contactIndex !== -1) {
-        // Contact bulundu, güncelle
-        const updatedContacts = [...state.contacts];
-        updatedContacts[contactIndex] = {
-          ...updatedContacts[contactIndex],
-          lastMessage: message.content,
-          lastMessageSender: isOwnMessage ? "ben" : "o",
-          lastMessageCreatedAt: message.createdAt,
-          ...(!isOwnMessage && { unRead: (updatedContacts[contactIndex].unRead || 0) + 1 })
-        };
-        
-        // Güncellenmiş contact'ı en üste taşı
-        const [updatedContact] = updatedContacts.splice(contactIndex, 1);
-        state.contacts = [updatedContact, ...updatedContacts];
-      } else {
-        // Yeni contact ekle (eğer kendi mesajımız değilse)
-        if (!isOwnMessage) {
-          const newContact = {
-            type: isGroupMessage ? "group" : "user",
-            contactId: isGroupMessage ? message.groupId : message.senderId,
-            name: isGroupMessage ? "Yeni Grup" : message.senderName,
-            surname: isGroupMessage ? "" : message.senderSurname,
-            username: isGroupMessage ? "" : message.senderUsername,
-            profileImage: isGroupMessage ? null : message.senderProfileImage,
-            isActive: true,
-            lastMessage: message.content,
-            lastMessageSender: "o",
-            lastMessageCreatedAt: message.createdAt,
-            isBlocked: false,
-            unRead: 1
-          };
-          
-          state.contacts = [newContact, ...state.contacts];
-        }
-      }
-    },
-    
-  },
+      const userId = parseInt(localStorage.getItem("userId"));
+      const { senderId, receiverId, groupId } = message;
 
+      console.log("updateContactList called with message:", message);
+      console.log("isOwnMessage:", isOwnMessage);
+
+      // Contact ID'yi belirle
+      const contactId = groupId || (senderId === userId ? receiverId : senderId);
+      const contactType = groupId ? "group" : "user";
+
+      // Mevcut contact'ı bul
+    const existingContactIndex = state.contacts.findIndex(
+  contact => String(contact.contactId) === String(contactId) && contact.type === contactType
+);
+
+
+      if (existingContactIndex !== -1) {
+        const updatedContact = {
+          ...state.contacts[existingContactIndex],
+          lastMessage: message.content,
+          lastMessageCreatedAt: message.createdAt,
+          lastMessageSender: isOwnMessage ? "ben" : "o",
+          isRead: isOwnMessage,
+          unreadCount: isOwnMessage ? 0 : (state.contacts[existingContactIndex].unreadCount || 0) + 1
+        };
+
+        const newContacts = [...state.contacts];
+        newContacts.splice(existingContactIndex, 1);
+        state.contacts = [updatedContact, ...newContacts];
+      } else {
+        const newContact = {
+          contactId,
+          type: contactType,
+          lastMessage: message.content,
+          lastMessageCreatedAt: message.createdAt,
+          lastMessageSender: isOwnMessage ? "ben" : "o",
+          isRead: isOwnMessage,
+          unreadCount: isOwnMessage ? 0 : 1
+        };
+
+        state.contacts.unshift(newContact);
+      }
+
+
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchMessages.pending, (state) => {
@@ -95,7 +93,6 @@ const messagesSlice = createSlice({
         state.status = "failed";
         state.error = action.error.message;
       });
-
   },
 });
 

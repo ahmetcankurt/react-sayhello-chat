@@ -43,9 +43,7 @@ const ProfileUser = ({
         <a data-fancybox={`profile-${userInfo?.id || "unique"}`} href={profile}>
           <img src={profile} className="profile-img rounded" alt="Profile" />
         </a>
-
-
-        <div className="overlay-content rounded" style={{ pointerEvents: "none" }}>
+        <div className="overlay-content rounded" >
           <div className="user-chat-nav p-2">
             <div className="d-flex w-100">
               <div className="flex-grow-1">
@@ -120,7 +118,7 @@ const ProfileUser = ({
             </div>
           </div>
           <div className="mt-auto p-3">
-            <h5 className="user-name mb-1 text-truncate">{fullName}</h5>
+            <h5 className="user-name mb-1 text-truncate user-select-none">{fullName}</h5>
             {/* {userInfo?.status && (
               <p className="font-size-14 text-truncate mb-0">
                 <i

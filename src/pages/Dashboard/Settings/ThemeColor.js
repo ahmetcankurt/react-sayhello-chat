@@ -2,16 +2,8 @@ import { memo, useEffect, useState } from "react";
 import classnames from "classnames";
 
 // Sabit tema renkleri
-const themeColors = [
-  { id: "bgcolor-radio2", color: "bg-info" },
-  { id: "bgcolor-radio3", color: "bg-purple" },
-  { id: "bgcolor-radio4", color: "bg-pink" },
-  { id: "bgcolor-radio5", color: "bg-danger" },
-  { id: "bgcolor-radio6", color: "bg-secondary" },
-  { id: "bgcolor-radio7", color: "bg-success" },
-  { id: "bgcolor-radio8", color: "bg-warning" },
-  { id: "bgcolor-radio11", color: "bg-transparent" },
-];
+import { themeColors } from "../../../constants/themeColors"
+
 
 // Yardımcı: Renk değişimini uygula
 const changeColor = (id) => {
@@ -40,8 +32,10 @@ const FormCheck = ({ color, selected, onChange }) => (
     <label className="form-check-label avatar-xs" htmlFor={color.id}>
       <span
         id={`color-${color.id}`}
-        className={classnames("avatar-title", "rounded-circle", "theme-btn", color.color, color.id)}
+        className={classnames("avatar-title", "rounded-circle", "theme-btn", color.id)}
+        style={{ backgroundColor: color.color }}
       ></span>
+
     </label>
   </div>
 );

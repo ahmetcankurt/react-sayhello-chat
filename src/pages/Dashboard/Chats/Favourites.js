@@ -1,28 +1,47 @@
 // component
 import { memo } from "react";
 import ChatUser from "./ChatUser";
+import EmptyStateResult from "../../../components/EmptyStateResult";
 
-const Favourites = ({ users, selectedChat, setSelectedUser }) => {
+const Favourites = ({ users, selectedChat, setSelectedUser, userId, activeTab }) => {
+  // users içinde lastMessageCreatedAt bilgisi var mı kontrol et, yoksa 0 koy
+  const sortedUsers = (users || []).slice().sort((a, b) => {
+    const hasMessageA = !!a.lastMessageCreatedAt;
+    const hasMessageB = !!b.lastMessageCreatedAt;
+
+    // Eğer sadece biri mesaj içeriyorsa, o yukarı gelsin
+    if (hasMessageA && !hasMessageB) return -1;
+    if (!hasMessageA && hasMessageB) return 1;
+
+    // Her ikisi de mesaj içeriyor veya ikisi de mesaj içermiyor
+    const dateA = new Date(a.lastMessageCreatedAt || a.createdAt || 0);
+    const dateB = new Date(b.lastMessageCreatedAt || b.createdAt || 0);
+    return dateB - dateA;
+  });
+
   return (
     <>
-      {/* <h5 className="mb-3 px-4 mt-4 font-size-11 text-muted text-uppercase">
-        Favourites
-      </h5> */}
-
-      <div className="chat-message-list">
+      <div className="position-relative">
         <ul className="list-unstyled chat-list chat-user-list">
-          {(users || []).map((user, key) => (
-            <ChatUser
-              user={user}
-              key={key}
-              selectedChat={selectedChat}
-              setSelectedUser={setSelectedUser}
-            />
-          ))}
+          {sortedUsers.length === 0 ? (
+            <EmptyStateResult searchedText={sortedUsers} />
+          ) : (
+            sortedUsers.map((user, key) => (
+              <ChatUser
+                activeTab={activeTab}
+                key={`${user.type}_${user.contactId}_${key}`}
+                user={user}
+                userId={userId}
+                selectedChat={selectedChat}
+                setSelectedUser={setSelectedUser}
+              />
+            ))
+          )}
         </ul>
       </div>
     </>
   );
 };
+
 
 export default memo(Favourites);

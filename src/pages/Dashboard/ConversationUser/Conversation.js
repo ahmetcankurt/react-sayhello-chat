@@ -1,14 +1,16 @@
 import React, { useEffect, useRef, useCallback, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { io } from "socket.io-client";
 
 import AppSimpleBar from "../../../components/AppSimpleBar";
-import Loader from "../../../components/Loader";
 import Message from "./Message";
 import ForwardModal from "../../../components/ForwardModal";
 
 import { API_URL } from "../../../config";
 import { getFormattedDateGroup } from "../../../utils/getFormattedDateGroup";
+
+import { addNewMessageToConversation, setMessagesForContact } from "../../../redux/slices/messagesSlice";
 
 const Conversation = ({
   chatUserDetails,
@@ -19,15 +21,48 @@ const Conversation = ({
   handleProfileClick,
   setSelectedUser,
 }) => {
-  const [messages, setMessages] = useState([]);
-  const [forwardData, setForwardData] = useState(null);
-  const [isOpenForward, setIsOpenForward] = useState(false);
-  const [stickyDate, setStickyDate] = useState(null);
-
+  const dispatch = useDispatch();
   const userId = Number(localStorage.getItem("userId"));
   const socketRef = useRef(null);
   const ref = useRef();
   const dateRefs = useRef({});
+
+  // Redux'tan conversations'ı al, seçilen kişi/gruba göre mesajları getir
+  const conversations = useSelector((state) => state.messages.conversations);
+  const contactId = selectedUser?.id ? String(selectedUser.id) : null;
+  const messages = contactId && conversations[contactId] ? conversations[contactId] : [];
+
+  const [forwardData, setForwardData] = useState(null);
+  const [isOpenForward, setIsOpenForward] = useState(false);
+  const [stickyDate, setStickyDate] = useState(null);
+
+  // Mesajları API'den çek ve Redux'a kaydet
+  const fetchMessages = useCallback(async () => {
+    if (!contactId) return;
+    try {
+      const token = localStorage.getItem("token");
+      const params = {};
+      if (selectedUser.userType === "group") {
+        params.selectedGroup = selectedUser.id;
+      } else {
+        params.selectedUser = selectedUser.id;
+      }
+      const { data } = await axios.get(`${API_URL}/messages/list/users`, {
+        headers: { Authorization: `Bearer ${token}` },
+        params,
+      });
+      dispatch(setMessagesForContact({ contactId, messages: data.messages }));
+      scrollToBottom();
+    } catch (error) {
+      console.error("Mesajlar alınamadı:", error?.response?.data || error);
+    }
+  }, [contactId, dispatch, selectedUser]);
+
+  useEffect(() => {
+    if (contactId) {
+      fetchMessages();
+    }
+  }, [contactId, fetchMessages]);
 
   const scrollToBottom = useCallback(() => {
     const container = ref.current?.getScrollElement();
@@ -41,52 +76,6 @@ const Conversation = ({
     }
   }, []);
 
-  const fetchMessages = useCallback(async () => {
-    try {
-      const token = localStorage.getItem("token");
-      const params = {};
-
-      if (selectedUser?.id) {
-        params[selectedUser.userType === "group" ? "selectedGroup" : "selectedUser"] = selectedUser.id;
-      }
-
-      const { data } = await axios.get(`${API_URL}/messages/list/users`, {
-        headers: { Authorization: `Bearer ${token}` },
-        params,
-      });
-
-      setMessages(data.messages);
-    } catch (error) {
-      console.error("Mesajlar alınamadı:", error?.response?.data || error);
-    }
-  }, [selectedUser]);
-
-  useEffect(() => {
-    if (selectedUser?.id) {
-      fetchMessages();
-    }
-  }, [fetchMessages]);
-
-  const handleUpdate = useCallback(async (messageId) => {
-    try {
-      const token = localStorage.getItem("token");
-
-      await axios.put(`${API_URL}/messages/update/${messageId}`, {}, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      setMessages((prev) =>
-        prev.map((msg) =>
-          msg.messageId === messageId ? { ...msg, isDeleted: true } : msg
-        )
-      );
-
-      socketRef.current?.emit("messageDeleted", { messageId });
-    } catch (error) {
-      console.error("Mesaj silme hatası:", error);
-    }
-  }, []);
-
   useEffect(() => {
     socketRef.current = io(API_URL, {
       auth: { token: localStorage.getItem("token") },
@@ -95,14 +84,28 @@ const Conversation = ({
     socketRef.current.emit("joinRoom", String(userId));
 
     socketRef.current.on("newMessage", (newMessage) => {
-      setMessages((prev) => [...prev, newMessage]);
+      // Normalize
+      const normalizedMessage = {
+        ...newMessage,
+        sender: newMessage.sender || {
+          userId: newMessage.senderId,
+          name: newMessage.senderName,
+          surname: newMessage.senderSurname,
+          username: newMessage.senderUsername,
+          profileImage: newMessage.senderProfileImage,
+        },
+      };
+
+      // Redux'a yeni mesaj ekle
+      dispatch(addNewMessageToConversation(normalizedMessage));
+
       scrollToBottom();
     });
 
     return () => {
       socketRef.current.disconnect();
     };
-  }, [userId, scrollToBottom]);
+  }, [dispatch, userId, scrollToBottom]);
 
   useEffect(() => {
     if (ref.current) {
@@ -112,10 +115,7 @@ const Conversation = ({
 
   useEffect(() => {
     if (messages.length > 0) {
-      const timeout = setTimeout(() => {
-        scrollToBottom();
-      }, 100);
-
+      const timeout = setTimeout(scrollToBottom, 100);
       return () => clearTimeout(timeout);
     }
   }, [messages, scrollToBottom]);
@@ -130,27 +130,27 @@ const Conversation = ({
   const onForwardMessage = async (data) => {
     try {
       const token = localStorage.getItem("token");
-      await axios.post(`${API_URL}/messages/forward`, {
-        ...data,
-        forwardedMessage: forwardData,
-      }, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
+      await axios.post(
+        `${API_URL}/messages/forward`,
+        {
+          ...data,
+          forwardedMessage: forwardData,
+        },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
       onCloseForward();
     } catch (error) {
       console.error("İletme hatası:", error);
     }
   };
 
-  const groupMessagesByDate = (messages) => {
-    return messages.reduce((groups, msg) => {
+  const groupMessagesByDate = (messages) =>
+    messages.reduce((groups, msg) => {
       const dateKey = getFormattedDateGroup(msg.createdAt);
       if (!groups[dateKey]) groups[dateKey] = [];
       groups[dateKey].push(msg);
       return groups;
     }, {});
-  };
 
   const groupedMessages = groupMessagesByDate(messages);
 
@@ -163,7 +163,6 @@ const Conversation = ({
       const dates = Object.keys(groupedMessages);
 
       let current = null;
-
       for (const date of dates) {
         const el = dateRefs.current[date];
         if (el && scrollTop >= el.offsetTop - container.offsetTop - 100) {
@@ -172,7 +171,6 @@ const Conversation = ({
           break;
         }
       }
-
       setStickyDate(current);
     };
 
@@ -211,7 +209,6 @@ const Conversation = ({
                   onSetReplyData={onSetReplyData}
                   onOpenForward={onOpenForward}
                   isChannel={isChannel}
-                  handleUpdate={handleUpdate}
                   handleProfileClick={handleProfileClick}
                   chatUserDetails={chatUserDetails}
                   selectedUser={selectedUser}

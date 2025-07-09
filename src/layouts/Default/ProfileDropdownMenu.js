@@ -10,8 +10,6 @@ import { TABS } from "../../constants/index";
 import { useSelector } from "react-redux";
 import { API_URL } from "../../config";
 import { getShortName } from '../../utils/userHelpers';
-import { COLORS } from "../../constants/bgShortColor";
-import LightDarkMode from "../../components/LightDarkMode"; // Import et
 import { LAYOUT_MODES } from "../../constants/index";
 
 const ProfileDropdownMenu = ({
@@ -27,7 +25,6 @@ const ProfileDropdownMenu = ({
     const userInfo = useSelector((state) => state.userInformation.user);
 
     const shortName = getShortName(userInfo);
-    const [color] = useState(Math.floor(Math.random() * COLORS.length));
 
     const handleImageError = () => {
         setImageError(true);
@@ -53,7 +50,7 @@ const ProfileDropdownMenu = ({
             onMouseLeave={() => setDropdownOpen(false)}
             toggle={toggle}
         >
-            <DropdownToggle nav className="bg-transparent">
+            <DropdownToggle nav className="bg-transparent mb-3">
                 {userInfo?.profileImage && !imageError ? (
                     <img
                         src={`${API_URL}/${userInfo.profileImage}`}
@@ -62,7 +59,12 @@ const ProfileDropdownMenu = ({
                         onError={handleImageError}
                     />
                 ) : (
-                    <span className={`p-2 rounded-circle ${COLORS[color]} text-white font-size-22`}>
+                    <span className={`p-2 rounded-circle text-white font-size-12 `}
+                        style={
+                            {
+                                backgroundColor: userInfo?.color,
+                            }
+                        }>
                         {shortName}
                     </span>
                 )}

@@ -29,6 +29,16 @@ const Message = ({
   const handleReply = () => onSetReplyData(message);
   const handleForward = () => onOpenForward(message);
 
+
+  const senderInfo = message.lastMessageSender && typeof message.lastMessageSender === "object"
+    ? message.lastMessageSender
+    : message.sender || {};
+
+  // avatar için
+  const profileImage = senderInfo.profileImage;
+  const name = senderInfo.name || "";
+  const surname = senderInfo.surname || "";
+
   return (
     <li className={classnames("chat-list", { right: isFromMe, reply: isRepliedMessage })}>
       <div className="conversation-list mb-1">
@@ -51,9 +61,9 @@ const Message = ({
           {!isFromMe && selectedUser.userType === "group" && (
             <div className="conversation-name">
               <div className="chat-avatar me-0 mb-1">
-                {message?.sender?.profileImage ? (
+                {profileImage ? (
                   <img
-                    src={`${API_URL}/${message.sender.profileImage}`}
+                    src={`${API_URL}/${profileImage}`}
                     alt="User"
                     className="rounded-circle"
                   />
@@ -65,18 +75,20 @@ const Message = ({
                         COLORS[colorIndex]
                       )}
                     >
-                      <span className="username">{getShortName(message.sender)}</span>
+                      <span className="username user-select-none">{getShortName(senderInfo)}</span>
                     </span>
                   </div>
                 )}
+
               </div>
               <span
                 className="cursor-pointer ms-1"
                 style={{ fontSize: "12px", fontWeight: 500 }}
-                onClick={() => setSelectedUser({ id: message.sender.userId, userType: "user" })}
+                onClick={() => setSelectedUser({ id: senderInfo.userId, userType: "user" })}
               >
-                {message.sender?.name} {message.sender?.surname}
+                {name} {surname}
               </span>
+
             </div>
           )}
         </div>

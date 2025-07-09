@@ -11,9 +11,7 @@ import { deleteFriend } from "../../../redux/slices/friendRequestsSlice";
 import { useDispatch } from "react-redux";
 import Swal from "sweetalert2"; // Swal'ı import ediyoruz
 import { getShortName } from "../../../utils/userHelpers";
-import { COLORS } from "../../../constants/bgShortColor";
 import axios from "axios"; // Axios import ettik
-import { getColorById } from "../../../utils/colorHelper";
 
 const ContactItem = ({ contact, setSelectedUser }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -23,7 +21,6 @@ const ContactItem = ({ contact, setSelectedUser }) => {
   const handleImageError = () => setImageError(true);
   const fullName = [contact?.name, contact?.surname].filter(Boolean).join(' ');
   const shortName = getShortName(contact);
-  const color = getColorById(contact);
   const dispatch = useDispatch();
 
   // Kullanıcıyı engelleme fonksiyonu
@@ -45,7 +42,6 @@ const ContactItem = ({ contact, setSelectedUser }) => {
           const response = await axios.post(
             `${API_URL}/user-blocked/${blockerId}/block/${blockedId}`
           );
-          console.log("Kullanıcı engellendi:", response.data);
           Swal.fire("Engellendi!", "Kullanıcı başarıyla engellendi.", "success");
         } catch (error) {
           console.error("Error blocking user", error);
@@ -100,8 +96,9 @@ const ContactItem = ({ contact, setSelectedUser }) => {
                   "rounded-circle",
                   "text-uppercase",
                   "text-white",
-                  COLORS[color]
+                  "user-select-none"
                 )}
+                style={{ backgroundColor: contact?.color }}
               >
                 {shortName}
               </span>
@@ -116,7 +113,7 @@ const ContactItem = ({ contact, setSelectedUser }) => {
             <DropdownToggle tag="a" className="text-mute">
               <i className="bx bx-dots-vertical-rounded align-middle"></i>
             </DropdownToggle>
-            <DropdownMenu className="dropdown-menu-end">
+            <DropdownMenu >
               <DropdownItem
                 className="d-flex align-items-center justify-content-between"
                 onClick={(event) =>

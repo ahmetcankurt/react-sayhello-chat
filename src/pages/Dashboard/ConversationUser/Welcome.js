@@ -1,6 +1,7 @@
 import { TABS } from "../../../constants";
 import { motion, AnimatePresence } from "framer-motion";
 import COLORS from "../../../constants/menuColors";
+import { memo } from "react";
 
 const Welcome = ({ activeTab }) => {
   const getWelcomeContent = () => {
@@ -33,6 +34,13 @@ const Welcome = ({ activeTab }) => {
           icon: "ri-user-add-line",
           color: COLORS.friendRequest,
         };
+      case TABS.NOTIFICATIONS:
+        return {
+          title:  "Bildirimler",
+          message: "Yeni bildirimlerini buradan takip edebilirsin.",
+          icon: "bx bx-bell",
+          color: COLORS.notifications,
+        };
       default:
         return {
           title: "Profilim",
@@ -40,6 +48,7 @@ const Welcome = ({ activeTab }) => {
           icon: "ri-user-line",
           color: COLORS.profile,
         };
+
     }
   };
 
@@ -53,19 +62,19 @@ const Welcome = ({ activeTab }) => {
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.95 }}
         transition={{ duration: 0.4 }}
-        className="d-flex flex-column align-items-center justify-content-center h-100 text-center p-4"
+        className="d-flex flex-column align-items-center justify-content-center h-100 text-center p-4 "
       >
         <motion.div
-          className="welcome-icon"
+          className="welcome-icon  text-muted "
           initial={{ y: -30, opacity: 0, scale: 0.8 }}
           animate={{ y: 0, opacity: 1, scale: 1 }}
           transition={{ type: "spring", stiffness: 500, damping: 15 }}
         >
-          <i className={`${icon} display-4`} style={{ color }} />
+          <i className={`${icon} display-4 text-primary`} style={{ color }} />
         </motion.div>
 
         <motion.h4
-          className="mt-3"
+          className="mt-3 "
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2 }}
@@ -73,8 +82,10 @@ const Welcome = ({ activeTab }) => {
           {title}
         </motion.h4>
         <motion.p
-          className="text-muted"
-          style={{ color: COLORS.textDark }}
+          className="text-muted p-3 "
+          style={{
+            color: COLORS.textDark, fontSize: "1rem", fontWeight: "700",
+          }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3 }}
@@ -86,4 +97,4 @@ const Welcome = ({ activeTab }) => {
   );
 };
 
-export default Welcome;
+export default memo(Welcome)

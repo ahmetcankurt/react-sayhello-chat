@@ -1,28 +1,30 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import {API_URL} from "../../config";
+import { API_URL } from "../../config";
 
-// Async Thunk: Arkadaş listesini getir
+// Arkadaş listesini getir
 export const fetchFriends = createAsyncThunk(
   "friendRequests/fetchFriends",
-  async (userId, thunkAPI) => {
+  async (userId) => {
     const response = await axios.get(`${API_URL}/friend-requests/${userId}/friends-status`);
-    return response.data
+    return response.data;
   }
 );
 
+// Arkadaş sil
 export const deleteFriend = createAsyncThunk(
   "friendRequests/deleteFriend",
   async ({ userId, friendId }, thunkAPI) => {
     try {
-      const response = await axios.delete(`${API_URL}/friend-requests/${userId}/friend/${friendId}`)
-      return { userId, friendId }; 
+      await axios.delete(`${API_URL}/friend-requests/${userId}/friend/${friendId}`);
+      return { userId, friendId };
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.response.data);
+      return thunkAPI.rejectWithValue(error.response?.data || error.message);
     }
   }
 );
 
+// Arkadaşlık isteği kabul et
 export const acceptFriendRequest = createAsyncThunk(
   "friendRequests/acceptFriendRequest",
   async ({ userId, senderId }, thunkAPI) => {
@@ -31,9 +33,9 @@ export const acceptFriendRequest = createAsyncThunk(
         `${API_URL}/friend-requests/${userId}/friend-request/${senderId}`,
         { action: "accept" }
       );
-      return { friend: response.data, senderId }; // Hem yeni arkadaş bilgisini hem de senderId'yi döndürüyoruz
+      return { friend: response.data, senderId };
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.response.data);
+      return thunkAPI.rejectWithValue(error.response?.data || error.message);
     }
   }
 );
@@ -42,7 +44,7 @@ const friendRequestsSlice = createSlice({
   name: "friendRequests",
   initialState: {
     friends: [],
-    status: "idle", // 'idle' | 'loading' | 'succeeded' | 'failed'
+    status: "idle",
     error: null,
   },
   reducers: {},
@@ -64,10 +66,12 @@ const friendRequestsSlice = createSlice({
       })
       .addCase(deleteFriend.fulfilled, (state, action) => {
         state.status = "succeeded";
+        // Silinen arkadaşın userId veya friendUserId'si eşleşenleri filtrele
         state.friends = state.friends.filter(
-          (friend) => friend.userId !== action.payload.friendId
+          (friend) => friend.userId !== action.payload.friendId && friend.friendUserId !== action.payload.friendId
         );
       })
+
       .addCase(deleteFriend.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
@@ -82,7 +86,7 @@ const friendRequestsSlice = createSlice({
       .addCase(acceptFriendRequest.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
-      })
+      });
   },
 });
 

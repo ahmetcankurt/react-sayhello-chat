@@ -4,9 +4,7 @@ import classnames from "classnames";
 import { STATUS_TYPES } from "../../../constants";
 import { API_URL } from "../../../config";
 import { getShortName } from "../../../utils/userHelpers";
-import { getColorById } from "../../../utils/colorHelper";
 
-import { COLORS } from "../../../constants/bgShortColor";
 import axios from "axios";
 export const ProfileImage = ({
   selectedUser,
@@ -27,7 +25,7 @@ export const ProfileImage = ({
           console.error("Error fetching user data:", error);
         }
       }
-      else{
+      else {
         try {
           const response = await axios.get(`${API_URL}/groups/${selectedUser.id}`);
           setUserData(response.data);
@@ -36,18 +34,12 @@ export const ProfileImage = ({
         }
       }
     };
-  
+
     fetchUserData();
   }, [selectedUser]);
-  
-
 
   const shortName = getShortName(userData);
-
-  const color = getColorById(userData);
-
   const isOnline = userData?.status && userData?.status === STATUS_TYPES.ACTIVE;
-
   const handleImageError = () => {
     setImageError(true);
   };
@@ -109,10 +101,10 @@ export const ProfileImage = ({
                     "rounded-circle",
                     "text-uppercase",
                     "text-white",
-                    COLORS[color]
                   )}
+                  style={{ backgroundColor: userData?.color }}
                 >
-                  <span className="username">{shortName}</span>
+                  <span className="username user-select-none">{shortName}</span>
                   {isOnline && (
                     <span className={classnames(
                       "user-status",

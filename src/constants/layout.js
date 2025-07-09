@@ -16,5 +16,5 @@ export const TABS = {
   BOOKMARK: "pills-bookmark",
   FriendRequest: "pills-friend-request",
   SETTINGS: "pills-setting",
-  Notification: "pills-notification",
+  NOTIFICATIONS: "pills-notification",
 };

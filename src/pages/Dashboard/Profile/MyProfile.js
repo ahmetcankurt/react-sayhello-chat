@@ -27,7 +27,9 @@ const MyProfile = ({ userInfo }) => {
 
   const avatarPlaceholderStyle = {
     ...placeholderStyle,
-    margin: "0 auto",
+    margin: "0  auto",
+    height: "75px",
+    width: "75px",
     borderRadius: "50%",
   };
 
@@ -73,7 +75,7 @@ const MyProfile = ({ userInfo }) => {
               />
             </a>
           ) : (
-            <div className="rounded-circle avatar-lg img-thumbnail bg-light d-flex align-items-center justify-content-center" style={avatarPlaceholderStyle}>
+            <div className="rounded-circle " style={avatarPlaceholderStyle}>
               <i className="fas fa-user fa-2x text-muted"></i>
             </div>
           )}

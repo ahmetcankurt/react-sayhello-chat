@@ -332,7 +332,7 @@ const Message = ({ message, onSetReplyData, isFromMe, onOpenForward, handleUpdat
                               "text-white",
                               COLORS[color]
                             )} >
-                            <span className="username">{getShortName(message.sender)}</span>
+                            <span className="username user-select-none">{getShortName(message.sender)}</span>
                           </span>
                         </div>
                       )}

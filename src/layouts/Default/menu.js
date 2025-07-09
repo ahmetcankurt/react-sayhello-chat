@@ -22,7 +22,7 @@ const MENU_ITEMS = [
   {
     id: 3,
     key: "pills-contacts-tab",
-    icon: "bx bxs-user-detail",
+     icon: "bx bx-group",
     tooltipTitle: "Kişiler",
     tabId: TABS.CONTACTS,
     color: COLORS.contacts,
@@ -34,6 +34,14 @@ const MENU_ITEMS = [
     tooltipTitle: "Arkadaşlık İstekleri",
     tabId: TABS.FriendRequest,
     color: COLORS.friendRequest,
+  },
+  {
+    id: 5,
+    key: "pills-notifications-tab",
+    icon: "bx bx-bell",
+    tooltipTitle: "Bildirimler",
+    tabId: TABS.NOTIFICATIONS,
+    color: COLORS.notifications,
   },
   {
     id: 6,

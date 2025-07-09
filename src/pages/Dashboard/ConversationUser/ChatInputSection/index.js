@@ -44,9 +44,9 @@ const Index = ({ selectedUser }) => {
       const formData = new FormData();
 
       if (selectedUser?.id && selectedUser?.userType === "user") {
-        formData.append("receiverId", selectedUser.id);
+        formData.append("receiverId", Number(selectedUser.id));
       } else if (selectedUser?.id && selectedUser?.userType === "group") {
-        formData.append("groupId", selectedUser.id);
+        formData.append("groupId", Number(selectedUser.id));
       }
 
       formData.append("content", message);
@@ -82,10 +82,10 @@ const Index = ({ selectedUser }) => {
     setMessage(e.target.value);
   };
 
- const onToggle = (open) => {
-  if (typeof open === "boolean") setIsOpen(open);
-  else setIsOpen(prev => !prev);
-};
+  const onToggle = (open) => {
+    if (typeof open === "boolean") setIsOpen(open);
+    else setIsOpen(prev => !prev);
+  };
 
   // Emoji state, opsiyonel
   const [emojiArray, setemojiArray] = useState([]);

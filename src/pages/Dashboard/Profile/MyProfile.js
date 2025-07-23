@@ -1,6 +1,7 @@
 import { memo, useEffect, useState } from "react";
 import { Fancybox } from "@fancyapps/ui";
 import { API_URL } from "../../../config";
+import DelayedImage from "../../../components/DelayedImage";
 
 const MyProfile = ({ userInfo }) => {
   const fullName = [userInfo?.name, userInfo?.surname].filter(Boolean).join(" ");
@@ -38,12 +39,17 @@ const MyProfile = ({ userInfo }) => {
       <div className="user-profile-img">
         {userInfo?.backgroundImage && !bgImageError ? (
           <a data-fancybox="Background" href={`${API_URL}/${userInfo.backgroundImage}`}>
-            <img
+            <DelayedImage
               src={`${API_URL}/${userInfo.backgroundImage}`}
               className="profile-img"
               alt="Profile Background"
-              style={{ height: 160 }}
               onError={handleError(setBgImageError)}
+              style={{ height: 160 }}
+              fallback={
+                <div className="avatar-sm bg-light rounded-circle d-flex align-items-center justify-content-center">
+                  <i className="bx bx-user text-muted"></i>
+                </div>
+              }
             />
           </a>
         ) : (
@@ -56,7 +62,7 @@ const MyProfile = ({ userInfo }) => {
           <div className="user-chat-nav p-2 ps-3">
             <div className="d-flex w-100 align-items-center">
               <div className="flex-grow-1">
-                <h5 className="text-white mb-0 mt-2">Kullanıcı Profili</h5>
+                <h5 className="text-white mb-0 mt-2 user-select-none">Kullanıcı Profili</h5>
               </div>
             </div>
           </div>
@@ -67,11 +73,16 @@ const MyProfile = ({ userInfo }) => {
         <div className="mb-lg-3 mb-2">
           {userInfo?.profileImage && !profileImageError ? (
             <a data-fancybox="Profile" href={`${API_URL}/${userInfo.profileImage}`}>
-              <img
+              <DelayedImage
                 src={`${API_URL}/${userInfo.profileImage}`}
-                className="rounded-circle avatar-lg img-thumbnail"
+                className="rounded-circle avatar-lg img-thumbnail user-select-none"
                 alt="Profile"
                 onError={handleError(setProfileImageError)}
+                fallback={
+                  <div className="avatar-sm bg-light rounded-circle d-flex align-items-center justify-content-center">
+                    <i className="bx bx-user text-muted"></i>
+                  </div>
+                }
               />
             </a>
           ) : (

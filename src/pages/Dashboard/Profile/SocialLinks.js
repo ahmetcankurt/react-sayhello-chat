@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import { memo } from "react";
 import InfoItem from "./InfoItem"; // InfoItem bileşenini bu şekilde içe aktar
 import { socialMediaLinks } from "../../../utils/socialMediaLinks"; // Sosyal medya bağlantılarını içe aktar
 

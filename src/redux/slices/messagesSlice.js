@@ -3,22 +3,6 @@ import axios from "axios";
 import { API_URL } from "../../config";
 
 // Arşivlenmiş mesajları kullanıcı ID'ye göre getir
-export const fetchArchivedMessages = createAsyncThunk(
-  "messages/fetchArchivedMessages",
-  async (_, thunkAPI) => {
-    try {
-      const userId = localStorage.getItem("userId");
-      if (!userId) return thunkAPI.rejectWithValue("Kullanıcı ID bulunamadı");
-
-      const response = await axios.get(`${API_URL}/messages/users/${userId}/archives`);
-      return response.data.conversations;
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error.message);
-    }
-  }
-);
-
-// Async thunk: mesajları kullanıcı ID'ye göre getir
 export const fetchMessages = createAsyncThunk(
   "messages/fetchMessages",
   async (_, thunkAPI) => {
@@ -26,8 +10,15 @@ export const fetchMessages = createAsyncThunk(
       const userId = localStorage.getItem("userId");
       if (!userId) return thunkAPI.rejectWithValue("Kullanıcı ID bulunamadı");
 
-      const response = await axios.get(`${API_URL}/messages/users/${userId}`);
-      return response.data.conversations;
+      const [normalRes, archivedRes] = await Promise.all([
+        axios.get(`${API_URL}/messages/users/${userId}/conversations`),
+        axios.get(`${API_URL}/messages/users/${userId}/conversations?archived=true`),
+      ]);
+
+      return {
+        contacts: normalRes.data.conversations,
+        archivedContacts: archivedRes.data.conversations,
+      };
     } catch (error) {
       return thunkAPI.rejectWithValue(error.message);
     }
@@ -112,7 +103,6 @@ const messagesSlice = createSlice({
       }
       // Hiçbirinde yoksa YENİ bir sohbet oluştur ve normal listeye ekle
       else {
-        console.log("Yeni sohbet ekleniyor:",message )
         state.contacts.unshift({
           contactId,
           type: contactType,
@@ -123,7 +113,7 @@ const messagesSlice = createSlice({
           lastMessageSender,
           isRead: isOwnMessage,
           unreadCount: isOwnMessage ? 0 : 1,
-          profileImage: message.groupImage || message.profileImage || null, // ✅ BURASI ÖNEMLİ
+          profileImage: message?.groupImage || message?.profileImage || null, // ✅ BURASI ÖNEMLİ
         });
 
       }
@@ -145,9 +135,16 @@ const messagesSlice = createSlice({
     },
     removeFromContacts: (state, action) => {
       const { contactId, type } = action.payload;
+      // contacts listesinden sil
       state.contacts = state.contacts.filter(
         contact => !(String(contact.contactId) === String(contactId) && contact.type === type)
       );
+
+      // conversations içinden sil
+      const key = String(contactId);
+      if (state.conversations[key]) {
+        delete state.conversations[key];
+      }
     },
 
   },
@@ -160,10 +157,35 @@ const messagesSlice = createSlice({
       .addCase(fetchMessages.fulfilled, (state, action) => {
         state.status = "succeeded";
 
-        // contacts olarak set et
-        state.contacts = action.payload.map((contact) => {
+        const { contacts, archivedContacts } = action.payload;
+
+        const currentUserId = parseInt(localStorage.getItem("userId"), 10);
+
+        state.contacts = contacts.map((contact) => {
           let lastMessageSender = contact.lastMessageSender;
-          const currentUserId = parseInt(localStorage.getItem("userId"), 10);
+
+          if (typeof lastMessageSender === "string") {
+            lastMessageSender =
+              lastMessageSender === "me"
+                ? { type: "me" }
+                : { type: "user", name: contact.name };
+          }
+
+          if (!lastMessageSender?.type) {
+            lastMessageSender =
+              contact.senderId === currentUserId
+                ? { type: "me" }
+                : { type: "user", name: contact.name };
+          }
+
+          return {
+            ...contact,
+            lastMessageSender,
+          };
+        });
+
+        state.archivedContacts = archivedContacts.map((contact) => {
+          let lastMessageSender = contact.lastMessageSender;
 
           if (typeof lastMessageSender === "string") {
             lastMessageSender =
@@ -185,26 +207,13 @@ const messagesSlice = createSlice({
           };
         });
       })
+
       .addCase(fetchMessages.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload || action.error.message;
       })
-
-      // Arşivli sohbetler
-      .addCase(fetchArchivedMessages.pending, (state) => {
-        state.archiveStatus = "loading";
-        state.error = null;
-      })
-      .addCase(fetchArchivedMessages.fulfilled, (state, action) => {
-        state.archiveStatus = "succeeded";
-        state.archivedContacts = action.payload;
-      })
-      .addCase(fetchArchivedMessages.rejected, (state, action) => {
-        state.archiveStatus = "failed";
-        state.error = action.payload || action.error.message;
-      });
   },
 });
 
-export const { updateContactList, addNewMessageToConversation, setMessagesForContact } = messagesSlice.actions;
+export const { updateContactList, addNewMessageToConversation, setMessagesForContact, removeFromContacts } = messagesSlice.actions;
 export default messagesSlice.reducer;

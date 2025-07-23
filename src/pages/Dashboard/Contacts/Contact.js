@@ -1,7 +1,6 @@
 import ContactItem from "./ContactItem";
 import { memo } from "react";
 
-
 const CharacterItem = ({
   letterContacts,
   setSelectedUser

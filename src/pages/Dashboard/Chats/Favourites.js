@@ -1,7 +1,6 @@
 // component
 import { memo } from "react";
 import ChatUser from "./ChatUser";
-import EmptyStateResult from "../../../components/EmptyStateResult";
 
 const Favourites = ({ users, selectedChat, setSelectedUser, userId, activeTab }) => {
   // users içinde lastMessageCreatedAt bilgisi var mı kontrol et, yoksa 0 koy
@@ -20,13 +19,9 @@ const Favourites = ({ users, selectedChat, setSelectedUser, userId, activeTab })
   });
 
   return (
-    <>
       <div className="position-relative">
         <ul className="list-unstyled chat-list chat-user-list">
-          {sortedUsers.length === 0 ? (
-            <EmptyStateResult searchedText={sortedUsers} />
-          ) : (
-            sortedUsers.map((user, key) => (
+           { sortedUsers.map((user, key) => (
               <ChatUser
                 activeTab={activeTab}
                 key={`${user.type}_${user.contactId}_${key}`}
@@ -35,13 +30,10 @@ const Favourites = ({ users, selectedChat, setSelectedUser, userId, activeTab })
                 selectedChat={selectedChat}
                 setSelectedUser={setSelectedUser}
               />
-            ))
-          )}
+            ))}
         </ul>
       </div>
-    </>
-  );
-};
-
+  )
+}
 
 export default memo(Favourites);

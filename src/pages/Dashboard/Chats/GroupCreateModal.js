@@ -234,7 +234,7 @@ const GroupCreateModal = ({ isOpen, toggle }) => {
                                     </Label>
                                 </FormGroup>
                             );
-                        })}
+                        })} 
                 </AppSimpleBar>
             </ModalBody>
 

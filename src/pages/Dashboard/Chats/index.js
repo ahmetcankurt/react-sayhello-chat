@@ -1,265 +1,173 @@
 import { memo, useEffect, useRef, useState } from "react";
-import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Form, Input } from "reactstrap";
+import {
+  Button,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownToggle,
+  Form,
+  Input,
+} from "reactstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { AnimatePresence, color, motion } from "framer-motion";
-import { Link } from "react-router-dom";
 import { io } from "socket.io-client";
-import { fetchArchivedMessages, fetchMessages, updateContactList } from "../../../redux/slices/messagesSlice";
-import { getUsers } from "../../../redux/slices/userInformation";
-import { setActiveTab } from "../../../redux/slices/chatTabsSlice";
+import { Link } from "react-router-dom";
 import AppSimpleBar from "../../../components/AppSimpleBar";
-import { CHATS_TABS } from "../../../constants";
-import { API_URL } from "../../../config";
 import GroupCreateModal from "./GroupCreateModal";
 import Favourites from "./Favourites";
-
+import { CHATS_TABS, SOCKET_EVENTS } from "../../../constants";
+import { API_URL } from "../../../config";
+import {
+  fetchMessages,
+  updateContactList,
+} from "../../../redux/slices/messagesSlice";
+import { setActiveTab } from "../../../redux/slices/chatTabsSlice";
 
 const Index = ({ setSelectedUser }) => {
   const dispatch = useDispatch();
-  const { contacts, status, archiveStatus, archivedContacts } = useSelector((state) => state.messages);
-  const userId = localStorage.getItem("userId");
-  const active = useSelector((state) => state.chatTabs.activeTab);
   const socketRef = useRef(null);
+  const userId = localStorage.getItem("userId");
 
-  console.log("Contacts:", contacts);
+  const { contacts, archivedContacts } = useSelector((state) => state.messages);
+  const activeTab = useSelector((state) => state.chatTabs.activeTab);
 
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [isGroupModalOpen, setIsGroupModalOpen] = useState(false);
+
+  // Mesajları yükle
   useEffect(() => {
     if (!userId) return;
+    dispatch(fetchMessages());
+  }, [dispatch, userId]);
 
-    if (status === "idle") dispatch(fetchMessages());
-    if (archiveStatus === "idle") dispatch(fetchArchivedMessages());
-  }, [dispatch, status, archiveStatus, userId]);
-
-
+  // Socket kurulumu
   useEffect(() => {
-    dispatch(getUsers());
-  }, [dispatch]);
+    if (!userId || socketRef.current) return;
 
+    const socket = io(API_URL, {
+      transports: ["websocket"],
+      auth: { token: localStorage.getItem("token") },
+    });
+    socketRef.current = socket;
 
-  useEffect(() => {
-    if (!userId) return;
+    socket.emit("joinRoom", String(userId));
 
-    if (!socketRef.current) {
-      socketRef.current = io(API_URL, {
-        transports: ["websocket"],
-        auth: {
-          token: localStorage.getItem("token"),
-        },
-      });
-    }
-
-    socketRef.current.emit("joinRoom", String(userId));
-
-    socketRef.current.on("newMessage", (newMessage) => {
-      const isOwnMessage = newMessage.senderId === parseInt(userId);
-      dispatch(updateContactList({ message: newMessage, isOwnMessage }));
+    socket.on(SOCKET_EVENTS.NEW_MESSAGE, (message) => {
+      console.log("users mesajı ", message)
+      dispatch(updateContactList({
+        message,
+        isOwnMessage: message.senderId === parseInt(userId),
+      }));
     });
 
-    // ✅ Yeni grup bildirimi
-    socketRef.current.on("newGroupCreated", (groupData) => {
+    socket.on(SOCKET_EVENTS.NEW_GROUP, (group) => {
       dispatch(updateContactList({
         message: {
-          groupId: groupData.groupId,
-          content: groupData.lastMessage,
-          createdAt: groupData.createdAt,
-          groupName: groupData.name,
-          groupImage: groupData.image || null, // Use group image if available
-          senderId: groupData.creatorId,
-          senderName: groupData.creatorName,
-          color: groupData.color , // Default color if not provided
+          groupId: group.groupId,
+          content: group.lastMessage,
+          createdAt: group.createdAt,
+          groupName: group.name,
+          groupImage: group.image || null,
+          senderId: group.creatorId,
+          senderName: group.creatorName,
+          color: group.color,
           lastMessageSender: {
             type: "user",
-            userId: groupData.creatorId,
-            name: groupData.creatorName,
-            surname: groupData.creatorSurname,
+            userId: group.creatorId,
+            name: group.creatorName,
+            surname: group.creatorSurname,
           },
         },
         isOwnMessage: false,
       }));
     });
 
-
     return () => {
-      socketRef.current?.off("newMessage");
-      socketRef.current?.off("newGroupCreated");
-      socketRef.current?.disconnect();
+      socket.disconnect();
       socketRef.current = null;
     };
-  }, [dispatch]);
+  }, [dispatch, userId]);
 
-
-  const searchUsers = () => {
-    const inputValue = document.getElementById("serachChatUser");
-    const filter = inputValue.value.toUpperCase();
-    const ul = document.querySelector(".chat-room-list");
-    const li = ul.getElementsByTagName("li");
-
-    for (let i = 0; i < li.length; i++) {
-      const a = li[i].getElementsByTagName("a")[0];
-      const txtValue = a.textContent || a.innerText;
-      li[i].style.display = txtValue.toUpperCase().includes(filter) ? "" : "none";
-    }
+  // Arama
+  const handleSearch = (e) => {
+    const value = e.target.value.toLowerCase();
+    document.querySelectorAll(".chat-room-list li").forEach((item) => {
+      item.style.display = item.textContent.toLowerCase().includes(value) ? "" : "none";
+    });
   };
 
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-  const toggle = () => setDropdownOpen(!dropdownOpen);
-  const [isGroupModalOpen, setIsGroupModalOpen] = useState(false);
-  const toggleGroupModal = () => setIsGroupModalOpen(!isGroupModalOpen);
-
-
-  const handleTabChange = (tab) => {
-    if (active === tab) {
-      dispatch(setActiveTab(CHATS_TABS.DEFAULT)); // aynı tab’a tıklanırsa kapat
-    } else {
-      dispatch(setActiveTab(tab)); // farklı tab’a tıklanırsa aktif et
-    }
+  // Tab değiştir
+  const toggleTab = () => {
+    const newTab = activeTab === CHATS_TABS.DEFAULT ? CHATS_TABS.ARCHIVE : CHATS_TABS.DEFAULT;
+    dispatch(setActiveTab(newTab));
   };
+
+  const showArchivedToggle = archivedContacts.length > 0;
 
   return (
     <>
       <div className="position-relative">
-        <div className="px-3 pt-4">
-          <div className="d-flex align-items-start">
-            <div className="flex-grow-1">
-              <h4 className="mb-4">
-                {
-                  active === CHATS_TABS.DEFAULT ? "Sohbetler" : "Arşivlenmiş Sohbetler"
-                }
-              </h4>
-            </div>
-            <div className="flex-shrink-0" >
+        <div className="px-3 pt-4 d-flex justify-content-between align-items-start">
+          <h4 className="mb-4">
+            {activeTab === CHATS_TABS.DEFAULT ? "Sohbetler" : "Arşivlenmiş Sohbetler"}
+          </h4>
 
-              <Dropdown isOpen={dropdownOpen} toggle={toggle} >
-                <DropdownToggle
-                  color="none"
-                  className="btn nav-btn text-black "
-                  type="button"
-                >
-                  <i className="bx bx-dots-vertical-rounded"></i>
-                </DropdownToggle>
-                <DropdownMenu container="body">
-                  <DropdownItem
-                    className="d-flex justify-content-between align-items-center user-profile-show"
-                    onClick={toggleGroupModal}
-                  >
-                    Grup Oluştur <i className="bx bx-group text-muted"></i>
-                  </DropdownItem>
-
-                </DropdownMenu>
-              </Dropdown>
-            </div>
-          </div>
-          <Form>
-            <div className="input-group mb-3">
-              <Input
-                onKeyUp={searchUsers}
-                id="serachChatUser"
-                type="text"
-                className="form-control bg-light border-0 pe-0"
-                placeholder="Arama yap..."
-              />
-              <Button color="light" type="button" id="searchbtn-addon">
-                <i className="bx bx-search align-middle"></i>
-              </Button>
-            </div>
-          </Form>
+          <Dropdown isOpen={dropdownOpen} toggle={() => setDropdownOpen(!dropdownOpen)}>
+            <DropdownToggle color="none" className="btn nav-btn text-black pe-0">
+              <i className="bx bx-dots-vertical-rounded" />
+            </DropdownToggle>
+             <DropdownMenu container="body">
+              <DropdownItem onClick={() => setIsGroupModalOpen(true)}>
+                Grup Oluştur <i className="bx bx-group text-muted ms-2" />
+              </DropdownItem>
+            </DropdownMenu>
+          </Dropdown>
         </div>
-        {
-          archivedContacts?.length !== 0 &&
-          (
-            <h5 className="text-center cursor-pointer "  >
-              <Link className="font-size-13 text-muted rounded d-flex mb-3 px-3" >
-                {active === CHATS_TABS.ARCHIVE ? (
-                  <span
-                    onClick={() => handleTabChange(CHATS_TABS.ARCHIVE)}
-                    className="bg-primary"
-                    style={{
-                      display: "flex",
-                      gap: "0.5rem",
-                      alignItems: "center",
-                      padding: "0.4rem 0.75rem",
-                      borderRadius: "50px",
-                      boxShadow: "rgba(100, 100, 111, 0.2) 0px 7px 29px 0px",
-                      transition: "all 0.3s ease",
-                      color: "white",
-                    }}
-                  >
-                    <span style={{ fontSize: "14px", color: "white" }}>Sohbetler</span>
-                    <i
-                      className="bx bx-archive-out"
-                      style={{ fontSize: "18px", color: "white" }}
-                    />
-                  </span>
-                ) : (
-                  <span
-                    onClick={() => handleTabChange(CHATS_TABS.ARCHIVE)}
-                    className="bg-primary"
-                    style={{
-                      display: "flex",
-                      gap: "0.5rem",
-                      alignItems: "center",
-                      padding: "0.4rem 0.75rem",
-                      borderRadius: "50px",
-                      boxShadow: "rgba(100, 100, 111, 0.2) 0px 7px 29px 0px",
-                      transition: "all 0.3s ease",
-                      color: "white",
-                    }}
-                  >
-                    <span style={{ fontSize: "14px", color: "white" }}>
-                      Arşivlenmiş
-                    </span>
-                    <i
-                      className="bx bx-archive-in"
-                      style={{ fontSize: "18px", color: "white" }}
-                    />
-                  </span>
-                )}
-              </Link>
-            </h5>
+
+        <Form className="px-3 mb-3 ">
+          <div className="input-group">
+            <Input
+              type="text"
+              className="form-control bg-light border-0 pe-0"
+              placeholder="Arama yap..."
+              onChange={handleSearch}
+            />
+            <Button color="light" type="button">
+              <i className="bx bx-search align-middle" />
+            </Button>
+          </div>
+        </Form>
+
+        {showArchivedToggle && (
+          <div className="px-3 mb-3">
+            <Link onClick={toggleTab} className="text-decoration-none shadow-lg">
+              <span className="bg-primary text-white d-inline-flex align-items-center px-3 py-2 rounded-pill shadow-sm">
+                <span className="me-2" style={{ fontSize: 12 }}>
+                  {activeTab === CHATS_TABS.ARCHIVE ? "Sohbetler" : "Arşivlenmiş"}
+                </span>
+                <i
+                  style={{ fontSize: 14 }}
+                  className={`bx ${activeTab === CHATS_TABS.ARCHIVE ? "bx-archive-out" : "bx-archive-in"}`}
+                />
+              </span>
+            </Link>
+          </div>
+        )}
+
+        <AppSimpleBar className="chat-room-list overflow-x-hidden">
+          {activeTab === CHATS_TABS.DEFAULT ? (
+            <Favourites users={contacts} setSelectedUser={setSelectedUser} userId={userId} activeTab={activeTab}/>
+          ) : archivedContacts.length === 0 ? (
+            <p className="text-center text-muted">
+              Arşivlenmiş sohbet bulunmamaktadır. <br />
+              <Link onClick={toggleTab} className="text-primary">Sohbetlere dön</Link>
+            </p>
+          ) : (
+            <Favourites users={archivedContacts} setSelectedUser={setSelectedUser} userId={userId} activeTab={activeTab} />
           )}
-
-
-
-        <AppSimpleBar className="chat-room-list">
-          <AnimatePresence mode="wait">
-            {active === CHATS_TABS.DEFAULT && (
-              <motion.div
-                key="default-tab"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.3 }}
-              >
-                <Favourites users={contacts} setSelectedUser={setSelectedUser} userId={userId} activeTab={active}/>
-              </motion.div>
-            )}
-
-            {active === CHATS_TABS.ARCHIVE && (
-              <motion.div
-                key="archive-tab"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.3 }}
-              >
-                {archivedContacts.length === 0 ? (
-                  <p className="text-center text-muted">
-                    Arşivlenmiş sohbet bulunmamaktadır.
-                    <br />
-                    <Link onClick={() => handleTabChange(CHATS_TABS.ARCHIVE)} className="text-primary">
-                      Sohbetlere dön
-                    </Link>
-                  </p>
-                ) : (
-                  <Favourites users={archivedContacts} setSelectedUser={setSelectedUser} userId={userId}  activeTab={active}/>
-                )}
-              </motion.div>
-            )}
-          </AnimatePresence>
         </AppSimpleBar>
+      </div>
 
-      </div >
-      <GroupCreateModal isOpen={isGroupModalOpen} toggle={toggleGroupModal} />
+      <GroupCreateModal isOpen={isGroupModalOpen} toggle={() => setIsGroupModalOpen(false)} />
     </>
   );
 };

@@ -6,6 +6,8 @@ import tabReducer from "./slices/tabSlice";
 import layoutReducer from "./slices/layoutSlice"; // Yeni slice'ı ekliyoruz
 import friendRequestsReducer from "./slices/friendRequestsSlice";
 import chatTabsReducer from "./slices/chatTabsSlice"; // Yeni slice'ı ekliyoruz
+import notificationsReducer from "./slices/notificationsSlice"; // Yeni slice'ı ekliyoruz
+
 const store = configureStore({
   reducer: {
     selectedUser: selectedUserReducer,  // selectedUser reducer'ını ekliyoruz
@@ -14,7 +16,8 @@ const store = configureStore({
     tab: tabReducer,
     layout: layoutReducer,
     friendRequests: friendRequestsReducer,
-     chatTabs: chatTabsReducer, // <-- burası önemli
+    chatTabs: chatTabsReducer, // <-- burası önemli
+    notifications: notificationsReducer, // notifications slice'ını store'a ekliyoruz
   },
 });
 

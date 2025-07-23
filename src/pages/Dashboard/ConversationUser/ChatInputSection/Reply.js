@@ -1,37 +1,36 @@
 import { useEffect, useState } from "react";
-
 import { Collapse, Card, CardBody } from "reactstrap";
 
-
-
 const Reply = ({ reply, onSetReplyData, chatUserDetails }) => {
-  /*
-  collapse handeling
-  */
   const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    setIsOpen(!!reply);
+  }, [reply]);
+
   const onClose = () => {
     setIsOpen(false);
     onSetReplyData(null);
   };
-  useEffect(() => {
-    setIsOpen(reply ? true : false);
-  }, [reply]);
 
-
-  const userProfile ={
+  // Örnek kullanıcı, bunu gerçek auth kullanıcısı ile değiştir
+  const userProfile = {
     uid: "123",
     firstName: "John",
     lastName: "Doe",
     image: "https://via.placeholder.com/150",
     status: "online",
     lastSeen: "2 hours ago",
-  }
+  };
 
-  const replyUserName = chatUserDetails.firstName
+  const replyUserName = chatUserDetails?.firstName
     ? `${chatUserDetails.firstName} ${chatUserDetails.lastName}`
-    :reply && reply.meta.userData?.firstName;
+    : reply?.sender
+    ? `${reply.sender.name} ${reply.sender.surname}`
+    : "Unknown";
+
   const isReplyFromMe =
-    reply && reply.meta.sender + "" === userProfile.uid + "";
+    reply?.sender?.userId + "" === userProfile.uid + "";
 
   return (
     <Collapse isOpen={isOpen} className="chat-input-collapse replyCollapse">
@@ -42,20 +41,13 @@ const Reply = ({ reply, onSetReplyData, chatUserDetails }) => {
               <h5 className="conversation-name">
                 {isReplyFromMe ? "You" : replyUserName}
               </h5>
-              {reply?.text && <p className="mb-0">{reply?.text}</p>}
 
-              {(reply?.image || reply?.attachments) && (
-                <p className="mb-0">
-                  {reply?.attachments &&
-                    !reply?.newimage &&
-                    `${reply?.attachments.length} Files`}
-                  {reply?.newimage &&
-                    !reply?.attachments &&
-                    `${reply?.newimage.length} Images`}
-                  {reply?.newimage &&
-                    reply?.attachments &&
-                    `${reply?.attachments.length} Files & ${reply?.newimage.length} Images`}
-                </p>
+              {reply?.fileType === "text" && reply?.content && (
+                <p className="mb-0">{reply.content}</p>
+              )}
+
+              {reply?.fileType !== "text" && (
+                <p className="mb-0">[{reply.fileType} dosya]</p>
               )}
             </div>
             <div className="flex-shrink-0">

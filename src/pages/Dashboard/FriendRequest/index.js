@@ -17,6 +17,7 @@ import {
 } from "../../../redux/slices/friendRequestsSlice";
 import { getShortName } from "../../../utils/userHelpers";
 import { capitalize } from "../../../utils/stringUtils";
+import DelayedImage from "../../../components/DelayedImage"
 
 import "./index.css";
 
@@ -128,12 +129,18 @@ function FriendRequestList() {
                     <div className="friends-list-img-container me-2">
                       <div className="avatar-sm">
                         {user.profileImage && !hasImageError ? (
-                          <img
+                          <DelayedImage
                             src={`${API_URL}/${user.profileImage}`}
                             alt={fullName}
-                            className="img-fluid rounded-circle"
+                            className="rounded-circle avatar-sm"
                             onError={() => handleImageError(user.userId)}
+                            fallback={
+                              <div className="avatar-sm bg-light rounded-circle d-flex align-items-center justify-content-center">
+                                <i className="bx bx-user text-muted"></i>
+                              </div>
+                            }
                           />
+
                         ) : (
                           <span
                             className={classnames(

@@ -39,3 +39,14 @@
     max-height: 250px;
   }
 }
+/* 
+.group-deleted-warning {
+  font-size: 14px;
+  background-color: #fff3cd;
+  color: #856404;
+  border: 1px solid #ffeeba;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+} */

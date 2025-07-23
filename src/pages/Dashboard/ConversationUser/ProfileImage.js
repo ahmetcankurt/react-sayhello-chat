@@ -4,42 +4,21 @@ import classnames from "classnames";
 import { STATUS_TYPES } from "../../../constants";
 import { API_URL } from "../../../config";
 import { getShortName } from "../../../utils/userHelpers";
+import { useSelector } from "react-redux";
+import DelayedImage from "../../../components/DelayedImage";
 
-import axios from "axios";
 export const ProfileImage = ({
   selectedUser,
   toggleContentVisibility,
-  handleProfileClick
+  handleProfileClick,
 }) => {
   const [imageError, setImageError] = useState(false);
-  const chatUserDetails = {};
-  const [userData, setUserData] = useState(null);
+  const userData = useSelector((state) => state.selectedUser.userInfo);
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      if (selectedUser?.id && selectedUser?.userType === "user") {
-        try {
-          const response = await axios.get(`${API_URL}/users/my-friends-profile/${selectedUser.id}`);
-          setUserData(response.data);
-        } catch (error) {
-          console.error("Error fetching user data:", error);
-        }
-      }
-      else {
-        try {
-          const response = await axios.get(`${API_URL}/groups/${selectedUser.id}`);
-          setUserData(response.data);
-        } catch (error) {
-          console.error("Error fetching user data:", error);
-        }
-      }
-    };
-
-    fetchUserData();
-  }, [selectedUser]);
 
   const shortName = getShortName(userData);
-  const isOnline = userData?.status && userData?.status === STATUS_TYPES.ACTIVE;
+  const isOnline =
+    userData?.status && userData?.status === STATUS_TYPES.ACTIVE;
   const handleImageError = () => {
     setImageError(true);
   };
@@ -67,31 +46,32 @@ export const ProfileImage = ({
               { online: isOnline }
             )}
           >
-            {userData?.profileImage && !imageError ? (
+            {(userData?.profileImage || userData?.groupImage) && !imageError ? (
               <>
-                <img
-                  src={`${API_URL}/${userData?.profileImage}`}
+
+                <DelayedImage
+                  src={
+                    selectedUser?.userType === "user"
+                      ? `${API_URL}/${userData?.profileImage}`
+                      : `${API_URL}/${userData?.groupImage}`
+                  }
+                  alt={`${userData?.name || ""} ${userData?.surname || ""}`}
                   className="rounded-circle avatar-sm"
-                  alt={`${userData?.name} ${userData?.surname}`}
                   onError={handleImageError}
+                  fallback={
+                    <div className="avatar-sm bg-light rounded-circle d-flex align-items-center justify-content-center">
+                      <i className="bx bx-user text-muted"></i>
+                    </div>
+                  }
                 />
                 <span
-                  className={classnames(
-                    "user-status",
-                    {
-                      "bg-success":
-                        chatUserDetails?.status === STATUS_TYPES.ACTIVE,
-                    },
-                    {
-                      "bg-warning":
-                        chatUserDetails?.status === STATUS_TYPES.AWAY,
-                    },
-                    {
-                      "bg-danger":
-                        chatUserDetails?.status === STATUS_TYPES.DO_NOT_DISTURB,
-                    }
-                  )}
-                ></span>
+                  className={classnames("user-status", {
+                    "bg-success": userData?.status === STATUS_TYPES.ACTIVE,
+                    "bg-warning": userData?.status === STATUS_TYPES.AWAY,
+                    "bg-danger":
+                      userData?.status === STATUS_TYPES.DO_NOT_DISTURB,
+                  })}
+                />
               </>
             ) : (
               <div className="avatar-sm align-self-center">
@@ -100,25 +80,20 @@ export const ProfileImage = ({
                     "avatar-title",
                     "rounded-circle",
                     "text-uppercase",
-                    "text-white",
+                    "text-white"
                   )}
                   style={{ backgroundColor: userData?.color }}
                 >
                   <span className="username user-select-none">{shortName}</span>
-                  {isOnline && (
-                    <span className={classnames(
-                      "user-status",
-                      {
-                        "bg-success": userData?.status === STATUS_TYPES.ACTIVE,
-                      },
-                      {
-                        "bg-warning": userData?.status === STATUS_TYPES.AWAY,
-                      },
-                      {
-                        "bg-danger": userData?.status === STATUS_TYPES.DO_NOT_DISTURB,
-                      }
-                    )}></span>
-                  )}
+                  <span
+                    className={classnames("user-status", {
+                      "bg-success":
+                        userData?.status === STATUS_TYPES.ACTIVE,
+                      "bg-warning": userData?.status === STATUS_TYPES.AWAY,
+                      "bg-danger":
+                        userData?.status === STATUS_TYPES.DO_NOT_DISTURB,
+                    })}
+                  />
                 </span>
               </div>
             )}

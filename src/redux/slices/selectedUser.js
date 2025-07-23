@@ -1,25 +1,29 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import {API_URL} from "../../config";
+import { API_URL } from "../../config";
 
-// Asenkron işlem: Seçili kullanıcının bilgilerini çek
+// Asenkron işlem: Kullanıcı ya da grup verisini çek
 export const fetchUserData = createAsyncThunk(
   "selectedUser/fetchUserData",
-  async (userId, { rejectWithValue }) => {
-    if (!userId) {
-      return rejectWithValue("Kullanıcı ID'si boş, istek yapılmadı.");
-    }
-
-
+  async ({ id, userType }, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`${API_URL}/users/my-friends-profile/${userId.id}`);
+      const token = localStorage.getItem("token");
+
+      const response =
+        userType === "user"
+          ? await axios.get(`${API_URL}/users/my-friends-profile/${id}`)
+          : await axios.get(`${API_URL}/groups/${id}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || "Bilinmeyen bir hata oluştu.");
     }
   }
 );
-
 
 const initialState = {
   isselectedUserOpen: false,
@@ -47,11 +51,38 @@ const selectedUserSlice = createSlice({
     closeselectedUser: (state) => {
       state.isselectedUserOpen = false;
     },
+    removeGroupMember: (state, action) => {
+      const removedUserId = action.payload;
+
+      if (state.userInfo?.members) {
+        state.userInfo.members = state.userInfo.members.filter(
+          member => member.userId !== removedUserId
+        );
+      }
+    },
+    addGroupMembers: (state, action) => {
+      const newMembers = action.payload;
+
+      // Eğer members yoksa, boş bir dizi olarak başlat
+      if (!state.userInfo) return;
+
+      if (!Array.isArray(state.userInfo.members)) {
+        state.userInfo.members = [];
+      }
+
+      const existingUserIds = state.userInfo.members.map(m => m.member?.userId || m.userId);
+      const uniqueNewMembers = newMembers.filter(
+        newMember => !existingUserIds.includes(newMember.member?.userId || newMember.userId)
+      );
+      state.userInfo.members = [...state.userInfo.members, ...uniqueNewMembers];
+    }
+
   },
   extraReducers: (builder) => {
     builder
       .addCase(fetchUserData.pending, (state) => {
         state.error = null;
+        state.userInfo = null;
       })
       .addCase(fetchUserData.fulfilled, (state, action) => {
         state.userInfo = action.payload;
@@ -60,8 +91,16 @@ const selectedUserSlice = createSlice({
         state.error = action.payload;
       });
   },
-  
 });
 
-export const { setUserId, resetUserId, toggleselectedUser, openselectedUser, closeselectedUser } = selectedUserSlice.actions;
+export const {
+  setUserId,
+  resetUserId,
+  toggleselectedUser,
+  openselectedUser,
+  closeselectedUser,
+  removeGroupMember,
+  addGroupMembers,
+} = selectedUserSlice.actions;
+
 export default selectedUserSlice.reducer;

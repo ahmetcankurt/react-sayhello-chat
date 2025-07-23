@@ -1,17 +1,19 @@
-import { memo, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import classnames from "classnames";
 import { STATUS_TYPES } from "../../../constants";
 import { getShortenedMessage } from "../../../utils/getShortenedMessage";
 import { formatMessageDate } from "../../../utils/formatMessageDate";
 import { API_URL } from "../../../config";
 import { getShortName } from '../../../utils/userHelpers';
+import DelayedImage from "../../../components/DelayedImage";
 import { Dropdown, DropdownItem, DropdownMenu, DropdownToggle } from "reactstrap";
 import axios from "axios"; // axios ekledim
-import { fetchArchivedMessages, fetchMessages } from "../../../redux/slices/messagesSlice";
+import { fetchArchivedMessages, fetchMessages, removeFromContacts } from "../../../redux/slices/messagesSlice";
 import { useDispatch } from "react-redux";
 import Swal from "sweetalert2";
+import { CHATS_TABS } from "../../../constants";
 
-const ChatUser = ({ user, setSelectedUser, refreshChats ,activeTab }) => {
+const ChatUser = ({ user, setSelectedUser, activeTab }) => {
   const fullName = [user?.name, user?.surname].filter(Boolean).join(" ");
   const [imageError, setImageError] = useState(false);
   const shortName = getShortName(user);
@@ -35,6 +37,45 @@ const ChatUser = ({ user, setSelectedUser, refreshChats ,activeTab }) => {
 
   // Arşivleme işlemi
   const dispatch = useDispatch(); // Redux kullanıyorsanız, useDispatch'i ekley
+
+
+  const handleClearChat = async (e) => {
+    e.stopPropagation();
+
+    try {
+      const token = localStorage.getItem("token");
+      await axios.patch(`${API_URL}/messages/hideAll`, {
+        type: user.type,           // "user" ya da "group"
+        targetId: user.contactId,  // kullanıcı veya grup ID
+      }, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      Swal.fire({
+        toast: true,
+        position: "top-end",
+        icon: "success",
+        title: "Sohbet başarıyla temizlendi",
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+      });
+
+      // Redux veya manuel refresh gerekiyorsa burada yapılabilir
+      dispatch(removeFromContacts({ contactId: user.contactId, type: user.type }));
+
+    } catch (error) {
+      console.error("Sohbet temizleme hatası:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Hata",
+        text: "Sohbet temizlenirken bir hata oluştu",
+      });
+    }
+  };
+
 
 
   const handleArchive = async (e) => {
@@ -65,8 +106,7 @@ const ChatUser = ({ user, setSelectedUser, refreshChats ,activeTab }) => {
         },
       });
 
-      // Arşiv listesini yenile
-      dispatch(fetchArchivedMessages());
+      dispatch(fetchMessages());
 
     } catch (error) {
       console.error("Arşivleme hatası:", error);
@@ -104,9 +144,7 @@ const ChatUser = ({ user, setSelectedUser, refreshChats ,activeTab }) => {
         },
       });
 
-      // Normal listeyi yeniden getir
       dispatch(fetchMessages());
-      dispatch(fetchArchivedMessages());
     } catch (error) {
       console.error("Arşivden çıkarma hatası:", error);
       Swal.fire({
@@ -118,6 +156,81 @@ const ChatUser = ({ user, setSelectedUser, refreshChats ,activeTab }) => {
   };
 
 
+  const handleDeleteGroup = async (e) => {
+    e.stopPropagation();
+
+    try {
+      const token = localStorage.getItem("token");
+
+      const response = await axios.delete(`${API_URL}/groups/${user.contactId}`, {
+        data: { userId: currentUserId },
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      Swal.fire({
+        toast: true,
+        position: "top-end",
+        icon: "success",
+        title: "Grup başarıyla silindi",
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+      });
+
+      dispatch(removeFromContacts({ contactId: user.contactId, type: "group" }));
+
+    } catch (error) {
+      console.error("Grup silme hatası:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Hata",
+        text: "Grup silinirken hata oluştu",
+      });
+    }
+  };
+
+  const handleLeaveGroup = async (e) => {
+    e.stopPropagation();
+
+    try {
+      const token = localStorage.getItem("token");
+
+      const response = await axios.delete(`${API_URL}/groups/${user.contactId}/member/${currentUserId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      Swal.fire({
+        toast: true,
+        position: "top-end",
+        icon: "success",
+        title: "Gruptan başarıyla çıktınız",
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+      });
+
+      dispatch(removeFromContacts({ contactId: user.contactId, type: "group" }));
+
+    } catch (error) {
+      console.error("Gruptan çıkma hatası:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Hata",
+        text: "Gruptan çıkarken hata oluştu",
+      });
+    }
+  };
+
+
+  const members = user?.members || [];
+  const currentUserMember = members.find(m => m.userId === currentUserId);
+  const isCurrentUserAdmin = currentUserMember?.isAdmin === true;
+  const isCurrentUserCreator = currentUserMember?.isCreator === true;
+
+
+  const isGroupDeleted = user?.type === 'group' && user?.isActive === false;
+  // console.log(isGroupDeleted)
+
 
   return (
     <li className={classnames("position-relative", { active: isSelectedChat })}>
@@ -126,13 +239,26 @@ const ChatUser = ({ user, setSelectedUser, refreshChats ,activeTab }) => {
         <div className={classnames("chat-user-img", "align-self-center", "me-2", "ms-0", { online: isOnline })}>
           {user.profileImage && !imageError ? (
             <>
-              <img
-                src={`${API_URL}/${user.profileImage}`}
-                className="rounded-circle avatar-sm"
+              <DelayedImage
+                src={`${API_URL}/${user?.profileImage}`}
                 alt={fullName}
+                className="rounded-circle avatar-sm"
                 onError={handleImageError}
+                fallback={
+                  <div className="avatar-sm bg-light rounded-circle d-flex align-items-center justify-content-center">
+                    <i className="bx bx-user text-muted"></i>
+                  </div>
+                }
               />
-              {isOnline && <span className="user-status"></span>}
+              <span
+                className={classnames("user-status", {
+                  "bg-success":
+                    user?.status === STATUS_TYPES.ACTIVE,
+                  "bg-warning": user?.status === STATUS_TYPES.AWAY,
+                  "bg-danger":
+                    user?.status === STATUS_TYPES.DO_NOT_DISTURB,
+                })}
+              />
             </>
           ) : (
             <div className="avatar-sm">
@@ -146,7 +272,15 @@ const ChatUser = ({ user, setSelectedUser, refreshChats ,activeTab }) => {
                 style={{ backgroundColor: user?.color }}
               >
                 <span className="username user-select-none">{shortName}</span>
-                {isOnline && <span className="user-status"></span>}
+                <span
+                  className={classnames("user-status", {
+                    "bg-success":
+                      user?.status === STATUS_TYPES.ACTIVE,
+                    "bg-warning": user?.status === STATUS_TYPES.AWAY,
+                    "bg-danger":
+                      user?.status === STATUS_TYPES.DO_NOT_DISTURB,
+                  })}
+                />
               </span>
             </div>
           )}
@@ -158,6 +292,11 @@ const ChatUser = ({ user, setSelectedUser, refreshChats ,activeTab }) => {
             onClick={() => setSelectedUser({ id: user.contactId, userType: user.type })}
           >
             {fullName}
+            {isGroupDeleted && (
+              <span className="badge bg-danger ms-2" style={{ fontSize: "0.6rem", verticalAlign: "middle" }}>
+                Grup Silindi
+              </span>
+            )}
             <div className="text-muted font-size-12">
               {user.lastMessage ? (
                 <>
@@ -217,40 +356,15 @@ const ChatUser = ({ user, setSelectedUser, refreshChats ,activeTab }) => {
               <i className="bx bx-chevron-down align-middle font-size-18 text-primary "></i>
             </DropdownToggle>
             <DropdownMenu container="body">
-              <DropdownItem
-                className="d-flex align-items-center justify-content-between"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  // handleBlockUser(user.contactId);
-                }}
-              >
+              {user.type === "user" && (
+              <DropdownItem className="d-flex align-items-center justify-content-between"  >
                 Engelle
                 <i className="bx bx-block ms-2 text-muted"></i>
               </DropdownItem>
+              )
+            }
 
-              <DropdownItem
-                className="d-flex align-items-center justify-content-between"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  // handleDeleteFriend(user.contactId);
-                }}
-              >
-                Arkadaşlıktan Çıkar
-                <i className="bx bx-user-x ms-2 text-muted"></i>
-              </DropdownItem>
-
-              <DropdownItem
-                className="d-flex align-items-center justify-content-between"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  // handleClearChat(user.contactId);
-                }}
-              >
-                Sohbeti Temizle
-                <i className="bx bx-eraser ms-2 text-muted"></i>
-              </DropdownItem>
-
-              {activeTab === "acrhive" ? (
+              {activeTab === CHATS_TABS.ARCHIVE ? (
                 <DropdownItem
                   className="d-flex align-items-center justify-content-between"
                   onClick={handleUnarchive}
@@ -267,16 +381,41 @@ const ChatUser = ({ user, setSelectedUser, refreshChats ,activeTab }) => {
                   <i className="bx bx-archive-in align-middle text-muted"></i>
                 </DropdownItem>
               )}
+              {user.type === "group" && (
+                isCurrentUserCreator ? (
+                  <DropdownItem
+                    className="d-flex align-items-center justify-content-between text-danger"
+                    onClick={handleDeleteGroup}
+                  >
+                    Grubu Sil (Kurucu)
+                    <i className="bx bx-trash ms-2 text-danger"></i>
+                  </DropdownItem>
+                ) : isCurrentUserAdmin ? (
+                  <DropdownItem
+                    className="d-flex align-items-center justify-content-between"
+                    onClick={handleLeaveGroup}
+                  >
+                    Gruptan Çık (Admin)
+                    <i className="bx bx-log-out ms-2 text-muted"></i>
+                  </DropdownItem>
+                ) : (
+                  <DropdownItem
+                    className="d-flex align-items-center justify-content-between"
+                    onClick={handleLeaveGroup}
+                  >
+                    Gruptan Çık
+                    <i className="bx bx-log-out ms-2 text-muted"></i>
+                  </DropdownItem>
+                )
+              )}
+
+
 
               <DropdownItem
-                className="d-flex align-items-center justify-content-between text-danger"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  // handleDeleteLastMessage(user.contactId);
-                }}
-              >
-                Mesajı Sil
-                <i className="bx bx-message-square-x ms-2 text-danger"></i>
+                onClick={handleClearChat}
+                className="d-flex align-items-center justify-content-between text-danger">
+                Sohbeti Temizle
+                <i className="bx bx-eraser ms-2  text-danger"></i>
               </DropdownItem>
             </DropdownMenu>
           </Dropdown>

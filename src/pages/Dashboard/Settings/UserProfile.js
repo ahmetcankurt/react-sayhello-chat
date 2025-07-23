@@ -1,7 +1,8 @@
 import { memo, useRef, useState } from "react";
-import { Label} from "reactstrap"; 
+import { Label } from "reactstrap";
 import { useSelector } from "react-redux";
 import { API_URL } from "../../../config";
+import DelayedImage from "../../../components/DelayedImage";
 
 const UserProfile = ({ handleFileChange, tempProfileImage }) => {
   const profileImageInputRef = useRef(null);
@@ -18,11 +19,16 @@ const UserProfile = ({ handleFileChange, tempProfileImage }) => {
     <div className="text-center p-3 p-lg-4 border-bottom pt-2 pt-lg-2 mt-n5 position-relative">
       <div className="mb-3 profile-user">
         {(tempProfileImage || (user?.profileImage && !imageError)) ? (
-          <img
+          <DelayedImage
             src={tempProfileImage || `${API_URL}/${user.profileImage}`}
             className="rounded-circle avatar-lg img-thumbnail user-profile-image"
             alt="user-profile"
             onError={handleImageError}
+            fallback={
+              <div className="avatar-sm bg-light rounded-circle d-flex align-items-center justify-content-center">
+                <i className="bx bx-user text-muted"></i>
+              </div>
+            }
           />
         ) : (
           <div

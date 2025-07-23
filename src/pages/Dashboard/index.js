@@ -11,21 +11,42 @@ import { fetchUserData } from "../../redux/slices/selectedUser";
 import Notifications from "../../components/Notification";
 import { motion } from "framer-motion";
 import { themeImages } from "../../constants/themeImages"
+import { getUsers } from "../../redux/slices/userInformation";
+import { fetchFriends } from "../../redux/slices/friendRequestsSlice";
 
 const Index = () => {
+  const userId = localStorage.getItem("userId")
   const [selectedTab, setSelectedTab] = useState(TABS.USERS);
   const [state, setState] = useState({
     isProfileVisible: false,
     selectedUser: null,
   });
   const { isProfileVisible, selectedUser } = state;
+  const { status } = useSelector((state) => state.friendRequests);
+
 
   const dispatch = useDispatch();
   const activeTab = useSelector((state) => state.tab.selectedTab); // Aktif tab bilgisini al
 
   useEffect(() => {
-    dispatch(fetchUserData(selectedUser));
+    if (selectedUser?.id && selectedUser?.userType) {
+      dispatch(fetchUserData({ id: selectedUser.id, userType: selectedUser.userType }));
+    }
   }, [selectedUser, dispatch]);
+
+
+  useEffect(() => {
+    dispatch(getUsers());
+  }, [dispatch]);
+
+  // Başlangıçta ve state değiştiğinde arkadaşları çek
+  useEffect(() => {
+    if (status === "idle") {
+      dispatch(fetchFriends(userId));
+    }
+  }, [dispatch, status, userId]);
+
+
 
   const toggleVisibility = (key) => {
     setState((prev) => ({ ...prev, [key]: !prev[key] }));
@@ -40,7 +61,7 @@ const Index = () => {
       userChat.classList.add(found.pattern);
     }
   }, []);
-
+  const [replyData, setReplyData] = useState(null);
   return (
     <>
       <Notifications selectedUser={selectedUser} />
@@ -73,6 +94,8 @@ const Index = () => {
               <ConversationUser
                 selectedUser={selectedUser}
                 isProfileVisible={isProfileVisible}
+                setReplyData={setReplyData}
+                replyData={replyData}
                 setSelectedUser={(user) =>
                   setState((prev) => ({ ...prev, selectedUser: user }))
                 }
@@ -90,7 +113,7 @@ const Index = () => {
             />
           </div>
         ) : (
-          <Welcome activeTab={activeTab} /> 
+          <Welcome activeTab={activeTab} />
         )}
       </div>
     </>

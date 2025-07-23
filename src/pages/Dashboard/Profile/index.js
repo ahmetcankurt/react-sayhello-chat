@@ -1,35 +1,19 @@
 // components
+import { memo } from "react";
 import AppSimpleBar from "../../../components/AppSimpleBar";
 import MyProfile from "./MyProfile";
 import UserDescription from "./UserDescription";
-import { useDispatch, useSelector } from "react-redux";
-import { memo, useEffect } from "react";
-import { getUsers } from "../../../redux/slices/userInformation";
+import { useSelector } from "react-redux";
 
 const Index = () => {
   const userInfo = useSelector((state) => state.userInformation.user);
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(getUsers());
-  }, [dispatch]);
-
-
 
   return (
     <div className="position-relative">
-      {/* {getProfileLoading && !isProfileFetched && <Loader />} */}
       <MyProfile userInfo={userInfo} />
 
       <AppSimpleBar className="p-3 profile-desc">
         <UserDescription userInfo={userInfo} />
-        {/* <hr className="my-4" /> */}
-
-        {/* <Media media={profileDetails.media} limit={2} /> */}
-
-        {/* <hr className="my-4" /> */}
-
-        {/* <AttachedFiles attachedFiles={profileDetails.attachedFiles} /> */}
       </AppSimpleBar>
     </div>
   );

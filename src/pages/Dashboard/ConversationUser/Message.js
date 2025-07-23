@@ -3,32 +3,26 @@ import classnames from "classnames";
 import Menu from "./Menu";
 import { API_URL } from "../../../config";
 import { getShortName } from "../../../utils/userHelpers";
-import { COLORS } from "../../../constants/bgShortColor";
 import renderMessageContent from "./renderMessageContent";
-
-const getColorIndex = (userId) => {
-  if (typeof userId === "string") {
-    return [...userId].reduce((acc, char) => acc + char.charCodeAt(0), 0) % COLORS.length;
-  }
-  return userId % COLORS.length;
-};
+import { useEffect } from "react";
+import { Fancybox } from "@fancyapps/ui";
+import DelayedImage from "../../../components/DelayedImage";
 
 const Message = ({
   message,
-  onSetReplyData,
   isFromMe,
   onOpenForward,
   handleUpdate,
   selectedUser,
   setSelectedUser,
+  repliedMessage,
+  isSelected, // New prop
+  setReplyData
 }) => {
-  const userId = Number(localStorage.getItem("userId"));
-  const colorIndex = getColorIndex(userId);
   const isRepliedMessage = Boolean(message?.replyOf);
 
-  const handleReply = () => onSetReplyData(message);
+  const handleReply = () => setReplyData(message);
   const handleForward = () => onOpenForward(message);
-
 
   const senderInfo = message.lastMessageSender && typeof message.lastMessageSender === "object"
     ? message.lastMessageSender
@@ -39,15 +33,32 @@ const Message = ({
   const name = senderInfo.name || "";
   const surname = senderInfo.surname || "";
 
+  useEffect(() => {
+    Fancybox.bind('[data-fancybox="gallery"]');
+  }, []);
+
+
+
   return (
-    <li className={classnames("chat-list", { right: isFromMe, reply: isRepliedMessage })}>
+    <li
+      className={classnames("chat-list", {
+        right: isFromMe,
+        reply: isRepliedMessage,
+        selected: isSelected, // Add selected class
+      })}
+    >
       <div className="conversation-list mb-1">
+        {isSelected && (
+          <div className="selection-checkbox">
+            <i className="bx bx-check-circle"></i>
+          </div>
+        )}
         <div>
-          <div className="ctext-wrap mb-2">
-            <div className={classnames("ctext-wrap-content d-flex", {
+          <div className="ctext-wrap mb-1">
+            <div className={classnames("ctext-wrap-content ", {
               "no-bg p-0": message?.fileType !== "text",
             })}>
-              {renderMessageContent({ message, isFromMe })}
+              {renderMessageContent({ message, isFromMe, repliedMessage })}
             </div>
 
             <Menu
@@ -55,6 +66,7 @@ const Message = ({
               onReply={handleReply}
               handleUpdate={handleUpdate}
               messageId={message.messageId}
+              Time={message.createdAt}
             />
           </div>
 
@@ -62,7 +74,7 @@ const Message = ({
             <div className="conversation-name">
               <div className="chat-avatar me-0 mb-1">
                 {profileImage ? (
-                  <img
+                  <DelayedImage
                     src={`${API_URL}/${profileImage}`}
                     alt="User"
                     className="rounded-circle"
@@ -72,14 +84,13 @@ const Message = ({
                     <span
                       className={classnames(
                         "avatar-title rounded-circle text-uppercase text-white",
-                        COLORS[colorIndex]
                       )}
+                      style={{ backgroundColor: senderInfo?.color }}
                     >
                       <span className="username user-select-none">{getShortName(senderInfo)}</span>
                     </span>
                   </div>
                 )}
-
               </div>
               <span
                 className="cursor-pointer ms-1"
@@ -88,7 +99,6 @@ const Message = ({
               >
                 {name} {surname}
               </span>
-
             </div>
           )}
         </div>

@@ -38,7 +38,6 @@
 .play-pause-btn:hover svg {
   transform: scale(1.1);
   fill: #0d3b66;
-
 }
 
 .progress-container {
@@ -94,4 +93,17 @@
   padding: 0;
   margin: 0;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.reply-box {
+  position: relative;
+  padding: 12px;
+  font-size: 12px;
+  /* border-radius: 0px 7px 5px 0px; */
+  border-radius: 7px;
+  user-select: none;
+  cursor: pointer;
+  background-color:#f8efed;
+  color: #393a71;
+  box-shadow: #393a71 3px 3px, rgba(71, 60, 67, 0.05) 0px 0px;
 }

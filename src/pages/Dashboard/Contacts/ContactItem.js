@@ -12,6 +12,7 @@ import { useDispatch } from "react-redux";
 import Swal from "sweetalert2"; // Swal'ı import ediyoruz
 import { getShortName } from "../../../utils/userHelpers";
 import axios from "axios"; // Axios import ettik
+import DelayedImage from "../../../components/DelayedImage";
 
 const ContactItem = ({ contact, setSelectedUser }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -83,11 +84,16 @@ const ContactItem = ({ contact, setSelectedUser }) => {
         <div className="flex-shrink-0 me-2">
           <div className="avatar-sm" onClick={() => setSelectedUser({ id: contact.userId, userType: contact.type })} >
             {contact.profileImage && !imageError ? (
-              <img
+              <DelayedImage
                 src={`${API_URL}/${contact.profileImage}`}
                 alt={fullName}
-                className="img-fluid rounded-circle"
                 onError={handleImageError}
+                className="img-fluid rounded-circle"
+                fallback={
+                  <div className="avatar-sm bg-light rounded-circle d-flex align-items-center justify-content-center">
+                    <i className="bx bx-user text-muted"></i>
+                  </div>
+                }
               />
             ) : (
               <span
@@ -124,11 +130,11 @@ const ContactItem = ({ contact, setSelectedUser }) => {
                 <i className="bx bx-block ms-2 text-muted"></i>
               </DropdownItem>
               <DropdownItem
-                className="d-flex align-items-center justify-content-between"
+                className="d-flex align-items-center justify-content-between  text-danger"
                 onClick={(event) => handleDeleteFriend(event, contact.userId)}
               >
                 Arkadaşlıktan Çıkar
-                <i className="bx bx-trash ms-2 text-muted"></i>
+                <i className="bx bx-user-x ms-2 text-danger"></i>
               </DropdownItem>
             </DropdownMenu>
           </Dropdown>

@@ -16,9 +16,18 @@ import AttachedFiles from "../../../components/AttachedFiles";
 import Status from "./Status";
 import Members from "./Members";
 import axios from "axios";
-import {API_URL} from "../../../config";
+import DelayedImage from "../../../components/DelayedImage";
+import GroupMembers from "./GroupMembers";
+import { API_URL } from "../../../config";
+import { useDispatch, useSelector } from "react-redux";
+import AddMemberModal from "./AddMemberModal";
+import EditGroupModal from "./EditGroupModal"
+import { fetchUserData } from "../../../redux/slices/selectedUser";
 
-const Index = ({ isChannel, isProfileVisible, handleProfileClick, selectedUser }) => {
+const Index = ({ isProfileVisible, handleProfileClick, selectedUser }) => {
+  const userInfo = useSelector(state => state.selectedUser.userInfo);
+  const [showEditGroupModal, setShowEditGroupModal] = useState(false);
+
 
   const onCloseUserDetails = () => {
   };
@@ -42,33 +51,22 @@ const Index = ({ isChannel, isProfileVisible, handleProfileClick, selectedUser }
     setIsOpenAudioModal(false);
   };
 
-  const [userInfo, setUserInfo] = useState(null);
 
+  const [imageErrorMap, setImageErrorMap] = useState({});
+  const handleImageError = (userId) => {
+    setImageErrorMap(prev => ({ ...prev, [userId]: true }));
+  };
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      if (selectedUser?.id && selectedUser?.userType === "user") {
-        try {
-          const response = await axios.get(`${API_URL}/users/my-friends-profile/${selectedUser.id}`);
-          setUserInfo(response.data);
-        } catch (error) {
-          console.error("Error fetching user data:", error);
-        }
-      }
-      if (selectedUser?.id && selectedUser?.userType === "group") {
-        try {
-          const response = await axios.get(`${API_URL}/groups/${selectedUser.id}`);
-          setUserInfo(response.data);
-        } catch (error) {
-          console.error("Error fetching user data:", error);
-        }
-      }
-    };
-  
-    fetchUserData();
-  }, [selectedUser]);
+  const [showAddMemberModal, setShowAddMemberModal] = useState(false);
 
+  // const currentUser = userInfo?.members?.find(m => m.role === "you");
+  // const isCurrentUserAdmin = currentUser?.isAdmin === true;
 
+  const members = userInfo?.members || [];
+  const currentUser = members.find(m => m.role === "you");
+  const isCurrentUserAdmin = currentUser?.isAdmin === true;
+
+  const dispatch = useDispatch()
 
   return (
     <>
@@ -84,9 +82,59 @@ const Index = ({ isChannel, isProfileVisible, handleProfileClick, selectedUser }
             handleProfileClick={handleProfileClick}
             onCloseUserDetails={onCloseUserDetails}
             userInfo={userInfo}
+            selectedUser={selectedUser}
             onOpenVideo={onOpenVideo}
             onOpenAudio={onOpenAudio}
           />
+
+          {selectedUser?.userType === "group" && isCurrentUserAdmin && (
+            <div className="d-flex gap-2 p-3 pt-3 pb-0">
+              <button
+                className="btn btn-sm btn-primary cursor-pointer shadow-lg"
+                onClick={() => setShowAddMemberModal(true)}
+              >
+                <i className="bx bx-user-plus me-1 "></i>
+                Üye Ekle
+              </button>
+              <button
+                className="btn btn-sm btn-secondary cursor-pointer shadow-sm"
+                onClick={() => setShowEditGroupModal(true)}
+              >
+                <i className="bx bx-edit-alt me-1"></i>
+                Düzenle
+              </button>
+            </div>
+          )}
+
+
+          {selectedUser?.userType === "group" && (
+            <>
+              <GroupMembers
+                userInfo={userInfo}
+                handleImageError={handleImageError}
+                API_URL={API_URL}
+                imageErrorMap={imageErrorMap}
+              />
+
+              <AddMemberModal
+                isOpen={showAddMemberModal}
+                toggle={() => setShowAddMemberModal(false)}
+                groupId={userInfo?.groupId}
+                userInfo={userInfo}
+              />
+            </>
+          )}
+
+          {showEditGroupModal && (
+            <EditGroupModal
+              isOpen={showEditGroupModal}
+              toggle={() => setShowEditGroupModal(false)}
+              groupData={userInfo} // <-- Doğru isimlendirme
+              onUpdate={() => dispatch(fetchUserData({ id: userInfo.groupId, userType: "group" }))}
+
+            />
+          )}
+
           {/* <!-- End profile user --> */}
 
           {/* <AppSimpleBar className="p-4 user-profile-desc">

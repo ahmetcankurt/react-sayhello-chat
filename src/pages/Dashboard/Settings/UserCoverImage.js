@@ -2,6 +2,7 @@ import { memo, useState } from "react";
 import { useSelector } from "react-redux";
 import { Label } from "reactstrap";
 import { API_URL } from "../../../config";
+import DelayedImage from "../../../components/DelayedImage"
 
 const UserCoverImage = ({ handleFileChange, tempBackgroundImage }) => {
   const user = useSelector((state) => state.userInformation.user);
@@ -14,12 +15,17 @@ const UserCoverImage = ({ handleFileChange, tempBackgroundImage }) => {
   return (
     <div className="user-profile-img">
       {(tempBackgroundImage || (user?.backgroundImage && !imageError)) ? (
-        <img
+        <DelayedImage
           src={tempBackgroundImage || `${API_URL}/${user.backgroundImage}`}
           className="profile-img profile-foreground-img"
-          style={{ height: "160px" }}
           alt="Profile Background"
           onError={handleImageError}
+          style={{ height: "160px" }}
+          fallback={
+            <div className="avatar-sm bg-light rounded-circle d-flex align-items-center justify-content-center">
+              <i className="bx bx-user text-muted"></i>
+            </div>
+          }
         />
       ) : (
         <div
@@ -29,7 +35,7 @@ const UserCoverImage = ({ handleFileChange, tempBackgroundImage }) => {
           <i className="fas fa-image fa-3x text-muted"></i>
         </div>
       )}
-      
+
       <div className="overlay-content">
         <div>
           <div className="user-chat-nav p-3">

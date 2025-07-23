@@ -25,13 +25,7 @@ const FriendsList = ({ setSelectedUser }) => {
   const [search, setSearch] = useState("");
   const [isOpen, setIsOpen] = useState(false);
 
-  // Başlangıçta ve state değiştiğinde arkadaşları çek
-  useEffect(() => {
-    if (status === "idle") {
-      dispatch(fetchFriends(userId));
-    }
-  }, [dispatch, status, userId]);
-
+  
   // Arkadaş listesi veya arama değiştiğinde filtrele ve grupla
   useEffect(() => {
     if (friends && friends.length > 0) {

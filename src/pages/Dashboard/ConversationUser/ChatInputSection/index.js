@@ -8,8 +8,11 @@ import { API_URL } from "../../../../config";
 import MoreMenu from "./MoreMenuDropdown";
 import "./index.css";
 import AudioMessage from "../AudioMessage";
+import Reply from "./Reply";
+import { useSelector } from "react-redux";
 
-const Index = ({ selectedUser }) => {
+const Index = ({ replyData, selectedUser, setReplyData }) => {
+  const userInfo = useSelector(state => state.selectedUser.userInfo);
   const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [isSending, setIsSending] = useState(false);
@@ -17,7 +20,6 @@ const Index = ({ selectedUser }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [file, setFile] = useState(null);
   const [fileType, setFileType] = useState(null);
-
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
     if (selectedFile) {
@@ -49,6 +51,13 @@ const Index = ({ selectedUser }) => {
         formData.append("groupId", Number(selectedUser.id));
       }
 
+      // replyToId her durumda eklenmeli
+      if (replyData?.messageId) {
+        formData.append("replyToId", replyData.messageId);
+      }
+
+
+
       formData.append("content", message);
       formData.append("fileType", file ? fileType : "text");
       if (file) {
@@ -65,6 +74,7 @@ const Index = ({ selectedUser }) => {
       setMessage("");
       setFile(null);
       setFileType(null);
+      setReplyData(null); // Yanıt temizlenir
       const fileInput = document.querySelector(".file-input");
       if (fileInput) fileInput.value = "";
     } catch (error) {
@@ -100,8 +110,27 @@ const Index = ({ selectedUser }) => {
     setMessage("");  // istersen mesaj alanını temizle
   };
 
+  const isGroupDeleted = selectedUser?.userType === "group" && userInfo?.isActive === false;
+
   return (
-    <div className="chat-input-section p-3 p-lg-4">
+    <div
+      className="chat-input-section p-3 p-lg-4"
+      style={isGroupDeleted ? {
+        background: 'transparent',
+        border: 'none',
+        backdropFilter: 'none',
+        boxShadow: 'none'
+      } : {}}
+    >
+
+      {replyData && (
+        <Reply
+          reply={replyData}
+          onSetReplyData={setReplyData}
+          chatUserDetails={selectedUser}
+        />
+      )}
+
       {file && (
         <div className="selected-file-preview mb-2">
           {fileType === "image" && (
@@ -119,6 +148,7 @@ const Index = ({ selectedUser }) => {
               <video controls style={{ width: "100%" }} src={URL.createObjectURL(file)} />
             </div>
           )}
+
           <Alert
             isOpen={true}
             toggle={() => setFile(null)}
@@ -131,47 +161,56 @@ const Index = ({ selectedUser }) => {
         </div>
       )}
 
-      <Form
-        className="chatinput-form"
-        id="chatinput-form"
-        onSubmit={(e) => {
-          e.preventDefault();
-          handleMessageSend();
-        }}
-      >
-        <div className="row g-0 align-items-center">
-          <div className="col-auto">
-            <StartButtons
-              onFileChange={handleFileChange}
-              onEmojiClick={onEmojiClick}
-              emojiPicker={emojiPicker}
-              setemojiPicker={setemojiPicker}
-              onToggle={onToggle} // <--- bunu ekle
-              dropdownOpen={dropdownOpen}
-              setDropdownOpen={setDropdownOpen}
-              onSelectImages={onSelectFiles}
-              onSelectFiles={onSelectFiles}
-            />
-
-
-          </div>
-          <div className="col">
-            <InputSection
-              value={message}
-              onChange={handleMessageChange}
-              disabled={!!file}
-              placeholder={file ? "Dosya seçildi, metin yazılamaz" : "Type your message..."}
-            />
-          </div>
-          <div className="col-auto">
-            <EndButtons
-              onSubmit={handleMessageSend}
-              isSending={isSending}
-              onAudioRecorded={onAudioRecorded}
-            />
-          </div>
+      {isGroupDeleted ?
+        <div className="alert alert-primary  text-center py-2 px-3 rounded shadow m-0  ">
+          <i className="bx bx-block me-2 text-danger"></i>
+          <span>
+            Bu grup silinmiştir. Yeni mesaj gönderemezsiniz.
+          </span>
         </div>
-      </Form>
+        :
+        <Form
+          className="chatinput-form"
+          id="chatinput-form"
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleMessageSend();
+          }}
+        >
+          <div className="row g-0 align-items-center">
+            <div className="col-auto">
+              <StartButtons
+                onFileChange={handleFileChange}
+                onEmojiClick={onEmojiClick}
+                emojiPicker={emojiPicker}
+                setemojiPicker={setemojiPicker}
+                onToggle={onToggle} // <--- bunu ekle
+                dropdownOpen={dropdownOpen}
+                setDropdownOpen={setDropdownOpen}
+                onSelectImages={onSelectFiles}
+                onSelectFiles={onSelectFiles}
+              />
+
+
+            </div>
+            <div className="col">
+              <InputSection
+                value={message}
+                onChange={handleMessageChange}
+                disabled={!!file}
+                placeholder={file ? "Dosya seçildi, metin yazılamaz" : "Type your message..."}
+              />
+            </div>
+            <div className="col-auto">
+              <EndButtons
+                onSubmit={handleMessageSend}
+                isSending={isSending}
+                onAudioRecorded={onAudioRecorded}
+              />
+            </div>
+          </div>
+        </Form>
+      }
 
       <MoreMenu isOpen={isOpen} onSelectImages={onSelectFiles} onSelectFiles={onSelectFiles} onToggle={onToggle} />
     </div>

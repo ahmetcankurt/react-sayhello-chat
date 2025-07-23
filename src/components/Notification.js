@@ -2,7 +2,6 @@ import React, { useState, useEffect, useCallback, useRef, memo } from "react";
 import axios from "axios";
 import { io } from "socket.io-client";
 import { API_URL } from "../config";
-import { COLORS } from "../constants/bgShortColor";
 import "./Notifications.css";
 
 const socket = io(API_URL, { autoConnect: false });
@@ -12,7 +11,7 @@ const Notifications = () => {
   const [imageErrors, setImageErrors] = useState({});
   const timeoutRefs = useRef({});
   const userId = useRef(localStorage.getItem("userId"));
-  const sound = useRef(new Audio('../assets/sound/notification-sound.mp3'));
+
 
   const fetchNotifications = useCallback(async () => {
     try {
@@ -54,25 +53,10 @@ const Notifications = () => {
     setNotifications(prev => [...prev, notification]);
     markAsRead(notification.notificationId);
     scheduleRemoval(notification.notificationId);
-    
-    // Sesin çalınması için önce bir kullanıcı etkileşimi gerektirebilir
-    if (sound.current) {
-      sound.current.play().catch(err => {
-        console.error("Bildirim sesi çalınamadı:", err);
-      });
-    }
   }, [markAsRead, scheduleRemoval]);
 
   const handleImageError = useCallback(id => {
     setImageErrors(prev => ({ ...prev, [id]: true }));
-  }, []);
-
-  const getBgColor = useCallback(str => {
-    let hash = 0;
-    for (let i = 0; i < str.length; i++) {
-      hash = str.charCodeAt(i) + ((hash << 5) - hash);
-    }
-    return COLORS[Math.abs(hash) % COLORS.length];
   }, []);
 
   useEffect(() => {
@@ -94,7 +78,6 @@ const Notifications = () => {
       {notifications.map(({ notificationId, sender, content }) => {
         const shortName = `${sender.name?.[0] || ''}${sender.surname?.[0] || ''}`.toUpperCase();
         const hasImage = sender.profileImage && typeof sender.profileImage === "string" && !imageErrors[notificationId];
-        const bgColor = getBgColor(sender.name + sender.surname);
 
         return (
           <div key={notificationId} className="notification-card entering" data-id={notificationId}>
@@ -106,7 +89,7 @@ const Notifications = () => {
                 className="notification-avatar"
               />
             ) : (
-              <span className={`short-name-avatar ${bgColor}`}>
+              <span className="short-name-avatar" style={{ backgroundColor: sender.color }}>
                 {shortName}
               </span>
             )}
